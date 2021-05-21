@@ -1,0 +1,10 @@
+{
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Yvan Nollet",
+  "email": "yvan.nollet@rayference.eu",
+  "friendly_name": "Joseki",
+  "github_user": "nollety",
+  "package_name": "joseki",
+  "project_name": "joseki",
+  "version": "0.0.0"
+}
