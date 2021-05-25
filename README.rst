@@ -22,7 +22,7 @@ Joseki
 .. |Tests| image:: https://github.com/nollety/joseki/workflows/Tests/badge.svg
    :target: https://github.com/nollety/joseki/actions?workflow=Tests
    :alt: Tests
-.. |Codecov| image:: https://codecov.io/gh/nollety/joseki/branch/master/graph/badge.svg
+.. |Codecov| image:: https://codecov.io/gh/nollety/joseki/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/nollety/joseki
    :alt: Codecov
 .. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
