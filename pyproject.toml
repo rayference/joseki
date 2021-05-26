@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "joseki"
-version = "0.0.0"
+version = "0.1.0"
 description = "Joseki"
 authors = ["Yvan Nollet <yvan.nollet@rayference.eu>"]
 license = "MIT"
