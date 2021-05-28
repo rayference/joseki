@@ -209,3 +209,23 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
             ),
         ),
     )
+
+
+@ureg.wraps(ret=None, args=(None, "km"), strict=False)
+def interp(ds, z_level):
+    """Interpolate atmospheric profile.
+
+    Parameters
+    ----------
+    ds: xarray.Dataset
+        Atmospheric profile to interpolate.
+
+    z_level: array
+        Level altitudes to interpolate the atmospheric profile at [km].
+
+    Returns
+    -------
+    xarray.Dataset
+        Interpolated atmospheric profile.
+    """
+    return ds.interp(z_level=z_level, kwargs=dict(bounds_error=True))

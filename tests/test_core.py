@@ -1,4 +1,5 @@
 """Test cases for the core module."""
+import numpy as np
 import pandas as pd
 import pytest
 import xarray as xr
@@ -73,3 +74,19 @@ def test_to_xarray_attrs() -> None:
     ds = core.to_xarray(df)
     expected_attrs = ["convention", "title", "source", "history", "references"]
     assert all([attr in ds.attrs for attr in expected_attrs])
+
+
+def test_interp_returns_data_set() -> None:
+    """Returns an xarray.Dataset."""
+    df = core.read_raw_data(identifier="afgl_1986-tropical")
+    ds = core.to_xarray(df)
+    interpolated = core.interp(ds=ds, z_level=np.linspace(0, 120, 121))
+    assert isinstance(interpolated, xr.Dataset)
+
+
+def test_interp_out_of_bound() -> None:
+    """Raises when out of bounds values are provided."""
+    with pytest.raises(ValueError):
+        df = core.read_raw_data(identifier="afgl_1986-tropical")
+        ds = core.to_xarray(df)
+        core.interp(ds=ds, z_level=np.linspace(0, 150))
