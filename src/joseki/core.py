@@ -1,4 +1,5 @@
 """Core module."""
+import datetime
 import importlib.resources as pkg_resources
 
 import numpy as np
@@ -96,6 +97,7 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
     associated metadata (standard name, long name and units).
     Raw data units are documented in the technical report *AFGL Atmospheric
     Constituent Profiles (0-120 km)*, Anderson et al., 1986.
+    Data set attributes are added.
 
     Parameters
     ----------
@@ -127,6 +129,7 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
         mrs = raw_data[s].values * 1e-6  # raw data mixing ratios are in ppmv
         mr_values.append(mrs)
     mr = ureg.Quantity(np.array(mr_values), "")
+
     return xr.Dataset(
         data_vars=dict(
             p=(
@@ -184,6 +187,25 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
                     long_name="species",
                     units="",
                 ),
+            ),
+        ),
+        attrs=dict(
+            convention="CF-1.8",
+            title="Atmospheric thermophysical properties profile",
+            history=(
+                f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                "- data set creation - joseki"
+            ),
+            source=(
+                "Atmospheric model (U.S. Standard Atmosphere) adapted from "
+                "satellite data and/or dynamical-photochemical analyses."
+            ),
+            references=(
+                "Anderson, G.P. and Chetwynd J.H. and Clough S.A. and "
+                "Shettle E.P. and Kneizys F.X., AFGL Atmospheric "
+                "Constituent Profiles (0-120km), 1986, Air Force "
+                "Geophysics Laboratory, AFGL-TR-86-0110, "
+                "https://ui.adsabs.harvard.edu/abs/1986afgl.rept.....A/abstract"
             ),
         ),
     )
