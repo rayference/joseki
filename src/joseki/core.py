@@ -1,9 +1,14 @@
 """Core module."""
 import importlib.resources as pkg_resources
 
+import numpy as np
 import pandas as pd
+import pint
+import xarray as xr
 
 from . import data
+
+ureg = pint.UnitRegistry()
 
 TABLE_2_DATA_FILES = (
     "afgl_1986-table_2a.csv",
@@ -80,3 +85,105 @@ def read_raw_data(identifier: str) -> pd.DataFrame:
         dataframes[i] = dataframes[i].drop("z", axis=1)
 
     return pd.concat(dataframes, axis=1)
+
+
+def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
+    """Convert the output of read_raw_data to a xarray.Dataset.
+
+    Use the ``z`` column of the output pandas.DataFrame of read_raw_data
+    as data coordinate and all other columns as data variables.
+    All data variables and coordinates of the returned xarray.Dataset are
+    associated metadata (standard name, long name and units).
+    Raw data units are documented in the technical report *AFGL Atmospheric
+    Constituent Profiles (0-120 km)*, Anderson et al., 1986.
+
+    Parameters
+    ----------
+    raw_data: pandas.DataFrame
+        Raw atmospheric profile data.
+
+    Returns
+    -------
+    xarray.Dataset
+        Atmospheric profile data set.
+    """
+    # list species
+    # species labels correspond to upper case columns in raw data DataFrames
+    species = []
+    for column in raw_data.columns:
+        if column.isupper():
+            species.append(column)
+    # level altitudes
+    z_level = ureg.Quantity(raw_data.z.values, "km")
+    # air pressures
+    p = ureg.Quantity(raw_data.p.values, "millibar").to("Pa")
+    # air temperatures
+    t = ureg.Quantity(raw_data.t.values, "K")
+    # air number density
+    n = ureg.Quantity(raw_data.n.values, "cm^-3").to("m^-3")
+    # mixing ratios
+    mr_values = []
+    for s in species:
+        mrs = raw_data[s].values * 1e-6  # raw data mixing ratios are in ppmv
+        mr_values.append(mrs)
+    mr = ureg.Quantity(np.array(mr_values), "")
+    return xr.Dataset(
+        data_vars=dict(
+            p=(
+                "z_level",
+                p.magnitude,
+                dict(
+                    standard_name="air_pressure",
+                    long_name="air pressure",
+                    units=p.units,
+                ),
+            ),
+            t=(
+                "z_level",
+                t.magnitude,
+                dict(
+                    standard_name="air_temperature",
+                    long_name="air temperature",
+                    units=t.units,
+                ),
+            ),
+            n=(
+                "z_level",
+                n.magnitude,
+                dict(
+                    standard_name="air_number_density",
+                    long_name="air number density",
+                    units=n.units,
+                ),
+            ),
+            mr=(
+                ("species", "z_level"),
+                mr.magnitude,
+                dict(
+                    standard_name="mixing_ratio",
+                    long_name="mixing ratio",
+                    units=mr.units,
+                ),
+            ),
+        ),
+        coords=dict(
+            z_level=(
+                "z_level",
+                z_level.magnitude,
+                dict(
+                    standard_name="level_altitude",
+                    long_name="level altitude",
+                    units=z_level.units,
+                ),
+            ),
+            species=(
+                "species",
+                species,
+                dict(
+                    standard_name="species",
+                    long_name="species",
+                    units="",
+                ),
+            ),
+        ),
+    )
