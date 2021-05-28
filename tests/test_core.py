@@ -49,3 +49,27 @@ def test_to_xarray_dataframes() -> None:
     ]:
         df = core.read_raw_data(identifier=identifier)
         core.to_xarray(df)
+
+
+def test_to_xarray_all_coords() -> None:
+    """Adds all expected coordinates to data set."""
+    df = core.read_raw_data(identifier="afgl_1986-tropical")
+    ds = core.to_xarray(df)
+    expected_coords = ["z_level", "species"]
+    assert all([coord in ds.coords for coord in expected_coords])
+
+
+def test_to_xarray_all_data_vars() -> None:
+    """Adds all expected data variables to data set."""
+    df = core.read_raw_data(identifier="afgl_1986-tropical")
+    ds = core.to_xarray(df)
+    expected_data_vars = ["p", "t", "n", "mr"]
+    assert all([data_var in ds.data_vars for data_var in expected_data_vars])
+
+
+def test_to_xarray_attrs() -> None:
+    """Adds all expected attributes to data set."""
+    df = core.read_raw_data(identifier="afgl_1986-tropical")
+    ds = core.to_xarray(df)
+    expected_attrs = ["convention", "title", "source", "history", "references"]
+    assert all([attr in ds.attrs for attr in expected_attrs])
