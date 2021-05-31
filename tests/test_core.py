@@ -90,3 +90,19 @@ def test_interp_out_of_bound() -> None:
         df = core.read_raw_data(identifier="afgl_1986-tropical")
         ds = core.to_xarray(df)
         core.interp(ds=ds, z_level=np.linspace(0, 150))
+
+
+def test_set_main_coord_to_layer_altitude() -> None:
+    """Returns a xarray.Dataset object."""
+    df = core.read_raw_data(identifier="afgl_1986-tropical")
+    ds = core.to_xarray(df)
+    interpolated = core.set_main_coord_to_layer_altitude(ds)
+    assert isinstance(interpolated, xr.Dataset)
+
+
+def test_set_main_coord_to_layer_altitude_coords() -> None:
+    """'z_layer' is a dimension coord and 'z_level' is not."""
+    df = core.read_raw_data(identifier="afgl_1986-tropical")
+    ds = core.to_xarray(df)
+    interpolated = core.set_main_coord_to_layer_altitude(ds)
+    assert "z_layer" in interpolated.dims and "z_level" not in interpolated.dims

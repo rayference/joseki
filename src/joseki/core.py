@@ -1,6 +1,7 @@
 """Core module."""
 import datetime
 import importlib.resources as pkg_resources
+from typing import cast
 from typing import Union
 
 import numpy as np
@@ -9,8 +10,9 @@ import pint
 import xarray as xr
 
 from . import data
-
-ureg = pint.UnitRegistry()
+from .util import add_comment
+from .util import to_quantity
+from joseki import ureg
 
 TABLE_2_DATA_FILES = (
     "afgl_1986-table_2a.csv",
@@ -61,7 +63,7 @@ def read_raw_data(identifier: str) -> pd.DataFrame:
 
     Returns
     -------
-    :class:`pandas.DataFrame`
+    :class:`~pandas.DataFrame`
         Raw atmospheric profile data.
 
     Raises
@@ -102,12 +104,12 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
 
     Parameters
     ----------
-    raw_data: :class:`pandas.DataFrame`
+    raw_data: :class:`~pandas.DataFrame`
         Raw atmospheric profile data.
 
     Returns
     -------
-    :class:`xarray.Dataset`
+    :class:`~xarray.Dataset`
         Atmospheric profile data set.
     """
     # list species
@@ -116,14 +118,19 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
     for column in raw_data.columns:
         if column.isupper():
             species.append(column)
+
     # level altitudes
     z_level = ureg.Quantity(raw_data.z.values, "km")
+
     # air pressures
     p = ureg.Quantity(raw_data.p.values, "millibar").to("Pa")
+
     # air temperatures
     t = ureg.Quantity(raw_data.t.values, "K")
+
     # air number density
     n = ureg.Quantity(raw_data.n.values, "cm^-3").to("m^-3")
+
     # mixing ratios
     mr_values = []
     for s in species:
@@ -195,7 +202,7 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
             title="Atmospheric thermophysical properties profile",
             history=(
                 f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-                "- data set creation - joseki"
+                "- data set creation - joseki.core.to_xarray"
             ),
             source=(
                 "Atmospheric model (U.S. Standard Atmosphere) adapted from "
@@ -218,15 +225,81 @@ def interp(ds: xr.Dataset, z_level: Union[pint.Quantity, np.ndarray]) -> xr.Data
 
     Parameters
     ----------
-    ds: :class:`xarray.Dataset`
+    ds: :class:`~xarray.Dataset`
         Atmospheric profile to interpolate.
 
-    z_level: :class:`pint.Quantity`, :class:`numpy.ndarray`
+    z_level: :class:`~pint.Quantity`, :class:`numpy.ndarray`
         Level altitudes to interpolate the atmospheric profile at [km].
 
     Returns
     -------
-    :class:`xarray.Dataset`
+    :class:`~xarray.Dataset`
         Interpolated atmospheric profile.
     """
-    return ds.interp(z_level=z_level, kwargs=dict(bounds_error=True))
+    interpolated = ds.interp(z_level=z_level, kwargs=dict(bounds_error=True))
+    add_comment(
+        ds=interpolated,
+        comment=(
+            f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
+            "- data set interpolation - joseki.core.interp"
+        ),
+    )
+    return interpolated
+
+
+def set_main_coord_to_layer_altitude(ds: xr.Dataset) -> xr.Dataset:
+    """Set the main coordinate to the layer altitude.
+
+    For an atmospheric profile with level altitude as the main coordinate,
+    compute the corresponding layer altitude mesh and interpolate the
+    data variables onto that layer altitude mesh. The level altitude coordinate
+    is preserved but is not a dimension coordinate anymore.
+
+    Parameters
+    ----------
+    ds: :class:`~xarray.Dataset`
+        Atmospheric profile with level altitude as main coordinate.
+
+    Returns
+    -------
+    :class:`~xarray.Dataset`
+        Atmospheric profile with layer altitude as main coordinate.
+    """
+    # Compute layer altitudes
+    z_level = to_quantity(ds.z_level)
+    z_layer = (z_level[:-1] + z_level[1:]) / 2.0
+
+    # Interpolate at the layer altitudes (z_layer)
+    interpolated = interp(ds=ds, z_level=z_layer)
+
+    # Rename z_level into z_layer
+    interpolated = interpolated.rename({"z_level": "z_layer"})
+
+    # Add attributes to z_layer coordinate
+    interpolated.z_layer.attrs = dict(
+        standard_name="layer_altitude",
+        long_name="layer altitude",
+        units="km",
+    )
+
+    # Re-insert z_level (non-dimension) coordinate
+    interpolated.coords["z_level"] = (
+        "z_levelc",
+        z_level,
+        dict(
+            standard_name="level_altitude",
+            long_name="level altitude",
+            units="km",
+        ),
+    )
+
+    # Update metadata
+    add_comment(
+        ds=interpolated,
+        comment=(
+            f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
+            "- data set coords update - joseki.core.set_main_coord_to_layer_altitude"
+        ),
+    )
+
+    return cast(xr.Dataset, interpolated)
