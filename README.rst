@@ -36,7 +36,9 @@ Joseki
 Features
 --------
 
-* TODO
+* Original *AFGL Atmospheric Constituent Profiles (0-120 km)* data set in both csv and netCDF formats.
+* Interpolate the data sets on a different level altitude mesh
+* Compute the atmospheric profile on the corresponding layer altitude mesh
 
 
 Requirements
