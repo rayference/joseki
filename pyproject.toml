@@ -18,13 +18,13 @@ version = "0.1.0"
 Changelog = "https://github.com/nollety/joseki/releases"
 
 [tool.poetry.dependencies]
+Pint = "^0.17"
 click = "^7.0"
 numpy = "^1.20.3"
-python = ">=3.7.1,<3.10"
-xarray = "^0.18.2"
 pandas = "^1.2.4"
-Pint = "^0.17"
+python = ">=3.7.1,<3.10"
 scipy = "^1.6.3"
+xarray = "^0.18.2"
 
 [tool.poetry.dev-dependencies]
 Pygments = "^2.7.1"
