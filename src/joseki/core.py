@@ -261,6 +261,26 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
     return ds
 
 
+def read_raw_data_to_xarray(identifier: str) -> xr.Dataset:
+    """Chain calls to :meth:`read_raw_data` and then :meth:`to_xarray`.
+
+    Parameters
+    ----------
+    identifier: str
+        Atmospheric profile identifier in [``"afgl_1986-tropical"``,
+        ``"afgl_1986-midlatitude_summer"``, ``"afgl_1986-midlatitude_winter"``,
+        ``"afgl_1986-subarctic_summer"``, ``"afgl_1986-subarctic_winter"``,
+        ``"afgl_1986-us_standard"``]
+
+    Returns
+    -------
+    :class:`~xarray.Dataset`
+        Atmospheric profile data set.
+    """
+    df = read_raw_data(identifier=identifier)
+    return to_xarray(df)
+
+
 @ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
 def interp(
     ds: xr.Dataset,

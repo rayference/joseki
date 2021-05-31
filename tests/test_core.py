@@ -76,6 +76,13 @@ def test_to_xarray_attrs() -> None:
     assert all([attr in ds.attrs for attr in expected_attrs])
 
 
+def test_read_raw_data_to_xarray() -> None:
+    """Is equivalent to calling read_raw_data and then to_xarray."""
+    df = core.read_raw_data(identifier="afgl_1986-tropical")
+    ds = core.to_xarray(df)
+    assert ds == core.read_raw_data_to_xarray(identifier="afgl_1986-tropical")
+
+
 def test_interp_returns_data_set() -> None:
     """Returns an xarray.Dataset."""
     df = core.read_raw_data(identifier="afgl_1986-tropical")
