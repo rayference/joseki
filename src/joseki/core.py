@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import pint
 import xarray as xr
+from scipy import interpolate
 
 from . import data
 from .util import add_comment
@@ -219,8 +220,15 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
     )
 
 
-@ureg.wraps(ret=None, args=(None, "km"), strict=False)
-def interp(ds: xr.Dataset, z_level: Union[pint.Quantity, np.ndarray]) -> xr.Dataset:
+@ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
+def interp(
+    ds: xr.Dataset,
+    z_level: Union[pint.Quantity, np.ndarray],
+    p_interp_method: str = "linear",
+    t_interp_method: str = "linear",
+    n_interp_method: str = "linear",
+    x_interp_method: str = "linear",
+) -> xr.Dataset:
     """Interpolate atmospheric profile.
 
     Parameters
@@ -231,12 +239,109 @@ def interp(ds: xr.Dataset, z_level: Union[pint.Quantity, np.ndarray]) -> xr.Data
     z_level: :class:`~pint.Quantity`, :class:`numpy.ndarray`
         Level altitudes to interpolate the atmospheric profile at [km].
 
+    p_interp_method: str
+        Pressure interpolation method.
+
+    t_interp_method: str
+        Temperature interpolation method.
+
+    n_interp_method: str
+        Number density interpolation method.
+
+    x_interp_method: str
+        Volume mixing ratio interpolation method.
+
     Returns
     -------
     :class:`~xarray.Dataset`
         Interpolated atmospheric profile.
     """
-    interpolated = ds.interp(z_level=z_level, kwargs=dict(bounds_error=True))
+    # Interpolate pressure
+    fp = interpolate.interp1d(
+        ds.z_level.values, ds.p.values, kind=p_interp_method, bounds_error=True
+    )
+    p_new = fp(z_level)
+
+    # Interpolate temperature
+    ft = interpolate.interp1d(
+        ds.z_level.values, ds.t.values, kind=t_interp_method, bounds_error=True
+    )
+    t_new = ft(z_level)
+
+    # Interpolate number density
+    fn = interpolate.interp1d(
+        ds.z_level.values, ds.n.values, kind=n_interp_method, bounds_error=True
+    )
+    n_new = fn(z_level)
+
+    # Interpolate volume mixing ratio
+    mr_new = ds.mr.interp(
+        z_level=z_level, method=x_interp_method, kwargs=dict(bounds_error=True)
+    )
+
+    # Reform data set
+    interpolated = xr.Dataset(
+        data_vars=dict(
+            p=(
+                "z_level",
+                p_new,
+                dict(
+                    standard_name="air_pressure",
+                    long_name="air pressure",
+                    units=ds.p.units,
+                ),
+            ),
+            t=(
+                "z_level",
+                t_new,
+                dict(
+                    standard_name="air_temperature",
+                    long_name="air temperature",
+                    units=ds.t.units,
+                ),
+            ),
+            n=(
+                "z_level",
+                n_new,
+                dict(
+                    standard_name="air_number_density",
+                    long_name="air number density",
+                    units=ds.n.units,
+                ),
+            ),
+            mr=(
+                ("species", "z_level"),
+                mr_new.values,
+                dict(
+                    standard_name="mixing_ratio",
+                    long_name="mixing ratio",
+                    units=ds.mr.units,
+                ),
+            ),
+        ),
+        coords=dict(
+            z_level=(
+                "z_level",
+                z_level,
+                dict(
+                    standard_name="level_altitude",
+                    long_name="level altitude",
+                    units=ds.z_level.units,
+                ),
+            ),
+            species=(
+                "species",
+                ds.species,
+                dict(
+                    standard_name="species",
+                    long_name="species",
+                    units="",
+                ),
+            ),
+        ),
+        attrs=ds.attrs,
+    )
+
     add_comment(
         ds=interpolated,
         comment=(
