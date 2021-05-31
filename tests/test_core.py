@@ -80,7 +80,7 @@ def test_interp_returns_data_set() -> None:
     """Returns an xarray.Dataset."""
     df = core.read_raw_data(identifier="afgl_1986-tropical")
     ds = core.to_xarray(df)
-    interpolated = core.interp(ds=ds, z_level=np.linspace(0, 120, 121))
+    interpolated = core.interp(ds=ds, z_level_new=np.linspace(0, 120, 121))
     assert isinstance(interpolated, xr.Dataset)
 
 
@@ -89,7 +89,7 @@ def test_interp_out_of_bound() -> None:
     with pytest.raises(ValueError):
         df = core.read_raw_data(identifier="afgl_1986-tropical")
         ds = core.to_xarray(df)
-        core.interp(ds=ds, z_level=np.linspace(0, 150))
+        core.interp(ds=ds, z_level_new=np.linspace(0, 150))
 
 
 def test_set_main_coord_to_layer_altitude() -> None:
