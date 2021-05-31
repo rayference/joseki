@@ -10,10 +10,9 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx_click",
-    "sphinx_rtd_theme",
 ]
 autodoc_typehints = "description"
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
 intersphinx_mapping = {
     "pandas": ("https://pandas.pydata.org/docs/", None),
     "pint": ("https://pint.readthedocs.io/en/stable/", None),
