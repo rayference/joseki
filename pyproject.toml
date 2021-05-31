@@ -51,6 +51,7 @@ typeguard = "^2.9.1"
 xdoctest = {extras = ["colors"], version = "^0.15.0"}
 ipython = "^7.24.0"
 jupyterlab = "^3.0.16"
+matplotlib = "^3.4.2"
 
 [tool.poetry.scripts]
 joseki = "joseki.__main__:main"
