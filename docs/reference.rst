@@ -1,11 +1,6 @@
 Reference
 =========
 
-.. contents::
-    :local:
-    :backlinks: none
-
-
 ``joseki``
 ----------
 

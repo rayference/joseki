@@ -61,7 +61,7 @@ def read_raw_data(identifier: str) -> pd.DataFrame:
 
     Returns
     -------
-    pandas.DataFrame
+    :class:`pandas.DataFrame`
         Raw atmospheric profile data.
 
     Raises
@@ -102,12 +102,12 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
 
     Parameters
     ----------
-    raw_data: pandas.DataFrame
+    raw_data: :class:`pandas.DataFrame`
         Raw atmospheric profile data.
 
     Returns
     -------
-    xarray.Dataset
+    :class:`xarray.Dataset`
         Atmospheric profile data set.
     """
     # list species
@@ -218,15 +218,15 @@ def interp(ds: xr.Dataset, z_level: Union[pint.Quantity, np.ndarray]) -> xr.Data
 
     Parameters
     ----------
-    ds: xarray.Dataset
+    ds: :class:`xarray.Dataset`
         Atmospheric profile to interpolate.
 
-    z_level: array
+    z_level: :class:`pint.Quantity`, :class:`numpy.ndarray`
         Level altitudes to interpolate the atmospheric profile at [km].
 
     Returns
     -------
-    xarray.Dataset
+    :class:`xarray.Dataset`
         Interpolated atmospheric profile.
     """
     return ds.interp(z_level=z_level, kwargs=dict(bounds_error=True))
