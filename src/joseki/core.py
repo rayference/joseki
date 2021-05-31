@@ -1,6 +1,7 @@
 """Core module."""
 import datetime
 import importlib.resources as pkg_resources
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -212,7 +213,7 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
 
 
 @ureg.wraps(ret=None, args=(None, "km"), strict=False)
-def interp(ds, z_level):
+def interp(ds: xr.Dataset, z_level: Union[pint.Quantity, np.ndarray]) -> xr.Dataset:
     """Interpolate atmospheric profile.
 
     Parameters
