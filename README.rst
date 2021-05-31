@@ -44,7 +44,7 @@ Features
 Requirements
 ------------
 
-* TODO
+* Python 3.7+
 
 
 Installation
