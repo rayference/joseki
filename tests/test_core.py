@@ -1,4 +1,7 @@
 """Test cases for the core module."""
+import pathlib
+import tempfile
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -113,3 +116,24 @@ def test_set_main_coord_to_layer_altitude_coords() -> None:
     ds = core.to_xarray(df)
     interpolated = core.set_main_coord_to_layer_altitude(ds)
     assert "z_layer" in interpolated.dims and "z_level" not in interpolated.dims
+
+
+def test_make() -> None:
+    """Returns xr.Dataset."""
+    assert isinstance(core.make(identifier="afgl_1986-tropical"), xr.Dataset)
+
+
+def test_make_set_main_coord() -> None:
+    """Returned data set has a z_layer dimension."""
+    ds = core.make(identifier="afgl_1986-tropical", main_coord_to_layer_altitude=True)
+    assert "z_layer" in ds.dims
+
+
+def test_make_level_altitudes() -> None:
+    """Returned data set has a z_layer dimension."""
+    z_level_values = np.linspace(0, 120, 121)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = pathlib.Path(tmpdir, "z_level.txt")
+        np.savetxt(path, z_level_values)
+        ds = core.make(identifier="afgl_1986-tropical", level_altitudes=path)
+    assert np.allclose(ds.z_level.values, z_level_values)

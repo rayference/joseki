@@ -1,6 +1,8 @@
 """Core module."""
 import datetime
 import importlib.resources as pkg_resources
+import pathlib
+from typing import Optional
 from typing import Union
 
 import numpy as np
@@ -444,3 +446,68 @@ def set_main_coord_to_layer_altitude(
     )
 
     return interpolated
+
+
+def make(
+    identifier: str,
+    level_altitudes: Optional[pathlib.Path] = None,
+    main_coord_to_layer_altitude: bool = False,
+    p_interp_method: str = "linear",
+    t_interp_method: str = "linear",
+    n_interp_method: str = "linear",
+    x_interp_method: str = "linear",
+) -> xr.Dataset:
+    """Make atmospheric profile data set.
+
+    Parameters
+    ----------
+    identifier: str
+        Atmospheric profile identifier.
+
+    level_altitudes: pathlib.Path
+        Level altitudes data file.
+        If ``None``, the original atmospheric profile level altitudes are used.
+
+    main_coord_to_layer_altitude: bool
+        If ``True``, set the layer altitude as the data set's main coordinate.
+
+    p_interp_method: str
+        Pressure interpolation method.
+
+    t_interp_method: str
+        Temperature interpolation method.
+
+    n_interp_method: str
+        Number density interpolation method.
+
+    x_interp_method: str
+        Volume mixing ratios interpolation method
+
+    Returns
+    -------
+    :class:`~xarray.Dataset`
+        Atmospheric profile.
+    """
+    ds = read_raw_data_to_xarray(identifier=identifier)
+
+    if level_altitudes is not None:
+        z_level = np.loadtxt(fname=level_altitudes, dtype=float, comments="#")
+        ds = interp(
+            ds=ds,
+            z_level_new=z_level,
+            p_interp_method=p_interp_method,
+            t_interp_method=t_interp_method,
+            n_interp_method=n_interp_method,
+            x_interp_method=x_interp_method,
+        )
+
+    if main_coord_to_layer_altitude:
+        ds = set_main_coord_to_layer_altitude(
+            ds=ds,
+            p_interp_method=p_interp_method,
+            t_interp_method=t_interp_method,
+            n_interp_method=n_interp_method,
+            x_interp_method=x_interp_method,
+        )
+
+    return ds
