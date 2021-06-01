@@ -360,7 +360,13 @@ def interp(
     return interpolated
 
 
-def set_main_coord_to_layer_altitude(ds: xr.Dataset) -> xr.Dataset:
+def set_main_coord_to_layer_altitude(
+    ds: xr.Dataset,
+    p_interp_method: str = "linear",
+    t_interp_method: str = "linear",
+    n_interp_method: str = "linear",
+    x_interp_method: str = "linear",
+) -> xr.Dataset:
     """Set the main coordinate to the layer altitude.
 
     For an atmospheric profile with level altitude as the main coordinate,
@@ -373,6 +379,18 @@ def set_main_coord_to_layer_altitude(ds: xr.Dataset) -> xr.Dataset:
     ds: :class:`~xarray.Dataset`
         Atmospheric profile with level altitude as main coordinate.
 
+    p_interp_method: str
+        Pressure interpolation method.
+
+    t_interp_method: str
+        Temperature interpolation method.
+
+    n_interp_method: str
+        Number density interpolation method.
+
+    x_interp_method: str
+        Volume mixing ratio interpolation method.
+
     Returns
     -------
     :class:`~xarray.Dataset`
@@ -383,7 +401,14 @@ def set_main_coord_to_layer_altitude(ds: xr.Dataset) -> xr.Dataset:
     z_layer = (z_level[:-1] + z_level[1:]) / 2.0
 
     # Interpolate at the layer altitudes (z_layer)
-    interpolated: xr.Dataset = interp(ds=ds, z_level_new=z_layer)
+    interpolated: xr.Dataset = interp(
+        ds=ds,
+        z_level_new=z_layer,
+        p_interp_method=p_interp_method,
+        t_interp_method=t_interp_method,
+        n_interp_method=n_interp_method,
+        x_interp_method=x_interp_method,
+    )
 
     # Rename z_level into z_layer
     interpolated = interpolated.rename({"z_level": "z_layer"})
