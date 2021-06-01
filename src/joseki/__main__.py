@@ -4,6 +4,8 @@ from typing import Optional
 
 import click
 
+from .core import make
+
 
 @click.command()
 @click.option(
@@ -138,24 +140,16 @@ def main(
     x_interp_method: str,
 ) -> None:
     """Joseki."""
-    print(f"identifier: {identifier}")
-    print(f"level_altitudes: {level_altitudes}")
-    print(f"set-main-coord-to-layer-altitude: {set_main_coord_to_layer_altitude}")
-    print(f"file_name: {file_name}")
-    print(f"p_interp_method: {p_interp_method}")
-    print(f"t_interp_method: {t_interp_method}")
-    print(f"n_interp_method: {n_interp_method}")
-    print(f"x_interp_method: {x_interp_method}")
-    # ds = joseki.core.make(
-    #   identifier=identifier,
-    #   z_level=z_level,
-    #   p_interp_method=p_interp_method,
-    #   t_interp_method=p_interp_method,
-    #   n_interp_method=p_interp_method,
-    #   x_interp_method=p_interp_method,
-    #   set_main_coord_to_layer_altitude=set_main_coord_to_layer_altitude
-    # )
-    # ds.to_netcdf(file_name)
+    ds = make(
+        identifier=identifier,
+        level_altitudes=level_altitudes,
+        p_interp_method=p_interp_method,
+        t_interp_method=t_interp_method,
+        n_interp_method=n_interp_method,
+        x_interp_method=x_interp_method,
+        main_coord_to_layer_altitude=set_main_coord_to_layer_altitude,
+    )
+    ds.to_netcdf(file_name)
 
 
 if __name__ == "__main__":
