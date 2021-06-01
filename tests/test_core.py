@@ -1,6 +1,6 @@
 """Test cases for the core module."""
 import pathlib
-import tempfile
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -129,11 +129,10 @@ def test_make_set_main_coord() -> None:
     assert "z_layer" in ds.dims
 
 
-def test_make_level_altitudes() -> None:
+def test_make_level_altitudes(tmpdir: Any) -> None:
     """Returned data set has a z_layer dimension."""
     z_level_values = np.linspace(0, 120, 121)
-    with tempfile.TemporaryDirectory() as tmpdir:
-        path = pathlib.Path(tmpdir, "z_level.txt")
-        np.savetxt(path, z_level_values)
-        ds = core.make(identifier="afgl_1986-tropical", level_altitudes=path)
+    path = pathlib.Path(tmpdir, "z_level.txt")
+    np.savetxt(path, z_level_values)
+    ds = core.make(identifier="afgl_1986-tropical", level_altitudes=path)
     assert np.allclose(ds.z_level.values, z_level_values)
