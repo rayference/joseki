@@ -235,10 +235,11 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
         Atmospheric profile data set.
     """
     # list species
-    # species labels correspond to upper case columns in raw data DataFrames
+    # species labels correspond to column with upper case first letter in
+    # raw data DataFrames
     species = []
     for column in raw_data.columns:
-        if column.isupper():
+        if column[0].isupper():
             species.append(column)
 
     # level altitudes
