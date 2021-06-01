@@ -104,22 +104,22 @@ def make_data_set(
 
     Parameters
     ----------
-    p: :class:`pint.Quantity`, :class:`numpy.ndarray`
+    p: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Pressure [Pa].
 
-    t: :class:`pint.Quantity`, :class:`numpy.ndarray`
+    t: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Temperature [K].
 
-    n: :class:`pint.Quantity`, :class:`numpy.ndarray`
+    n: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Number density [m^-3].
 
-    mr: :class:`pint.Quantity`, :class:`numpy.ndarray`
+    mr: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Volume mixing ratios [/].
 
-    z_level: :class:`pint.Quantity`, :class:`numpy.ndarray`
+    z_level: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Level altitude [km].
 
-    species: :class:`pint.Quantity`, :class:`numpy.ndarray`
+    species: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Species [/].
 
     Returns
@@ -209,7 +209,7 @@ def make_data_set(
 
 
 def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
-    """Convert the output of read_raw_data to a xarray.Dataset.
+    """Convert :meth:`read_raw_data`'s output to a :class:`~xarray.Dataset`.
 
     Use the ``z`` column of the output pandas.DataFrame of read_raw_data
     as data coordinate and all other columns as data variables.
@@ -262,7 +262,7 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
 
 
 def read_raw_data_to_xarray(identifier: str) -> xr.Dataset:
-    """Chain calls to :meth:`read_raw_data` and then :meth:`to_xarray`.
+    """Chain calls to :meth:`read_raw_data` and :meth:`to_xarray`.
 
     Parameters
     ----------
@@ -297,7 +297,7 @@ def interp(
     ds: :class:`~xarray.Dataset`
         Atmospheric profile to interpolate.
 
-    z_level_new: :class:`~pint.Quantity`, :class:`numpy.ndarray`
+    z_level_new: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Level altitudes to interpolate the atmospheric profile at [km].
 
     p_interp_method: str
