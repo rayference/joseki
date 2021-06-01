@@ -10,8 +10,10 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx_click",
+    "sphinxcontrib.bibtex",
 ]
 autodoc_typehints = "description"
+bibtex_bibfiles = ["references.bib"]
 html_theme = "furo"
 intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),

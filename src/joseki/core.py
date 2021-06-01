@@ -36,7 +36,9 @@ def read_raw_data(identifier: str) -> pd.DataFrame:
     Read the relevant raw data files corresponding to the atmospheric profile
     identifier. These raw data files correspond to tables 1 and 2 from the
     technical report *AFGL Atmospheric Constituent Profiles (0-120 km)*,
-    Anderson et al., 1986. Each atmospheric profile has 5 tables, i.e. 5 raw
+    Anderson et al., 1986
+    :cite:`Anderson1986AtmosphericConstituentProfiles`.
+    Each atmospheric profile has 5 tables, i.e. 5 raw
     data files, associated to it. Only the first of these tables is specific
     to each atmospheric profile. All 5 raw data files are read into
     pandas.DataFrame objects and then concatenated after dropping the
@@ -59,7 +61,7 @@ def read_raw_data(identifier: str) -> pd.DataFrame:
         Atmospheric profile identifier in [``"afgl_1986-tropical"``,
         ``"afgl_1986-midlatitude_summer"``, ``"afgl_1986-midlatitude_winter"``,
         ``"afgl_1986-subarctic_summer"``, ``"afgl_1986-subarctic_winter"``,
-        ``"afgl_1986-us_standard"``]
+        ``"afgl_1986-us_standard"``].
 
     Returns
     -------
@@ -216,7 +218,8 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
     All data variables and coordinates of the returned xarray.Dataset are
     associated metadata (standard name, long name and units).
     Raw data units are documented in the technical report *AFGL Atmospheric
-    Constituent Profiles (0-120 km)*, Anderson et al., 1986.
+    Constituent Profiles (0-120 km)*, Anderson et al., 1986
+    :cite:`Anderson1986AtmosphericConstituentProfiles`.
     Data set attributes are added.
 
     Parameters
@@ -270,7 +273,7 @@ def read_raw_data_to_xarray(identifier: str) -> xr.Dataset:
         Atmospheric profile identifier in [``"afgl_1986-tropical"``,
         ``"afgl_1986-midlatitude_summer"``, ``"afgl_1986-midlatitude_winter"``,
         ``"afgl_1986-subarctic_summer"``, ``"afgl_1986-subarctic_winter"``,
-        ``"afgl_1986-us_standard"``]
+        ``"afgl_1986-us_standard"``].
 
     Returns
     -------
