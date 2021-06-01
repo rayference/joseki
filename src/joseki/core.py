@@ -460,6 +460,12 @@ def make(
 ) -> xr.Dataset:
     """Make atmospheric profile data set.
 
+    This method creates an atmospheric profile data set corresponding to the
+    specified identifier.
+    It allows to interpolate the atmospheric profile on a different
+    level altitude mesh as well as to set the layer altitude as the data
+    set's main coordinate.
+
     Parameters
     ----------
     identifier: str

@@ -11,7 +11,7 @@ from .core import make
 @click.option(
     "--identifier",
     "-i",
-    help="atmospheric profile identifier",
+    help="Atmospheric profile identifier.",
     required=True,
     type=click.Choice(
         [
@@ -28,14 +28,17 @@ from .core import make
 @click.option(
     "--file-name",
     "-f",
-    help="output file name",
+    help="Output file name.",
     default="ds.nc",
     type=click.Path(writable=True),
 )
 @click.option(
     "--level-altitudes",
     "-la",
-    help="level altitudes",
+    help=(
+        "Path to level altitudes data file. The data file is read with "
+        ":meth:`numpy.loadtxt`."
+    ),
     default=None,
     show_default=True,
 )
@@ -43,15 +46,15 @@ from .core import make
     "--set-main-coord-to-layer-altitude",
     "-s",
     help=(
-        "set the data set main coordinate to layer altitude (default is "
-        "level altitude)"
+        "Set the data set main coordinate to layer altitude (default is "
+        "level altitude)."
     ),
     is_flag=True,
 )
 @click.option(
     "--p-interp-method",
     "-p",
-    help="pressure interpolation method",
+    help="Pressure interpolation method.",
     type=click.Choice(
         [
             "linear",
@@ -71,7 +74,7 @@ from .core import make
 @click.option(
     "--t-interp-method",
     "-t",
-    help="temperature interpolation method",
+    help="Temperature interpolation method.",
     type=click.Choice(
         [
             "linear",
@@ -91,7 +94,7 @@ from .core import make
 @click.option(
     "--n-interp-method",
     "-n",
-    help="number density interpolation method",
+    help="Number density interpolation method.",
     type=click.Choice(
         [
             "linear",
@@ -111,7 +114,7 @@ from .core import make
 @click.option(
     "--x-interp-method",
     "-x",
-    help="volume mixing ratios interpolation method",
+    help="Volume mixing ratios interpolation method.",
     type=click.Choice(
         [
             "linear",
@@ -139,7 +142,7 @@ def main(
     n_interp_method: str,
     x_interp_method: str,
 ) -> None:
-    """Joseki."""
+    """Joseki command-line interface."""
     ds = make(
         identifier=identifier,
         level_altitudes=level_altitudes,
