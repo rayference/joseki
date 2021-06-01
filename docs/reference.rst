@@ -12,3 +12,9 @@ Reference
 
 .. automodule:: joseki.core
     :members:
+
+``util``
+--------
+
+.. automodule:: joseki.util
+   :members:
