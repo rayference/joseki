@@ -120,8 +120,8 @@ def read_raw_mipas_data(identifier: str) -> xr.Dataset:
     Parameters
     ----------
     identifier: str
-        Atmospheric profile identifier in [``"day"``, ``"equ"``, ``"extra"``,
-        ``"ngt"``, ``"sum"``, ``"win"``].
+        Atmospheric profile identifier in [``"day"``, ``"equ"``, ``"ngt"``,
+        ``"sum"``, ``"win"``].
 
     Returns
     -------
