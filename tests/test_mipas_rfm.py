@@ -31,6 +31,46 @@ def test_parse_var_name() -> None:
     assert mipas_rfm._parse_var_name("other") == "other"
 
 
+def test_parse_var_line_2_parts() -> None:
+    """Parse 2-part line."""
+    s = "*VAR_NAME [VAR_UNITS]"
+    var_name, var_units = mipas_rfm._parse_var_line(s)
+    assert var_name, var_units == ("VAR_NAME", "VAR_UNITS")
+
+
+def test_parse_var_line_3_parts() -> None:
+    """Parse 3-part line."""
+    s = "*VAR_NAME (ALIAS) [VAR_UNITS]"
+    var_name, var_units = mipas_rfm._parse_var_line(s)
+    assert var_name, var_units == ("VAR_NAME", "VAR_UNITS")
+
+
+def test_parse_var_line_invalid() -> None:
+    """Raises ValueError when line has invalid format."""
+    invalid_lines = ["*VAR_NAME", "*VAR_NAME (ALIAS) [VAR_UNITS] extra"]
+    for invalid_line in invalid_lines:
+        with pytest.raises(ValueError):
+            mipas_rfm._parse_var_line(invalid_line)
+
+
+def test_parse_values_line_whitespace() -> None:
+    """Parse with whitespace delimiter."""
+    s = "1.0 12.0  5.0       4.0 0.0"
+    assert mipas_rfm._parse_values_line(s) == ["1.0", "12.0", "5.0", "4.0", "0.0"]
+
+
+def test_parse_values_line_commas_and_whitespace() -> None:
+    """Parse with commas and whitespace delimiters combined."""
+    s = "1.0,2.0,   3.0    , 7.0      ,10.0"
+    assert mipas_rfm._parse_values_line(s) == ["1.0", "2.0", "3.0", "7.0", "10.0"]
+
+
+def test_parse_values_line_commas_and_whitespace_ends_with_comma() -> None:
+    """Parse with commas and whitespace delimiters combined."""
+    s = "1.0,2.0,   3.0    , 7.0      ,10.0 ,"
+    assert mipas_rfm._parse_values_line(s) == ["1.0", "2.0", "3.0", "7.0", "10.0"]
+
+
 def test_parse_content() -> None:
     """Returns a dict."""
     lines = [
@@ -96,3 +136,10 @@ def test_read_mipas_data() -> None:
     """Returns a :class:`~xarray.Dataset`."""
     ds = mipas_rfm.read_raw_mipas_data(identifier="day")
     assert isinstance(ds, xr.Dataset)
+
+
+def test_read_mipas_data_identifier() -> None:
+    """Returns a :class:`~xarray.Dataset` for all identifier values."""
+    for identifier in ["day", "equ", "ngt", "sum", "win"]:
+        ds = mipas_rfm.read_raw_mipas_data(identifier=identifier)
+        assert isinstance(ds, xr.Dataset)

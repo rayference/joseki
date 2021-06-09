@@ -10,15 +10,12 @@ import pandas as pd
 import pint
 import xarray as xr
 from scipy import interpolate
-from scipy.constants import physical_constants
 
 from . import data
 from .util import add_comment
 from .util import to_quantity
 from joseki import ureg
 
-# Boltzmann constant
-K = ureg.Quantity(physical_constants["Boltzmann constant"][:2])
 
 TABLE_2_DATA_FILES = (
     "afgl_1986-table_2a.csv",

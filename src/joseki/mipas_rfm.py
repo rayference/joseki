@@ -4,6 +4,7 @@ Data are provided by RFM (http://eodg.atm.ox.ac.uk/RFM/).
 """
 from typing import Dict
 from typing import List
+from typing import Tuple
 
 import numpy as np
 import requests
@@ -38,31 +39,58 @@ def _parse_var_name(n: str) -> str:
         return n
 
 
+def _parse_var_line(s: str) -> Tuple[str]:
+    """Parse a line with the declaration of a variable and its units."""
+    parts = s[1:].strip().split()
+    if len(parts) == 2:
+        var_name, units_s = parts
+    elif len(parts) == 3:
+        var_name, _, units_s = parts
+    else:
+        raise ValueError(f"Invalid line format: {s}")
+    var = _parse_var_name(var_name)
+    units = _parse_units(units_s)
+    return var, units
+
+
+def _parse_values_line(s: str) -> List[str]:
+    """Parse a line with numeric values."""
+    if "," in s:  # delimiter is comma and whitespace combined
+        s_strip = s.strip()
+        if s_strip[-1] == ",":
+            s_strip = s_strip[:-1]
+        return [x.strip() for x in s_strip.split(",")]
+    else:  # delimiter is whitespace
+        return s.split()
+
+
 def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
     """Parse lines."""
     iterator = iter(lines)
     line = next(iterator)
 
     quantities: Dict[str, ureg.Quantity] = {}
+
+    def _add_to_quantities(quantity, name):
+        if quantity.units == "ppmv":
+            quantities[name] = quantity.to("dimensionless")
+        else:
+            quantities[name] = quantity
+
     var: str = ""
     units: str = ""
     values: List[str] = []
     while line != "*END":
         if line.startswith("!"):
-            # this is a comment, ignore the line
-            pass
+            pass  # this is a comment, ignore the line
         elif line.startswith("*"):
+            # convert previously read values (if any) and units to quantity
             if len(values) > 0:
                 quantity = ureg.Quantity(np.array(values, dtype=float), units)
-                if units == "ppmv":
-                    quantities[var] = quantity.to("dimensionless")
-                else:
-                    quantities[var] = quantity
+                _add_to_quantities(quantity=quantity, name=var)
 
-            # this is a variable line, fetch variable name and units
-            var_name, units_s = line[1:].strip().split(" ")
-            var = _parse_var_name(var_name)
-            units = _parse_units(units_s)
+            # this is a variable line, parse variable name and units
+            var, units = _parse_var_line(line)
 
             # following lines are the variables values so prepare a variable
             # to store the values
@@ -73,15 +101,12 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
                 pass
             else:
                 # this line contains variable values
-                values += line.split()
+                values += _parse_values_line(line)
         line = next(iterator)
 
     # include last array of values before the '*END' line
     quantity = ureg.Quantity(np.array(values, dtype=float), units)
-    if units == "ppmv":
-        quantities[var] = quantity.to("dimensionless")
-    else:
-        quantities[var] = quantity
+    _add_to_quantities(quantity=quantity, name=var)
 
     return quantities
 
@@ -95,7 +120,8 @@ def read_raw_mipas_data(identifier: str) -> xr.Dataset:
     Parameters
     ----------
     identifier: str
-        Atmospheric profile identifier in [``"day"``].
+        Atmospheric profile identifier in [``"day"``, ``"equ"``, ``"extra"``,
+        ``"ngt"``, ``"sum"``, ``"win"``].
 
     Returns
     -------
