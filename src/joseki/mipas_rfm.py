@@ -8,9 +8,13 @@ from typing import List
 import numpy as np
 import requests
 import xarray as xr
+from scipy.constants import physical_constants
 
 from joseki import ureg
 from joseki.core import make_data_set
+
+# Boltzmann constant
+K = ureg.Quantity(*physical_constants["Boltzmann constant"][:2])
 
 
 def _parse_units(s: str) -> str:
@@ -72,6 +76,13 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
                 values += line.split()
         line = next(iterator)
 
+    # include last array of values before the '*END' line
+    quantity = ureg.Quantity(np.array(values, dtype=float), units)
+    if units == "ppmv":
+        quantities[var] = quantity.to("dimensionless")
+    else:
+        quantities[var] = quantity
+
     return quantities
 
 
@@ -91,14 +102,18 @@ def read_raw_mipas_data(identifier: str) -> xr.Dataset:
     :class:`~xarray.Dataset`
         Atmospheric profile.
     """
-    response = requests.get("http://eodg.atm.ox.ac.uk/RFM/atm/{identifier}.atm")
+    response = requests.get(f"http://eodg.atm.ox.ac.uk/RFM/atm/{identifier}.atm")
     quantities = _parse_content(response.text.splitlines())
     z_level = quantities.pop("z_level")
     p = quantities.pop("p")
     t = quantities.pop("t")
-    species = list(quantities.keys())
+    species = np.array(list(quantities.keys()))
     mr = np.array([quantities[s].magnitude for s in species])
+
+    # compute air number density using perfect gas equation:
+    n = p / (K * t)
+
     ds: xr.Dataset = make_data_set(
-        p=p, t=t, n=None, mr=mr, z_level=z_level, species=species
+        p=p, t=t, n=n, mr=mr, z_level=z_level, species=species
     )
     return ds
