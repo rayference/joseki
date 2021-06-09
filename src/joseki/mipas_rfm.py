@@ -111,7 +111,7 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
     return quantities
 
 
-def read_raw_mipas_data(identifier: str) -> xr.Dataset:
+def read_raw_data(identifier: str) -> xr.Dataset:
     """Read the raw MIPAS reference atmosphere data files.
 
     The data files were downloaded from http://eodg.atm.ox.ac.uk/RFM/atm/ on

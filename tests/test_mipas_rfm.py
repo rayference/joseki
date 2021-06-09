@@ -132,14 +132,14 @@ def test_parse_content_2() -> None:
     assert isinstance(output, dict)
 
 
-def test_read_mipas_data() -> None:
+def test_read_raw_data() -> None:
     """Returns a :class:`~xarray.Dataset`."""
-    ds = mipas_rfm.read_raw_mipas_data(identifier="day")
+    ds = mipas_rfm.read_raw_data(identifier="day")
     assert isinstance(ds, xr.Dataset)
 
 
-def test_read_mipas_data_identifier() -> None:
+def test_read_raw_data_identifier() -> None:
     """Returns a :class:`~xarray.Dataset` for all identifier values."""
     for identifier in ["day", "equ", "ngt", "sum", "win"]:
-        ds = mipas_rfm.read_raw_mipas_data(identifier=identifier)
+        ds = mipas_rfm.read_raw_data(identifier=identifier)
         assert isinstance(ds, xr.Dataset)
