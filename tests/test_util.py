@@ -41,3 +41,14 @@ def test_to_quantity_raises(dataset: xr.Dataset) -> None:
     """Raises when the DataArray's metadata does not contain a units field."""
     with pytest.raises(ValueError):
         util.to_quantity(dataset.y)
+
+
+def test_translate_cfc() -> None:
+    """Converts F13 into CClF3."""
+    assert util.translate_cfc("F13") == "CClF3"
+
+
+def test_translate_cfc_unknown() -> None:
+    """Raises when CFC name is unknown."""
+    with pytest.raises(ValueError):
+        util.translate_cfc("unknown_cfc")

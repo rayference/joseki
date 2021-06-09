@@ -54,3 +54,39 @@ def to_quantity(da: xr.DataArray) -> pint.Quantity:
         raise ValueError("this DataArray has no 'units' metadata field") from e
     else:
         return ureg.Quantity(da.values, units)
+
+
+CFC_FORMULAE = {
+    "CCl3F": ("Freon-11", "F11", "R-11", "CFC-11"),
+    "CCl2F2": ("Freon-12", "F12", "R-12", "CFC-12"),
+    "CClF3": ("Freon-13", "F13", "R-13", "CFC-13"),
+    "CF4": ("Freon-14", "F4", "CFC-14"),
+    "CHClF2": ("Freon-22", "F22", "HCFC-22"),
+    "CHCl2F": ("Freon-21", "F21", "HCFC-21"),
+    "C2Cl3F3": ("Freon-113", "F113", "CFC-113"),
+    "C2Cl2F4": ("Freon-114", "F114", "CFC-114"),
+}
+
+
+def translate_cfc(name: str) -> str:
+    """Convert chlorofulorocarbon name to corresponding chemical formula.
+
+    Parameters
+    ----------
+    name: str
+        Chlorofulorocarbon name.
+
+    Returns
+    -------
+    str:
+        Chlorofulorocarbon chemical formula.
+
+    Raises
+    ------
+    ValueError:
+        If the chlorofulorocarbon is unknown.
+    """
+    for formula, names in CFC_FORMULAE.items():
+        if name in names:
+            return formula
+    raise ValueError(f"Unknown name {name}")
