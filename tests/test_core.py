@@ -32,10 +32,12 @@ def test_set_main_coord_to_layer_altitude() -> None:
 
 
 def test_set_main_coord_to_layer_altitude_coords() -> None:
-    """'z_layer' is a dimension coord and 'z_level' is not."""
+    """'z_layer' and 'z_layer_bounds' are both coordinates but first is dim."""
     ds = afgl_1986.read(name="tropical")
     interpolated = core.set_main_coord_to_layer_altitude(ds)
-    assert "z_layer" in interpolated.dims and "z_level" not in interpolated.dims
+    for coord in ["z_layer", "z_layer_bounds"]:
+        assert coord in interpolated.coords
+    assert "z_layer" in interpolated.dims and "z_layer_bounds" not in interpolated.dims
 
 
 def test_make() -> None:

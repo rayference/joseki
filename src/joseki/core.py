@@ -101,8 +101,8 @@ def set_main_coord_to_layer_altitude(
 
     For an atmospheric profile with level altitude as the main coordinate,
     compute the corresponding layer altitude mesh and interpolate the
-    data variables onto that layer altitude mesh. The level altitude coordinate
-    is preserved but is not a dimension coordinate anymore.
+    data variables onto that layer altitude mesh.
+    A z_layer_bounds coordinate is added to indicate the position of each layer.
 
     Parameters
     ----------
@@ -150,13 +150,21 @@ def set_main_coord_to_layer_altitude(
         units="km",
     )
 
-    # Re-insert z_level (non-dimension) coordinate
-    interpolated.coords["z_level"] = (
-        "z_levelc",
-        z_level.m_as("km"),
+    # Add layer boundaries info
+    interval_dtype = np.dtype([("start", float), ("stop", float)])
+    z_layer_bounds = np.array(
+        [
+            (start, stop)
+            for start, stop in zip(z_level.m_as("km")[:-1], z_level.m_as("km")[1:])
+        ],
+        dtype=interval_dtype,
+    )
+    interpolated.coords["z_layer_bounds"] = (
+        "z_layer",
+        z_layer_bounds,
         dict(
-            standard_name="level_altitude",
-            long_name="level altitude",
+            standard_name="layer_bounds_altitudes",
+            long_name="layer bounds altitudes",
             units="km",
         ),
     )
