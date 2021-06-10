@@ -201,7 +201,20 @@ CFC_FORMULAE = {
 
 
 def to_chemical_formula(name: str) -> str:
-    """Convert to chemical formula."""
+    """Convert to chemical formula.
+
+    If molecule name is unknown, returns name unchanged.
+
+    Parameters
+    ----------
+    name: str
+        Molecule name.
+
+    Returns
+    -------
+    str:
+        Molecule formula.
+    """
     try:
         return translate_cfc(name)
     except ValueError:
