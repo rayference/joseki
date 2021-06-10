@@ -156,11 +156,15 @@ def read(name: str) -> xr.Dataset:
     n = p / (K * t)
 
     translate = {
-        "win": "polar winter",
-        "sum": "polar summer",
-        "day": "mid-latitude (day)",
-        "ngt": "mid-latitude (night)",
-        "equ": "tropical",
+        "win": "MIPAS (2001) polar winter",
+        "sum": "MIPAS (2001) polar summer",
+        "day": "MIPAS (2001) mid-latitude daytime",
+        "ngt": "MIPAS (2001) mid-latitude nighttime",
+        "equ": "MIPAS (2001) equatorial",
+        "day_imk": "MIPAS (1998) mid-latitude daytime",
+        "ngt_imk": "MIPAS (1998) mid-latitude nighttime",
+        "sum_imk": "MIPAS (1998) polar summer",
+        "win_imk": "MIPAS (1998) polar winter",
     }
 
     ds: xr.Dataset = util.make_data_set(
