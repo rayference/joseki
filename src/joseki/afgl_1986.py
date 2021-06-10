@@ -17,20 +17,20 @@ TABLE_2_DATA_FILES = (
 )
 
 DATA_FILES = {
-    "afgl_1986-tropical": ("table_1a.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-midlatitude_summer": ("table_1b.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-midlatitude_winter": ("table_1c.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-subarctic_summer": ("table_1d.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-subarctic_winter": ("table_1e.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-us_standard": ("table_1f.csv", *TABLE_2_DATA_FILES),
+    "tropical": ("table_1a.csv", *TABLE_2_DATA_FILES),
+    "midlatitude_summer": ("table_1b.csv", *TABLE_2_DATA_FILES),
+    "midlatitude_winter": ("table_1c.csv", *TABLE_2_DATA_FILES),
+    "subarctic_summer": ("table_1d.csv", *TABLE_2_DATA_FILES),
+    "subarctic_winter": ("table_1e.csv", *TABLE_2_DATA_FILES),
+    "us_standard": ("table_1f.csv", *TABLE_2_DATA_FILES),
 }
 
 
-def parse(identifier: str) -> pd.DataFrame:
-    """Parse table data files for a given atmospheric profile identifier.
+def parse(name: str) -> pd.DataFrame:
+    """Parse table data files for a given atmospheric profile.
 
-    Read the relevant raw data files corresponding to the atmospheric profile
-    identifier. These raw data files correspond to tables 1 and 2 from the
+    Read the relevant raw data files corresponding to the atmospheric profile.
+    These raw data files correspond to tables 1 and 2 from the
     technical report *AFGL Atmospheric Constituent Profiles (0-120 km)*,
     Anderson et al., 1986
     :cite:`Anderson1986AtmosphericConstituentProfiles`.
@@ -42,11 +42,11 @@ def parse(identifier: str) -> pd.DataFrame:
 
     Parameters
     ----------
-    identifier: str
-        Atmospheric profile identifier in [``"afgl_1986-tropical"``,
-        ``"afgl_1986-midlatitude_summer"``, ``"afgl_1986-midlatitude_winter"``,
-        ``"afgl_1986-subarctic_summer"``, ``"afgl_1986-subarctic_winter"``,
-        ``"afgl_1986-us_standard"``].
+    name: str
+        Atmospheric profile name in [``"tropical"``,
+        ``"midlatitude_summer"``, ``"midlatitude_winter"``,
+        ``"subarctic_summer"``, ``"subarctic_winter"``,
+        ``"us_standard"``].
 
     Returns
     -------
@@ -56,16 +56,16 @@ def parse(identifier: str) -> pd.DataFrame:
     Raises
     ------
     ValueError
-        If ``identifier`` is invalid.
+        If ``name`` is invalid.
     """
     try:
-        files = DATA_FILES[identifier]
+        files = DATA_FILES[name]
     except KeyError:
         raise ValueError(
-            f"identifier must be either 'afgl_1986-tropical', "
-            f"'afgl_1986-midlatitude_summer', 'afgl_1986-midlatitude_winter', "
-            f"'afgl_1986-subarctic_summer', 'afgl_1986-subarctic_winter', "
-            f"or 'afgl_1986-us_standard' (got {identifier})"
+            f"'name' must be either 'tropical', "
+            f"'midlatitude_summer', 'midlatitude_winter', "
+            f"'subarctic_summer', 'subarctic_winter', "
+            f"or 'us_standard' (got {name})"
         )
     dataframes = []
     for file in files:
@@ -133,23 +133,23 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
     return ds
 
 
-def read(identifier: str) -> xr.Dataset:
+def read(name: str) -> xr.Dataset:
     """Read data files for a given atmospheric profile.
 
     Chain calls to :meth:`parse` and :meth:`to_xarray`.
 
     Parameters
     ----------
-    identifier: str
-        Atmospheric profile identifier in [``"afgl_1986-tropical"``,
-        ``"afgl_1986-midlatitude_summer"``, ``"afgl_1986-midlatitude_winter"``,
-        ``"afgl_1986-subarctic_summer"``, ``"afgl_1986-subarctic_winter"``,
-        ``"afgl_1986-us_standard"``].
+    name: str
+        Atmospheric profile name in [``"tropical"``,
+        ``"midlatitude_summer"``, ``"midlatitude_winter"``,
+        ``"subarctic_summer"``, ``"subarctic_winter"``,
+        ``"us_standard"``].
 
     Returns
     -------
     :class:`~xarray.Dataset`
         Atmospheric profile data set.
     """
-    df = parse(identifier=identifier)
+    df = parse(name=name)
     return to_xarray(df)

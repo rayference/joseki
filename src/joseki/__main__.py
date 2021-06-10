@@ -9,6 +9,13 @@ from .core import make
 
 @click.command()
 @click.option(
+    "--file-name",
+    "-f",
+    help="Output file name.",
+    default="ds.nc",
+    type=click.Path(writable=True),
+)
+@click.option(
     "--identifier",
     "-i",
     help="Atmospheric profile identifier.",
@@ -24,13 +31,6 @@ from .core import make
         ],
         case_sensitive=True,
     ),
-)
-@click.option(
-    "--file-name",
-    "-f",
-    help="Output file name.",
-    default="ds.nc",
-    type=click.Path(writable=True),
 )
 @click.option(
     "--level-altitudes",

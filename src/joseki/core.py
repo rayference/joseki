@@ -339,8 +339,17 @@ def make(
     -------
     :class:`~xarray.Dataset`
         Atmospheric profile.
+
+    Raises
+    ------
+    ValueError:
+        If atmospheric profile set is unknown.
     """
-    ds = afgl_1986.read(identifier=identifier)
+    group, name = identifier.split("-")
+    if group == "afgl_1986":
+        ds = afgl_1986.read(name=name)
+    else:
+        raise ValueError("Invalid identifier '{identifier}': unknown group '{group}'")
 
     if level_altitudes is not None:
         z_level = np.loadtxt(fname=level_altitudes, dtype=float, comments="#")
