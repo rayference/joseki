@@ -1,5 +1,6 @@
 """Test cases for the mipas_rfm module."""
 import pytest
+import requests
 import xarray as xr
 
 from joseki import mipas_rfm
@@ -143,3 +144,17 @@ def test_read_raw_data_identifier() -> None:
     for identifier in ["day", "equ", "ngt", "sum", "win"]:
         ds = mipas_rfm.read_raw_data(identifier=identifier)
         assert isinstance(ds, xr.Dataset)
+
+
+class MockConnectionError:
+    """ConnectionError mock."""
+
+    def __init__(self, *args, **kwargs):
+        raise requests.exceptions.ConnectionError
+
+
+def test_read_raw_data_connection_error(monkeypatch) -> None:
+    """Reads archived raw data files if connection error occurs."""
+    monkeypatch.setattr("requests.get", MockConnectionError)
+    ds = mipas_rfm.read_raw_data(identifier="day")
+    assert isinstance(ds, xr.Dataset)

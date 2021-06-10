@@ -2,6 +2,7 @@
 
 Data are provided by RFM (http://eodg.atm.ox.ac.uk/RFM/).
 """
+import importlib.resources as pkg_resources
 from typing import Dict
 from typing import List
 from typing import Tuple
@@ -11,6 +12,7 @@ import requests
 import xarray as xr
 from scipy.constants import physical_constants
 
+from .data import rfm
 from joseki import ureg
 from joseki.core import make_data_set
 
@@ -112,10 +114,12 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
 
 
 def read_raw_data(identifier: str) -> xr.Dataset:
-    """Read the raw MIPAS reference atmosphere data files.
+    """Read the raw MIPAS reference atmosphere data files as provided by RFM.
 
-    The data files were downloaded from http://eodg.atm.ox.ac.uk/RFM/atm/ on
-    June 6th, 2021.
+    Try to read the raw data from http://eodg.atm.ox.ac.uk/RFM/atm/
+    If that fails, reads archived raw data files.
+    The archived raw data files were downloaded from
+    http://eodg.atm.ox.ac.uk/RFM/atm/ on June 6th, 2021.
 
     Parameters
     ----------
@@ -128,8 +132,16 @@ def read_raw_data(identifier: str) -> xr.Dataset:
     :class:`~xarray.Dataset`
         Atmospheric profile.
     """
-    response = requests.get(f"http://eodg.atm.ox.ac.uk/RFM/atm/{identifier}.atm")
-    quantities = _parse_content(response.text.splitlines())
+    try:
+        response = requests.get(f"http://eodg.atm.ox.ac.uk/RFM/atm/{identifier}.atm")
+        content = response.text
+    except requests.ConnectionError:
+        file = f"{identifier}.atm"
+        with pkg_resources.path(rfm, file) as path:
+            with open(path, "r") as f:
+                content = f.read()
+
+    quantities = _parse_content(content.splitlines())
     z_level = quantities.pop("z_level")
     p = quantities.pop("p")
     t = quantities.pop("t")
