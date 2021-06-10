@@ -1,4 +1,6 @@
 """Test cases for the mipas_rfm module."""
+from typing import Any
+
 import pytest
 import requests
 import xarray as xr
@@ -36,14 +38,14 @@ def test_parse_var_line_2_parts() -> None:
     """Parse 2-part line."""
     s = "*VAR_NAME [VAR_UNITS]"
     var_name, var_units = mipas_rfm._parse_var_line(s)
-    assert var_name, var_units == ("VAR_NAME", "VAR_UNITS")
+    assert var_name == "VAR_NAME" and var_units == "VAR_UNITS"
 
 
 def test_parse_var_line_3_parts() -> None:
     """Parse 3-part line."""
     s = "*VAR_NAME (ALIAS) [VAR_UNITS]"
     var_name, var_units = mipas_rfm._parse_var_line(s)
-    assert var_name, var_units == ("VAR_NAME", "VAR_UNITS")
+    assert var_name == "VAR_NAME" and var_units == "VAR_UNITS"
 
 
 def test_parse_var_line_invalid() -> None:
@@ -149,11 +151,11 @@ def test_read_raw_data_identifier() -> None:
 class MockConnectionError:
     """ConnectionError mock."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         raise requests.exceptions.ConnectionError
 
 
-def test_read_raw_data_connection_error(monkeypatch) -> None:
+def test_read_raw_data_connection_error(monkeypatch: pytest.MonkeyPatch) -> None:
     """Reads archived raw data files if connection error occurs."""
     monkeypatch.setattr("requests.get", MockConnectionError)
     ds = mipas_rfm.read_raw_data(identifier="day")

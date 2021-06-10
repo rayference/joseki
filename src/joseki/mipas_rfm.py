@@ -41,7 +41,7 @@ def _parse_var_name(n: str) -> str:
         return n
 
 
-def _parse_var_line(s: str) -> Tuple[str]:
+def _parse_var_line(s: str) -> Tuple[str, str]:
     """Parse a line with the declaration of a variable and its units."""
     parts = s[1:].strip().split()
     if len(parts) == 2:
@@ -73,7 +73,7 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
 
     quantities: Dict[str, ureg.Quantity] = {}
 
-    def _add_to_quantities(quantity, name):
+    def _add_to_quantities(quantity: ureg.Quantity, name: str) -> None:
         if quantity.units == "ppmv":
             quantities[name] = quantity.to("dimensionless")
         else:
