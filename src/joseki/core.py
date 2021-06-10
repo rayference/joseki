@@ -11,25 +11,25 @@ import pint
 import xarray as xr
 from scipy import interpolate
 
-from . import data
+from .data import afgl_1986
 from .util import add_comment
 from .util import to_quantity
 from joseki import ureg
 
 
 TABLE_2_DATA_FILES = (
-    "afgl_1986-table_2a.csv",
-    "afgl_1986-table_2b.csv",
-    "afgl_1986-table_2c.csv",
-    "afgl_1986-table_2d.csv",
+    "table_2a.csv",
+    "table_2b.csv",
+    "table_2c.csv",
+    "table_2d.csv",
 )
 DATA_FILES = {
-    "afgl_1986-tropical": ("afgl_1986-table_1a.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-midlatitude_summer": ("afgl_1986-table_1b.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-midlatitude_winter": ("afgl_1986-table_1c.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-subarctic_summer": ("afgl_1986-table_1d.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-subarctic_winter": ("afgl_1986-table_1e.csv", *TABLE_2_DATA_FILES),
-    "afgl_1986-us_standard": ("afgl_1986-table_1f.csv", *TABLE_2_DATA_FILES),
+    "afgl_1986-tropical": ("table_1a.csv", *TABLE_2_DATA_FILES),
+    "afgl_1986-midlatitude_summer": ("table_1b.csv", *TABLE_2_DATA_FILES),
+    "afgl_1986-midlatitude_winter": ("table_1c.csv", *TABLE_2_DATA_FILES),
+    "afgl_1986-subarctic_summer": ("table_1d.csv", *TABLE_2_DATA_FILES),
+    "afgl_1986-subarctic_winter": ("table_1e.csv", *TABLE_2_DATA_FILES),
+    "afgl_1986-us_standard": ("table_1f.csv", *TABLE_2_DATA_FILES),
 }
 
 
@@ -87,7 +87,7 @@ def read_raw_data(identifier: str) -> pd.DataFrame:
         )
     dataframes = []
     for file in files:
-        with pkg_resources.path(data, file) as path:
+        with pkg_resources.path(afgl_1986, file) as path:
             dataframes.append(pd.read_csv(path))
     dataframes[1] = dataframes[1].drop(["H2O", "O3", "N2O", "CO", "CH4"], axis=1)
     for i in range(1, 5):
