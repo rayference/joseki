@@ -43,6 +43,11 @@ def test_make() -> None:
     assert isinstance(core.make(identifier="afgl_1986-tropical"), xr.Dataset)
 
 
+def test_make_mipas_rfm_day() -> None:
+    """."""
+    assert isinstance(core.make(identifier="mipas_rfm-day"), xr.Dataset)
+
+
 def test_make_invalid_identifier() -> None:
     """Raises if identifier is invalid."""
     with pytest.raises(ValueError):

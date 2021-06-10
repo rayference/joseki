@@ -14,7 +14,11 @@ from scipy.constants import physical_constants
 
 from .data import rfm
 from joseki import ureg
-from joseki.core import make_data_set
+from joseki import util
+
+SOURCE = "Unknown"
+
+REFERENCE = "Unknown"
 
 # Boltzmann constant
 K = ureg.Quantity(*physical_constants["Boltzmann constant"][:2])
@@ -151,7 +155,23 @@ def read(name: str) -> xr.Dataset:
     # compute air number density using perfect gas equation:
     n = p / (K * t)
 
-    ds: xr.Dataset = make_data_set(
-        p=p, t=t, n=n, mr=mr, z_level=z_level, species=species
+    translate = {
+        "win": "polar winter",
+        "sum": "polar summer",
+        "day": "mid-latitude (day)",
+        "ngt": "mid-latitude (night)",
+        "equ": "tropical",
+    }
+
+    ds: xr.Dataset = util.make_data_set(
+        p=p,
+        t=t,
+        n=n,
+        mr=mr,
+        z_level=z_level,
+        species=species,
+        title=f"MIPAS RFM {translate[name]} atmospheric profile",
+        source=SOURCE,
+        references=REFERENCE,
     )
     return ds

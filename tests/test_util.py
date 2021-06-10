@@ -19,19 +19,6 @@ def dataset() -> xr.Dataset:
     )
 
 
-def test_add_comment(dataset: xr.Dataset) -> None:
-    """Adds comment to a data set."""
-    util.add_comment(ds=dataset, comment="hello")
-    assert dataset.attrs["comment"] == "hello"
-
-
-def test_add_comment_append(dataset: xr.Dataset) -> None:
-    """Appends comment to pre-existing comments."""
-    dataset.attrs["comment"] = "hello"
-    util.add_comment(ds=dataset, comment="world")
-    assert dataset.attrs["comment"] == "hello\nworld"
-
-
 def test_to_quantity(dataset: xr.Dataset) -> None:
     """Returns a quantity."""
     assert isinstance(util.to_quantity(dataset.x), pint.Quantity)

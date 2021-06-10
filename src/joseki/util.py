@@ -1,29 +1,161 @@
 """Utility module."""
+import datetime
+from typing import Optional
+from typing import Union
+
+import numpy as np
 import pint
 import xarray as xr
 
 from joseki import ureg
 
 
-def add_comment(ds: xr.Dataset, comment: str) -> None:
-    """Add a comment to a :class:`~xarray.Dataset`'s ``attrs``.
-
-    If a comment already exists, the new comment is appended to the previous
-    comments.
+@ureg.wraps(
+    ret=None,
+    args=("Pa", "K", "m^-3", "", "km", "", None, None, None, None, None, None, None),
+    strict=False,
+)
+def make_data_set(
+    p: Union[pint.Quantity, np.ndarray],
+    t: Union[pint.Quantity, np.ndarray],
+    n: Union[pint.Quantity, np.ndarray],
+    mr: Union[pint.Quantity, np.ndarray],
+    z_level: Union[pint.Quantity, np.ndarray],
+    species: Union[pint.Quantity, np.ndarray],
+    convention: str = "CF-1.8",
+    title: str = "unknown",
+    history: Optional[str] = None,
+    func_name: str = "unknown",
+    operation: str = "unknown",
+    source: str = "unknown",
+    references: str = "unknown",
+) -> xr.Dataset:
+    """Make an atmospheric profile data set.
 
     Parameters
     ----------
-    ds: :class:`xarray.Dataset`
-        Data set.
+    p: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Pressure [Pa].
 
-    comment: str
-        Comment to add.
+    t: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Temperature [K].
+
+    n: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Number density [m^-3].
+
+    mr: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Volume mixing ratios [/].
+
+    z_level: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Level altitude [km].
+
+    species: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Species [/].
+
+    convention: str
+        Metadata convention.
+
+    title: str
+        A succinct description of what is in the dataset.
+
+    history: str, optional
+        Provides an audit trail for modifications to the original data.
+
+    func_name: str
+        Name of the calling function.
+
+    operation: str
+        Name of the operation performed on the data set.
+
+    source: str
+        The method of production of the original data.
+
+    references: str
+        Published or web-based references that describe the data or methods
+        used to produce it.
+
+    Returns
+    -------
+    :class:`~xarray.Dataset`
+        Atmospheric profile.
     """
-    try:
-        previous_comment = ds.attrs["comment"]
-        ds.attrs.update(dict(comment=f"{previous_comment}\n{comment}"))
-    except KeyError:
-        ds.attrs.update(dict(comment=comment))
+    if history is None:
+        history = (
+            f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            f"- {operation} - {func_name}\n"
+        )
+    else:
+        history += (
+            f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
+            f"- {operation} - {func_name}"
+        )
+    return xr.Dataset(
+        data_vars=dict(
+            p=(
+                "z_level",
+                p,
+                dict(
+                    standard_name="air_pressure",
+                    long_name="air pressure",
+                    units="Pa",
+                ),
+            ),
+            t=(
+                "z_level",
+                t,
+                dict(
+                    standard_name="air_temperature",
+                    long_name="air temperature",
+                    units="K",
+                ),
+            ),
+            n=(
+                "z_level",
+                n,
+                dict(
+                    standard_name="air_number_density",
+                    long_name="air number density",
+                    units="m^-3",
+                ),
+            ),
+            mr=(
+                ("species", "z_level"),
+                mr,
+                dict(
+                    standard_name="mixing_ratio",
+                    long_name="mixing ratio",
+                    units="",
+                ),
+            ),
+        ),
+        coords=dict(
+            z_level=(
+                "z_level",
+                z_level,
+                dict(
+                    standard_name="level_altitude",
+                    long_name="level altitude",
+                    units="km",
+                ),
+            ),
+            species=(
+                "species",
+                species,
+                dict(
+                    standard_name="species",
+                    long_name="species",
+                    units="",
+                ),
+            ),
+        ),
+        attrs=dict(
+            convention=convention,
+            title=title,
+            history=history,
+            source=source,
+            references=references,
+        ),
+    )
 
 
 def to_quantity(da: xr.DataArray) -> pint.Quantity:

@@ -9,127 +9,11 @@ import pint
 import xarray as xr
 from scipy import interpolate
 
-from .util import add_comment
 from .util import to_quantity
 from joseki import afgl_1986
+from joseki import mipas_rfm
 from joseki import ureg
-
-
-@ureg.wraps(ret=None, args=("Pa", "K", "m^-3", "", "km", ""), strict=False)
-def make_data_set(
-    p: Union[pint.Quantity, np.ndarray],
-    t: Union[pint.Quantity, np.ndarray],
-    n: Union[pint.Quantity, np.ndarray],
-    mr: Union[pint.Quantity, np.ndarray],
-    z_level: Union[pint.Quantity, np.ndarray],
-    species: Union[pint.Quantity, np.ndarray],
-) -> xr.Dataset:
-    """Make an atmospheric profile data set.
-
-    Parameters
-    ----------
-    p: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Pressure [Pa].
-
-    t: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Temperature [K].
-
-    n: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Number density [m^-3].
-
-    mr: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Volume mixing ratios [/].
-
-    z_level: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Level altitude [km].
-
-    species: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Species [/].
-
-    Returns
-    -------
-    :class:`~xarray.Dataset`
-        Atmospheric profile.
-    """
-    return xr.Dataset(
-        data_vars=dict(
-            p=(
-                "z_level",
-                p,
-                dict(
-                    standard_name="air_pressure",
-                    long_name="air pressure",
-                    units="Pa",
-                ),
-            ),
-            t=(
-                "z_level",
-                t,
-                dict(
-                    standard_name="air_temperature",
-                    long_name="air temperature",
-                    units="K",
-                ),
-            ),
-            n=(
-                "z_level",
-                n,
-                dict(
-                    standard_name="air_number_density",
-                    long_name="air number density",
-                    units="m^-3",
-                ),
-            ),
-            mr=(
-                ("species", "z_level"),
-                mr,
-                dict(
-                    standard_name="mixing_ratio",
-                    long_name="mixing ratio",
-                    units="",
-                ),
-            ),
-        ),
-        coords=dict(
-            z_level=(
-                "z_level",
-                z_level,
-                dict(
-                    standard_name="level_altitude",
-                    long_name="level altitude",
-                    units="km",
-                ),
-            ),
-            species=(
-                "species",
-                species,
-                dict(
-                    standard_name="species",
-                    long_name="species",
-                    units="",
-                ),
-            ),
-        ),
-        attrs=dict(
-            convention="CF-1.8",
-            title="Atmospheric thermophysical properties profile",
-            history=(
-                f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-                "- data set creation - joseki.core.make_data_set"
-            ),
-            source=(
-                "Atmospheric model (U.S. Standard Atmosphere) adapted from "
-                "satellite data and/or dynamical-photochemical analyses."
-            ),
-            references=(
-                "Anderson, G.P. and Chetwynd J.H. and Clough S.A. and "
-                "Shettle E.P. and Kneizys F.X., AFGL Atmospheric "
-                "Constituent Profiles (0-120km), 1986, Air Force "
-                "Geophysics Laboratory, AFGL-TR-86-0110, "
-                "https://ui.adsabs.harvard.edu/abs/1986afgl.rept.....A/abstract"
-            ),
-        ),
-    )
+from joseki import util
 
 
 @ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
@@ -192,21 +76,16 @@ def interp(
     )
 
     # Reform data set
-    interpolated: xr.Dataset = make_data_set(
+    interpolated: xr.Dataset = util.make_data_set(
         p=p_new,
         t=t_new,
         n=n_new,
         mr=mr_new.values,
         z_level=z_level_new,
         species=ds.species.values,
-    )
-
-    add_comment(
-        ds=interpolated,
-        comment=(
-            f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
-            "- data set interpolation - joseki.core.interp"
-        ),
+        func_name="joseki.core.interp",
+        operation="data set interpolation",
+        **ds.attrs,
     )
     return interpolated
 
@@ -274,7 +153,7 @@ def set_main_coord_to_layer_altitude(
     # Re-insert z_level (non-dimension) coordinate
     interpolated.coords["z_level"] = (
         "z_levelc",
-        z_level,
+        z_level.m_as("km"),
         dict(
             standard_name="level_altitude",
             long_name="level altitude",
@@ -282,13 +161,10 @@ def set_main_coord_to_layer_altitude(
         ),
     )
 
-    # Update metadata
-    add_comment(
-        ds=interpolated,
-        comment=(
-            f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
-            "- data set coords update - joseki.core.set_main_coord_to_layer_altitude"
-        ),
+    interpolated.attrs.update(
+        history=interpolated.history
+        + f"\n{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
+        "- data set coords update - joseki.core.set_main_coord_to_layer_altitude"
     )
 
     return interpolated
@@ -348,6 +224,8 @@ def make(
     group, name = identifier.split("-")
     if group == "afgl_1986":
         ds = afgl_1986.read(name=name)
+    elif group == "mipas_rfm":
+        ds = mipas_rfm.read(name=name)
     else:
         raise ValueError("Invalid identifier '{identifier}': unknown group '{group}'")
 

@@ -6,8 +6,21 @@ import pandas as pd
 import xarray as xr
 
 from .data import afgl_1986
-from joseki import core
 from joseki import ureg
+from joseki import util
+
+SOURCE = (
+    "Atmospheric model (U.S. Standard Atmosphere) adapted from "
+    "satellite data and/or dynamical-photochemical analyses."
+)
+
+REFERENCE = (
+    "Anderson, G.P. and Chetwynd J.H. and Clough S.A. and "
+    "Shettle E.P. and Kneizys F.X., AFGL Atmospheric "
+    "Constituent Profiles (0-120km), 1986, Air Force "
+    "Geophysics Laboratory, AFGL-TR-86-0110, "
+    "https://ui.adsabs.harvard.edu/abs/1986afgl.rept.....A/abstract"
+)
 
 TABLE_2_DATA_FILES = (
     "table_2a.csv",
@@ -78,7 +91,7 @@ def parse(name: str) -> pd.DataFrame:
     return pd.concat(dataframes, axis=1)
 
 
-def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
+def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
     """Convert :meth:`parse`'s output to a :class:`~xarray.Dataset`.
 
     Use the ``z`` column of the output pandas.DataFrame of read_raw_data
@@ -92,8 +105,17 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
 
     Parameters
     ----------
-    raw_data: :class:`~pandas.DataFrame`
+    df: :class:`~pandas.DataFrame`
         Atmospheric profile data.
+
+    name: str
+        Atmospheric profile name in [``"tropical"``,
+        ``"midlatitude_summer"``, ``"midlatitude_winter"``,
+        ``"subarctic_summer"``, ``"subarctic_winter"``,
+        ``"us_standard"``].
+
+    kwargs: str
+        Additional arguments passed to :meth:`util.make_data_set`.
 
     Returns
     -------
@@ -104,31 +126,40 @@ def to_xarray(raw_data: pd.DataFrame) -> xr.Dataset:
     # species labels correspond to column with upper case first letter in
     # raw data DataFrames
     species = []
-    for column in raw_data.columns:
+    for column in df.columns:
         if column[0].isupper():
             species.append(column)
 
     # level altitudes
-    z_level = ureg.Quantity(raw_data.z.values, "km")
+    z_level = ureg.Quantity(df.z.values, "km")
 
     # air pressures
-    p = ureg.Quantity(raw_data.p.values, "millibar").to("Pa")
+    p = ureg.Quantity(df.p.values, "millibar").to("Pa")
 
     # air temperatures
-    t = ureg.Quantity(raw_data.t.values, "K")
+    t = ureg.Quantity(df.t.values, "K")
 
     # air number density
-    n = ureg.Quantity(raw_data.n.values, "cm^-3").to("m^-3")
+    n = ureg.Quantity(df.n.values, "cm^-3").to("m^-3")
 
     # mixing ratios
     mr_values = []
     for s in species:
-        mrs = raw_data[s].values * 1e-6  # raw data mixing ratios are in ppmv
+        mrs = df[s].values * 1e-6  # raw data mixing ratios are in ppmv
         mr_values.append(mrs)
     mr = ureg.Quantity(np.array(mr_values), "")
 
-    ds: xr.Dataset = core.make_data_set(
-        p=p, t=t, n=n, mr=mr, z_level=z_level, species=np.array(species)
+    ds: xr.Dataset = util.make_data_set(
+        p=p,
+        t=t,
+        n=n,
+        mr=mr,
+        z_level=z_level,
+        species=np.array(species),
+        title=f"AFGL (1986) {name.replace('_', '-')} atmospheric profile",
+        source=SOURCE,
+        references=REFERENCE,
+        **kwargs,
     )
     return ds
 
@@ -152,4 +183,9 @@ def read(name: str) -> xr.Dataset:
         Atmospheric profile data set.
     """
     df = parse(name=name)
-    return to_xarray(df)
+    return to_xarray(
+        df=df,
+        name=name,
+        func_name="joseki.afgl_1986.read",
+        operation="data set creation",
+    )
