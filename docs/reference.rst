@@ -19,10 +19,10 @@ Reference
 .. automodule:: joseki.__main__
    :members:
 
-``mipas_rfm``
+``rfm``
 -------------
 
-.. automodule:: joseki.mipas_rfm
+.. automodule:: joseki.rfm
    :members:
 
 ``util``
