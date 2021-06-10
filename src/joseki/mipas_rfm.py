@@ -42,7 +42,7 @@ def _parse_var_name(n: str) -> str:
     if n in translate.keys():
         return translate[n]
     else:
-        return n
+        return util.to_chemical_formula(n)
 
 
 def _parse_var_line(s: str) -> Tuple[str, str]:

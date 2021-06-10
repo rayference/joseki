@@ -200,6 +200,14 @@ CFC_FORMULAE = {
 }
 
 
+def to_chemical_formula(name: str) -> str:
+    """Convert to chemical formula."""
+    try:
+        return translate_cfc(name)
+    except ValueError:
+        return name
+
+
 def translate_cfc(name: str) -> str:
     """Convert chlorofulorocarbon name to corresponding chemical formula.
 
@@ -216,9 +224,9 @@ def translate_cfc(name: str) -> str:
     Raises
     ------
     ValueError:
-        If the chlorofulorocarbon is unknown.
+        If the name does not match a known chlorofulorocarbon.
     """
     for formula, names in CFC_FORMULAE.items():
         if name in names:
             return formula
-    raise ValueError(f"Unknown name {name}")
+    raise ValueError("Unknown chlorofulorocarbon {name}")

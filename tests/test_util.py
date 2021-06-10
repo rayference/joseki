@@ -36,6 +36,16 @@ def test_translate_cfc() -> None:
 
 
 def test_translate_cfc_unknown() -> None:
-    """Raises when CFC name is unknown."""
+    """Raises when the chlorofulorocarbon is unknown."""
     with pytest.raises(ValueError):
-        util.translate_cfc("unknown_cfc")
+        util.translate_cfc("unknown")
+
+
+def test_to_chemical_formula_cfc() -> None:
+    """Converts a chlorofulorocarbon name to its chemical formula."""
+    assert util.to_chemical_formula("F13") == "CClF3"
+
+
+def test_to_chemical_formula_h2o() -> None:
+    """Returns non-chlorofulorocarbon name unchanged."""
+    assert util.to_chemical_formula("H2O") == "H2O"
