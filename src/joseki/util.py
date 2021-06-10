@@ -192,7 +192,7 @@ CFC_FORMULAE = {
     "CCl3F": ("Freon-11", "F11", "R-11", "CFC-11"),
     "CCl2F2": ("Freon-12", "F12", "R-12", "CFC-12"),
     "CClF3": ("Freon-13", "F13", "R-13", "CFC-13"),
-    "CF4": ("Freon-14", "F4", "CFC-14"),
+    "CF4": ("Freon-14", "F14", "CFC-14"),
     "CHClF2": ("Freon-22", "F22", "HCFC-22"),
     "CHCl2F": ("Freon-21", "F21", "HCFC-21"),
     "C2Cl3F3": ("Freon-113", "F113", "CFC-113"),
