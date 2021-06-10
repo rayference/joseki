@@ -1,6 +1,6 @@
-"""Module to read MIPAS atmospheric profiles.
+"""Module to read atmospheric profiles distributed with Reference Forward Model.
 
-Data are provided by RFM (http://eodg.atm.ox.ac.uk/RFM/).
+Reference Forward Model (RFM) website: http://eodg.atm.ox.ac.uk/RFM/.
 """
 import importlib.resources as pkg_resources
 from typing import Dict
@@ -118,7 +118,7 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
 
 
 def read(name: str) -> xr.Dataset:
-    """Read RFM MIPAS atmospheric data files.
+    """Read RFM atmospheric data files.
 
     Try to read the data from http://eodg.atm.ox.ac.uk/RFM/atm/
     If that fails, reads archived data files in ``src/joseki/data/rfm/``.
@@ -170,10 +170,10 @@ def read(name: str) -> xr.Dataset:
         mr=mr,
         z_level=z_level,
         species=species,
-        title=f"MIPAS RFM {translate[name]} atmospheric profile",
+        title=f"RFM {translate[name]} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,
-        func_name="joseki.mipas_rfm.read",
+        func_name="joseki.rfm.read",
         operation="data set creation",
     )
     return ds

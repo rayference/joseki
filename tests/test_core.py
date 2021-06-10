@@ -45,9 +45,9 @@ def test_make() -> None:
     assert isinstance(core.make(identifier="afgl_1986-tropical"), xr.Dataset)
 
 
-def test_make_mipas_rfm_day() -> None:
+def test_make_rfm_day() -> None:
     """."""
-    assert isinstance(core.make(identifier="mipas_rfm-day"), xr.Dataset)
+    assert isinstance(core.make(identifier="rfm-day"), xr.Dataset)
 
 
 def test_make_invalid_identifier() -> None:

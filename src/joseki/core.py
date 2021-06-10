@@ -11,7 +11,7 @@ from scipy import interpolate
 
 from .util import to_quantity
 from joseki import afgl_1986
-from joseki import mipas_rfm
+from joseki import rfm
 from joseki import ureg
 from joseki import util
 
@@ -232,8 +232,8 @@ def make(
     group, name = identifier.split("-")
     if group == "afgl_1986":
         ds = afgl_1986.read(name=name)
-    elif group == "mipas_rfm":
-        ds = mipas_rfm.read(name=name)
+    elif group == "rfm":
+        ds = rfm.read(name=name)
     else:
         raise ValueError("Invalid identifier '{identifier}': unknown group '{group}'")
 
