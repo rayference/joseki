@@ -14,7 +14,7 @@ def test_parse_returns_dataframe() -> None:
 
 def test_parse_identifier() -> None:
     """Handles all supported identifier values."""
-    for identifier in [
+    for name in [
         "tropical",
         "midlatitude_summer",
         "midlatitude_winter",
@@ -22,7 +22,7 @@ def test_parse_identifier() -> None:
         "subarctic_winter",
         "us_standard",
     ]:
-        afgl_1986.parse(name=identifier)
+        afgl_1986.parse(name=name)
 
 
 def test_parse_invalid_identifier() -> None:
@@ -39,7 +39,7 @@ def test_to_xarray_returns_dataset() -> None:
 
 def test_to_xarray_dataframes() -> None:
     """Handles all dataframes."""
-    for identifier in [
+    for name in [
         "tropical",
         "midlatitude_summer",
         "midlatitude_winter",
@@ -47,7 +47,7 @@ def test_to_xarray_dataframes() -> None:
         "subarctic_winter",
         "us_standard",
     ]:
-        df = afgl_1986.parse(name=identifier)
+        df = afgl_1986.parse(name=name)
         afgl_1986.to_xarray(df)
 
 

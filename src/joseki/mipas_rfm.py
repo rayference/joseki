@@ -113,7 +113,7 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
     return quantities
 
 
-def read(identifier: str) -> xr.Dataset:
+def read(name: str) -> xr.Dataset:
     """Read RFM MIPAS atmospheric data files.
 
     Try to read the data from http://eodg.atm.ox.ac.uk/RFM/atm/
@@ -123,8 +123,8 @@ def read(identifier: str) -> xr.Dataset:
 
     Parameters
     ----------
-    identifier: str
-        Atmospheric profile identifier in [``"day"``, ``"equ"``, ``"ngt"``,
+    name: str
+        Atmospheric profile name in [``"day"``, ``"equ"``, ``"ngt"``,
         ``"sum"``, ``"win"``].
 
     Returns
@@ -133,10 +133,10 @@ def read(identifier: str) -> xr.Dataset:
         Atmospheric profile.
     """
     try:
-        response = requests.get(f"http://eodg.atm.ox.ac.uk/RFM/atm/{identifier}.atm")
+        response = requests.get(f"http://eodg.atm.ox.ac.uk/RFM/atm/{name}.atm")
         content = response.text
     except requests.ConnectionError:
-        file = f"{identifier}.atm"
+        file = f"{name}.atm"
         with pkg_resources.path(rfm, file) as path:
             with open(path, "r") as f:
                 content = f.read()
