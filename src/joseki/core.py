@@ -340,7 +340,7 @@ def make(
     :class:`~xarray.Dataset`
         Atmospheric profile.
     """
-    ds = afgl_1986.read_raw_data_to_xarray(identifier=identifier)
+    ds = afgl_1986.read(identifier=identifier)
 
     if level_altitudes is not None:
         z_level = np.loadtxt(fname=level_altitudes, dtype=float, comments="#")
