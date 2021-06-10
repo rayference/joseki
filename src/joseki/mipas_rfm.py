@@ -173,5 +173,7 @@ def read(name: str) -> xr.Dataset:
         title=f"MIPAS RFM {translate[name]} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,
+        func_name="joseki.mipas_rfm.read",
+        operation="data set creation",
     )
     return ds
