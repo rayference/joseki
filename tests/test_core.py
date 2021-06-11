@@ -50,6 +50,56 @@ def test_make_rfm_day() -> None:
     assert isinstance(core.make(identifier="rfm-day"), xr.Dataset)
 
 
+def test_make_rfm_equ() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-equ"), xr.Dataset)
+
+
+def test_make_rfm_ngt() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-ngt"), xr.Dataset)
+
+
+def test_make_rfm_sum() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-sum"), xr.Dataset)
+
+
+def test_make_rfm_win() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-win"), xr.Dataset)
+
+
+def test_make_rfm_mls() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-mls"), xr.Dataset)
+
+
+def test_make_rfm_mlw() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-mlw"), xr.Dataset)
+
+
+def test_make_rfm_saw() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-saw"), xr.Dataset)
+
+
+def test_make_rfm_sas() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-sas"), xr.Dataset)
+
+
+def test_make_rfm_std() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-std"), xr.Dataset)
+
+
+def test_make_rfm_tro() -> None:
+    """."""
+    assert isinstance(core.make(identifier="rfm-tro"), xr.Dataset)
+
+
 def test_make_invalid_identifier() -> None:
     """Raises if identifier is invalid."""
     with pytest.raises(ValueError):
