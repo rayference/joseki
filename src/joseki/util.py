@@ -1,7 +1,9 @@
 """Utility module."""
 import datetime
+from typing import Any
+from typing import Dict
+from typing import Hashable
 from typing import Optional
-from typing import Tuple
 from typing import Union
 
 import numpy as np
@@ -28,6 +30,7 @@ from joseki import ureg
         None,
         None,
         None,
+        None,
     ),
     strict=False,
 )
@@ -45,7 +48,8 @@ def make_data_set(
     operation: str = "unknown",
     source: str = "unknown",
     references: str = "unknown",
-    url_info: Optional[Tuple[str]] = None,
+    url: Optional[str] = None,
+    url_date: Optional[str] = None,
 ) -> xr.Dataset:
     """Make an atmospheric profile data set.
 
@@ -91,8 +95,11 @@ def make_data_set(
         Published or web-based references that describe the data or methods
         used to produce it.
 
-    url_info: tuple of str, optional
-        Data URL, date and time of last access to URL.
+    url: str, optional
+        Data URL.
+
+    url_date: str, optional
+        Date and time of last access to URL.
 
     Returns
     -------
@@ -109,16 +116,17 @@ def make_data_set(
             f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
             f"- {operation} - {func_name}"
         )
-    attrs = dict(
+    attrs: Dict[Hashable, Any] = dict(
         convention=convention,
         title=title,
         history=history,
         source=source,
         references=references,
     )
-    if url_info is not None:
-        url, url_date = url_info
-        attrs.update(dict(url=url, url_date=url_date))
+    if url is not None:
+        attrs.update(dict(url=url))
+    if url_date is not None:
+        attrs.update(dict(url_date=url_date))
 
     return xr.Dataset(
         data_vars=dict(

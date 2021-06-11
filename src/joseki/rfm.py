@@ -8,7 +8,6 @@ from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Tuple
-from typing import Union
 
 import numpy as np
 import requests
@@ -138,7 +137,7 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
     return quantities
 
 
-def read_file_content(name: str) -> Tuple[str, Union[str, None], Union[str, None]]:
+def read_file_content(name: str) -> Tuple[str, Dict[str, str]]:
     """
     Read data file content.
 
@@ -157,20 +156,18 @@ def read_file_content(name: str) -> Tuple[str, Union[str, None], Union[str, None
         url_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         response = requests.get(url)
         content = response.text
+        return content, dict(url=url, url_date=url_date)
     except requests.ConnectionError:
-        url = None
-        url_date = None
         file = f"{name}.atm"
         with pkg_resources.path(rfm, file) as path:
             with open(path, "r") as f:
                 content = f.read()
-
-    return content, url, url_date
+        return content, dict()
 
 
 def read_additional_species(
     name: str,
-) -> Tuple[Dict[str, ureg.Quantity], str, str]:
+) -> Tuple[Dict[str, ureg.Quantity], Dict[str, str]]:
     """
     Read additional species data file.
 
@@ -184,8 +181,8 @@ def read_additional_species(
 
     Returns
     -------
-    tuple of dict of str and :class:`~pint.Quantity`, str and str:
-        Additional species parsed content, URL and URL date.
+    tuple of dict of str and :class:`~pint.Quantity` and dict of str and str:
+        Additional species parsed content, URL information.
 
     Raises
     ------
@@ -201,9 +198,9 @@ def read_additional_species(
     else:
         raise ValueError(f"invalid atmospheric profile name '{name}'")
 
-    content, url, url_date = read_file_content(name=add_species_name)
+    content, url_info = read_file_content(name=add_species_name)
     parsed_content = _parse_content(content.splitlines())
-    return parsed_content, url, url_date
+    return parsed_content, url_info
 
 
 def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
@@ -231,7 +228,9 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
     :class:`~xarray.Dataset`
         Atmospheric profile.
     """
-    content, url, url_date = read_file_content(name=name)
+    content, url_info = read_file_content(name=name)
+    url = url_info.get("url")
+    url_date = url_info.get("url_date")
     quantities = _parse_content(content.splitlines())
 
     z_level = quantities.pop("z_level")
@@ -242,7 +241,7 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
     mr = np.array([quantities[s].magnitude for s in species])
 
     if additional_species:
-        extra_quantities, extra_url, extra_url_date = read_additional_species(name=name)
+        extra_quantities, extra_url_info = read_additional_species(name=name)
         extra_z_level = extra_quantities.pop("z_level")
         extra_species = np.array(list(extra_quantities.keys()))
         extra_mr = np.array([extra_quantities[s].magnitude for s in extra_species])
@@ -287,6 +286,7 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
         title=f"RFM {DESCRIPTION[name]} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,
-        url_info=(url, url_date),
+        url=url,
+        url_date=url_date,
     )
     return ds
