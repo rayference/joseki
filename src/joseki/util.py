@@ -1,6 +1,7 @@
 """Utility module."""
 import datetime
 from typing import Optional
+from typing import Tuple
 from typing import Union
 
 import numpy as np
@@ -12,7 +13,22 @@ from joseki import ureg
 
 @ureg.wraps(
     ret=None,
-    args=("Pa", "K", "m^-3", "", "km", "", None, None, None, None, None, None, None),
+    args=(
+        "Pa",
+        "K",
+        "m^-3",
+        "",
+        "km",
+        "",
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+    ),
     strict=False,
 )
 def make_data_set(
@@ -29,6 +45,7 @@ def make_data_set(
     operation: str = "unknown",
     source: str = "unknown",
     references: str = "unknown",
+    url_info: Optional[Tuple[str]] = None,
 ) -> xr.Dataset:
     """Make an atmospheric profile data set.
 
@@ -74,6 +91,9 @@ def make_data_set(
         Published or web-based references that describe the data or methods
         used to produce it.
 
+    url_info: tuple of str, optional
+        Data URL, date and time of last access to URL.
+
     Returns
     -------
     :class:`~xarray.Dataset`
@@ -89,6 +109,16 @@ def make_data_set(
             f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
             f"- {operation} - {func_name}"
         )
+    attrs = dict(
+        convention=convention,
+        title=title,
+        history=history,
+        source=source,
+        references=references,
+    )
+    if url_info is not None:
+        url, url_date = url_info
+        attrs.update(dict(url=url, url_date=url_date))
     return xr.Dataset(
         data_vars=dict(
             p=(
@@ -148,13 +178,7 @@ def make_data_set(
                 ),
             ),
         ),
-        attrs=dict(
-            convention=convention,
-            title=title,
-            history=history,
-            source=source,
-            references=references,
-        ),
+        attrs=attrs,
     )
 
 

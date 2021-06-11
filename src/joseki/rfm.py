@@ -3,6 +3,7 @@
 Reference Forward Model (RFM) website: http://eodg.atm.ox.ac.uk/RFM/.
 """
 import importlib.resources as pkg_resources
+from datetime import datetime
 from typing import Dict
 from typing import List
 from typing import Tuple
@@ -16,9 +17,9 @@ from .data import rfm
 from joseki import ureg
 from joseki import util
 
-SOURCE = "Unknown"
+SOURCE = "unknown"
 
-REFERENCE = "Unknown"
+REFERENCE = "unknown"
 
 # Boltzmann constant
 K = ureg.Quantity(*physical_constants["Boltzmann constant"][:2])
@@ -139,9 +140,13 @@ def read(name: str) -> xr.Dataset:
         Atmospheric profile.
     """
     try:
-        response = requests.get(f"http://eodg.atm.ox.ac.uk/RFM/atm/{name}.atm")
+        url = f"http://eodg.atm.ox.ac.uk/RFM/atm/{name}.atm"
+        url_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        response = requests.get(url)
         content = response.text
     except requests.ConnectionError:
+        url = None
+        url_date = None
         file = f"{name}.atm"
         with pkg_resources.path(rfm, file) as path:
             with open(path, "r") as f:
@@ -183,9 +188,10 @@ def read(name: str) -> xr.Dataset:
         z_level=z_level,
         species=species,
         title=f"RFM {translate[name]} atmospheric profile",
-        source=SOURCE,
-        references=REFERENCE,
         func_name="joseki.rfm.read",
         operation="data set creation",
+        source=SOURCE,
+        references=REFERENCE,
+        url_info=(url, url_date),
     )
     return ds
