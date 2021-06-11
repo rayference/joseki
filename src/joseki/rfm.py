@@ -6,7 +6,9 @@ import importlib.resources as pkg_resources
 from datetime import datetime
 from typing import Dict
 from typing import List
+from typing import Optional
 from typing import Tuple
+from typing import Union
 
 import numpy as np
 import requests
@@ -20,6 +22,24 @@ from joseki import util
 SOURCE = "unknown"
 
 REFERENCE = "unknown"
+
+DESCRIPTION = {
+    "win": "MIPAS (2001) polar winter",
+    "sum": "MIPAS (2001) polar summer",
+    "day": "MIPAS (2001) mid-latitude daytime",
+    "ngt": "MIPAS (2001) mid-latitude nighttime",
+    "equ": "MIPAS (2001) equatorial",
+    "day_imk": "MIPAS (1998) mid-latitude daytime",
+    "ngt_imk": "MIPAS (1998) mid-latitude nighttime",
+    "sum_imk": "MIPAS (1998) polar summer",
+    "win_imk": "MIPAS (1998) polar winter",
+    "mls": "AFGL (1986) Mid-latitude summer",
+    "mlw": "AFGL (1986) Mid-latitude winter",
+    "sas": "AFGL (1986) Sub-arctic summer",
+    "saw": "AFGL (1986) Sub-arctic winter",
+    "std": "AFGL (1986) U.S. Standard",
+    "tro": "AFGL (1986) Tropical",
+}
 
 # Boltzmann constant
 K = ureg.Quantity(*physical_constants["Boltzmann constant"][:2])
@@ -118,7 +138,75 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
     return quantities
 
 
-def read(name: str) -> xr.Dataset:
+def read_file_content(name: str) -> Tuple[str, Union[str, None], Union[str, None]]:
+    """
+    Read data file content.
+
+    Parameters
+    ----------
+    name: str
+        Atmospheric data file name.
+
+    Returns
+    -------
+    tuple:
+        file content, URL, URL date.
+    """
+    try:
+        url = f"http://eodg.atm.ox.ac.uk/RFM/atm/{name}.atm"
+        url_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        response = requests.get(url)
+        content = response.text
+    except requests.ConnectionError:
+        url = None
+        url_date = None
+        file = f"{name}.atm"
+        with pkg_resources.path(rfm, file) as path:
+            with open(path, "r") as f:
+                content = f.read()
+
+    return content, url, url_date
+
+
+def read_additional_species(
+    name: str,
+) -> Tuple[Dict[str, ureg.Quantity], str, str]:
+    """
+    Read additional species data file.
+
+    Parameters
+    ----------
+    name: str
+        Atmospheric profile name in [``"day"``, ``"day_imk"``, ``"equ"``,
+        ``"ngt"``, ``"ngt_imk"``, ``"sum"``, ``"sum_imk"``, ``"win"``,
+        ``"win-imk"``, ``"mls"``, ``"mlw"``, ``"sas"``, ``"saw"``, ``"std"``,
+        ``"tro"``].
+
+    Returns
+    -------
+    tuple of dict of str and :class:`~pint.Quantity`, str and str:
+        Additional species parsed content, URL and URL date.
+
+    Raises
+    ------
+    ValueError
+        If ``name`` is invalid.
+    """
+    if name in ["day", "equ", "ngt", "sum", "win"]:
+        add_species_name = "extra"
+    elif name in ["day_imk", "ngt_imk", "sum_imk", "win_imk"]:
+        add_species_name = "extra_imk"
+    elif name in ["mls", "mlw", "sas", "saw", "std", "tro"]:
+        add_species_name = "minor"
+    else:
+        raise ValueError(f"invalid atmospheric profile name '{name}'")
+
+    content, url, url_date = read_file_content(name=add_species_name)
+    parsed_content = _parse_content(content.splitlines())
+    return parsed_content, url, url_date
+
+
+def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
     """Read RFM atmospheric data files.
 
     Try to read the data from http://eodg.atm.ox.ac.uk/RFM/atm/
@@ -134,51 +222,58 @@ def read(name: str) -> xr.Dataset:
         ``"win-imk"``, ``"mls"``, ``"mlw"``, ``"sas"``, ``"saw"``, ``"std"``,
         ``"tro"``].
 
+    additional_species: bool
+        Set to ``True`` to include the additional species to the atmospheric
+        profile.
+
     Returns
     -------
     :class:`~xarray.Dataset`
         Atmospheric profile.
     """
-    try:
-        url = f"http://eodg.atm.ox.ac.uk/RFM/atm/{name}.atm"
-        url_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        response = requests.get(url)
-        content = response.text
-    except requests.ConnectionError:
-        url = None
-        url_date = None
-        file = f"{name}.atm"
-        with pkg_resources.path(rfm, file) as path:
-            with open(path, "r") as f:
-                content = f.read()
-
+    content, url, url_date = read_file_content(name=name)
     quantities = _parse_content(content.splitlines())
+
     z_level = quantities.pop("z_level")
     p = quantities.pop("p")
     t = quantities.pop("t")
+    n = p / (K * t)  # perfect gas equation
     species = np.array(list(quantities.keys()))
     mr = np.array([quantities[s].magnitude for s in species])
 
-    # compute air number density using perfect gas equation:
-    n = p / (K * t)
+    if additional_species:
+        extra_quantities, extra_url, extra_url_date = read_additional_species(name=name)
+        extra_z_level = extra_quantities.pop("z_level")
+        extra_species = np.array(list(extra_quantities.keys()))
+        extra_mr = np.array([extra_quantities[s].magnitude for s in extra_species])
 
-    translate = {
-        "win": "MIPAS (2001) polar winter",
-        "sum": "MIPAS (2001) polar summer",
-        "day": "MIPAS (2001) mid-latitude daytime",
-        "ngt": "MIPAS (2001) mid-latitude nighttime",
-        "equ": "MIPAS (2001) equatorial",
-        "day_imk": "MIPAS (1998) mid-latitude daytime",
-        "ngt_imk": "MIPAS (1998) mid-latitude nighttime",
-        "sum_imk": "MIPAS (1998) polar summer",
-        "win_imk": "MIPAS (1998) polar winter",
-        "mls": "AFGL (1986) Mid-latitude summer",
-        "mlw": "AFGL (1986) Mid-latitude winter",
-        "sas": "AFGL (1986) Sub-arctic summer",
-        "saw": "AFGL (1986) Sub-arctic winter",
-        "std": "AFGL (1986) U.S. Standard",
-        "tro": "AFGL (1986) Tropical",
-    }
+        # initial species
+        da = xr.DataArray(
+            mr,
+            dims=["species", "z_level"],
+            coords={"species": species, "z_level": z_level.magnitude},
+        )
+
+        # additional species
+        da_extra = xr.DataArray(
+            extra_mr,
+            dims=["species", "z_level"],
+            coords={
+                "species": extra_species,
+                "z_level": extra_z_level.m_as(z_level.units),
+            },
+        )
+
+        # interpolate additional species mixing ratio on altitude mesh used
+        # for initial species mixing ratio:
+        da_extra_interp = np.exp(
+            np.log(da_extra).interp(z_level=z_level.m_as(z_level.units))
+        )
+
+        # concatenate initial and additional species
+        da_total = xr.concat([da, da_extra_interp], dim="species")
+        species = da_total.species.values
+        mr = da_total.values
 
     ds: xr.Dataset = util.make_data_set(
         p=p,
@@ -187,9 +282,9 @@ def read(name: str) -> xr.Dataset:
         mr=mr,
         z_level=z_level,
         species=species,
-        title=f"RFM {translate[name]} atmospheric profile",
         func_name="joseki.rfm.read",
         operation="data set creation",
+        title=f"RFM {DESCRIPTION[name]} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,
         url_info=(url, url_date),

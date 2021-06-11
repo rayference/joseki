@@ -135,9 +135,45 @@ def test_parse_content_2() -> None:
     assert isinstance(output, dict)
 
 
+def test_read_file_content_day() -> None:
+    """Returns a tuple."""
+    output = rfm.read_file_content(name="day")
+    assert isinstance(output, tuple)
+
+
+def test_read_additional_species_day() -> None:
+    """Returns a tuple."""
+    output = rfm.read_additional_species(name="day")
+    assert isinstance(output, tuple)
+
+
+def test_read_additional_species_day_imk() -> None:
+    """Returns a tuple."""
+    output = rfm.read_additional_species(name="day_imk")
+    assert isinstance(output, tuple)
+
+
+def test_read_additional_species_std() -> None:
+    """Returns a tuple."""
+    output = rfm.read_additional_species(name="std")
+    assert isinstance(output, tuple)
+
+
+def test_read_additional_species_invalid() -> None:
+    """Invalid name raises ValueError."""
+    with pytest.raises(ValueError):
+        rfm.read_additional_species(name="invalid")
+
+
 def test_read() -> None:
     """Returns a :class:`~xarray.Dataset`."""
     ds = rfm.read(name="day")
+    assert isinstance(ds, xr.Dataset)
+
+
+def test_read_additional_species_true() -> None:
+    """Returns a :class:`~xarray.Dataset`."""
+    ds = rfm.read(name="day", additional_species=True)
     assert isinstance(ds, xr.Dataset)
 
 
