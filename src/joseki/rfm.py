@@ -128,8 +128,10 @@ def read(name: str) -> xr.Dataset:
     Parameters
     ----------
     name: str
-        Atmospheric profile name in [``"day"``, ``"equ"``, ``"ngt"``,
-        ``"sum"``, ``"win"``].
+        Atmospheric profile name in [``"day"``, ``"day_imk"``, ``"equ"``,
+        ``"ngt"``, ``"ngt_imk"``, ``"sum"``, ``"sum_imk"``, ``"win"``,
+        ``"win-imk"``, ``"mls"``, ``"mlw"``, ``"sas"``, ``"saw"``, ``"std"``,
+        ``"tro"``].
 
     Returns
     -------
@@ -165,6 +167,12 @@ def read(name: str) -> xr.Dataset:
         "ngt_imk": "MIPAS (1998) mid-latitude nighttime",
         "sum_imk": "MIPAS (1998) polar summer",
         "win_imk": "MIPAS (1998) polar winter",
+        "mls": "AFGL (1986) Mid-latitude summer",
+        "mlw": "AFGL (1986) Mid-latitude winter",
+        "sas": "AFGL (1986) Sub-arctic summer",
+        "saw": "AFGL (1986) Sub-arctic winter",
+        "std": "AFGL (1986) U.S. Standard",
+        "tro": "AFGL (1986) Tropical",
     }
 
     ds: xr.Dataset = util.make_data_set(
