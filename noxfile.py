@@ -35,7 +35,7 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
         The Session object.
     """
     if session.bin is None:
-        return  # type: ignore
+        return
 
     virtualenv = session.env.get("VIRTUAL_ENV")
     if virtualenv is None:
