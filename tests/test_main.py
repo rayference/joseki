@@ -22,7 +22,7 @@ def test_main_succeeds(runner: CliRunner, tmpdir: Any) -> None:
     assert result.exit_code == 0
 
 
-def test_main_set_main_coord_to_layer_altitude(runner: CliRunner, tmpdir: Any) -> None:
+def test_main_represent_in_cells(runner: CliRunner, tmpdir: Any) -> None:
     """Exits with a status code of zero with option --represent-in-cells."""
     result = runner.invoke(
         __main__.main,
