@@ -28,7 +28,7 @@ def test_parse_unit_invalid() -> None:
 
 def test_parse_var_name() -> None:
     """Variable names are translated as expected."""
-    assert rfm._parse_var_name("HGT") == "z_level"
+    assert rfm._parse_var_name("HGT") == "z"
     assert rfm._parse_var_name("PRE") == "p"
     assert rfm._parse_var_name("TEM") == "t"
     assert rfm._parse_var_name("other") == "other"

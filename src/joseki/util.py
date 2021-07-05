@@ -39,7 +39,7 @@ def make_data_set(
     t: Union[pint.Quantity, np.ndarray],
     n: Union[pint.Quantity, np.ndarray],
     mr: Union[pint.Quantity, np.ndarray],
-    z_level: Union[pint.Quantity, np.ndarray],
+    z: Union[pint.Quantity, np.ndarray],
     species: Union[pint.Quantity, np.ndarray],
     convention: str = "CF-1.8",
     title: str = "unknown",
@@ -67,8 +67,8 @@ def make_data_set(
     mr: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Volume mixing ratios [/].
 
-    z_level: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Level altitude [km].
+    z: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Altitude [km].
 
     species: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Species [/].
@@ -107,15 +107,9 @@ def make_data_set(
         Atmospheric profile.
     """
     if history is None:
-        history = (
-            f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-            f"- {operation} - {func_name}\n"
-        )
+        history = f"{datetime.datetime.utcnow()}" f"- {operation} - {func_name}\n"
     else:
-        history += (
-            f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
-            f"- {operation} - {func_name}"
-        )
+        history += f"{datetime.datetime.utcnow()} " f"- {operation} - {func_name}\n"
     attrs: Dict[Hashable, Any] = dict(
         convention=convention,
         title=title,
@@ -131,7 +125,7 @@ def make_data_set(
     return xr.Dataset(
         data_vars=dict(
             p=(
-                "z_level",
+                "z",
                 p,
                 dict(
                     standard_name="air_pressure",
@@ -140,7 +134,7 @@ def make_data_set(
                 ),
             ),
             t=(
-                "z_level",
+                "z",
                 t,
                 dict(
                     standard_name="air_temperature",
@@ -149,7 +143,7 @@ def make_data_set(
                 ),
             ),
             n=(
-                "z_level",
+                "z",
                 n,
                 dict(
                     standard_name="air_number_density",
@@ -158,7 +152,7 @@ def make_data_set(
                 ),
             ),
             mr=(
-                ("species", "z_level"),
+                ("species", "z"),
                 mr,
                 dict(
                     standard_name="mixing_ratio",
@@ -168,12 +162,12 @@ def make_data_set(
             ),
         ),
         coords=dict(
-            z_level=(
-                "z_level",
-                z_level,
+            z=(
+                "z",
+                z,
                 dict(
-                    standard_name="level_altitude",
-                    long_name="level altitude",
+                    standard_name="altitude",
+                    long_name="altitude",
                     units="km",
                 ),
             ),

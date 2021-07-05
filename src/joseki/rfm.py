@@ -58,7 +58,7 @@ def _parse_units(s: str) -> str:
 
 def _parse_var_name(n: str) -> str:
     """Parse variable name."""
-    translate = {"HGT": "z_level", "PRE": "p", "TEM": "t"}
+    translate = {"HGT": "z", "PRE": "p", "TEM": "t"}
     if n in translate.keys():
         return translate[n]
     else:
@@ -233,7 +233,7 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
     url_date = url_info.get("url_date")
     quantities = _parse_content(content.splitlines())
 
-    z_level = quantities.pop("z_level")
+    z = quantities.pop("z")
     p = quantities.pop("p")
     t = quantities.pop("t")
     n = p / (K * t)  # perfect gas equation
@@ -242,32 +242,30 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
 
     if additional_species:
         extra_quantities, extra_url_info = read_additional_species(name=name)
-        extra_z_level = extra_quantities.pop("z_level")
+        extra_z = extra_quantities.pop("z")
         extra_species = np.array(list(extra_quantities.keys()))
         extra_mr = np.array([extra_quantities[s].magnitude for s in extra_species])
 
         # initial species
         da = xr.DataArray(
             mr,
-            dims=["species", "z_level"],
-            coords={"species": species, "z_level": z_level.magnitude},
+            dims=["species", "z"],
+            coords={"species": species, "z": z.magnitude},
         )
 
         # additional species
         da_extra = xr.DataArray(
             extra_mr,
-            dims=["species", "z_level"],
+            dims=["species", "z"],
             coords={
                 "species": extra_species,
-                "z_level": extra_z_level.m_as(z_level.units),
+                "z": extra_z.m_as(z.units),
             },
         )
 
         # interpolate additional species mixing ratio on altitude mesh used
         # for initial species mixing ratio:
-        da_extra_interp = np.exp(
-            np.log(da_extra).interp(z_level=z_level.m_as(z_level.units))
-        )
+        da_extra_interp = np.exp(np.log(da_extra).interp(z=z.m_as(z.units)))
 
         # concatenate initial and additional species
         da_total = xr.concat([da, da_extra_interp], dim="species")
@@ -279,7 +277,7 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
         t=t,
         n=n,
         mr=mr,
-        z_level=z_level,
+        z=z,
         species=species,
         func_name="joseki.rfm.read",
         operation="data set creation",

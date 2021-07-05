@@ -38,8 +38,8 @@ from .core import make
     ),
 )
 @click.option(
-    "--level-altitudes",
-    "-la",
+    "--altitudes",
+    "-a",
     help=(
         "Path to level altitudes data file. The data file is read with "
         ":meth:`numpy.loadtxt`."
@@ -48,11 +48,13 @@ from .core import make
     show_default=True,
 )
 @click.option(
-    "--set-main-coord-to-layer-altitude",
-    "-s",
+    "--represent-in-cells",
+    "-r",
     help=(
-        "Set the data set main coordinate to layer altitude (default is "
-        "level altitude)."
+        "Compute the cells representation of the atmospheric profile. The "
+        "initial altitude values are used to define the altitude bounds of "
+        "each cell. The pressure, temperature, number density and mixing "
+        "ratio fields are interpolated at the cells' center altitudes."
     ),
     is_flag=True,
 )
@@ -140,8 +142,8 @@ from .core import make
 def main(
     file_name: str,
     identifier: str,
-    level_altitudes: Optional[pathlib.Path],
-    set_main_coord_to_layer_altitude: bool,
+    altitudes: Optional[pathlib.Path],
+    represent_in_cells: bool,
     p_interp_method: str,
     t_interp_method: str,
     n_interp_method: str,
@@ -150,12 +152,12 @@ def main(
     """Joseki command-line interface."""
     ds = make(
         identifier=identifier,
-        level_altitudes=level_altitudes,
+        altitudes=altitudes,
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
         n_interp_method=n_interp_method,
         x_interp_method=x_interp_method,
-        main_coord_to_layer_altitude=set_main_coord_to_layer_altitude,
+        represent_in_cells=represent_in_cells,
     )
     ds.to_netcdf(file_name)
 

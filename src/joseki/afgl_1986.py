@@ -131,7 +131,7 @@ def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
             species.append(column)
 
     # level altitudes
-    z_level = ureg.Quantity(df.z.values, "km")
+    z = ureg.Quantity(df.z.values, "km")
 
     # air pressures
     p = ureg.Quantity(df.p.values, "millibar").to("Pa")
@@ -154,7 +154,7 @@ def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
         t=t,
         n=n,
         mr=mr,
-        z_level=z_level,
+        z=z,
         species=np.array(species),
         title=f"AFGL (1986) {name.replace('_', '-')} atmospheric profile",
         source=SOURCE,

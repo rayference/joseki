@@ -19,21 +19,21 @@ from joseki import util
 @ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
 def interp(
     ds: xr.Dataset,
-    z_level_new: Union[pint.Quantity, np.ndarray],
+    z_new: Union[pint.Quantity, np.ndarray],
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
     n_interp_method: str = "linear",
     x_interp_method: str = "linear",
 ) -> xr.Dataset:
-    """Interpolate atmospheric profile on new level altitudes.
+    """Interpolate atmospheric profile on new altitudes.
 
     Parameters
     ----------
     ds: :class:`~xarray.Dataset`
         Atmospheric profile to interpolate.
 
-    z_level_new: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Level altitudes to interpolate the atmospheric profile at [km].
+    z_new: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Altitudes to interpolate the atmospheric profile at [km].
 
     p_interp_method: str
         Pressure interpolation method.
@@ -54,25 +54,25 @@ def interp(
     """
     # Interpolate pressure
     fp = interpolate.interp1d(
-        ds.z_level.values, ds.p.values, kind=p_interp_method, bounds_error=True
+        ds.z.values, ds.p.values, kind=p_interp_method, bounds_error=True
     )
-    p_new = fp(z_level_new)
+    p_new = fp(z_new)
 
     # Interpolate temperature
     ft = interpolate.interp1d(
-        ds.z_level.values, ds.t.values, kind=t_interp_method, bounds_error=True
+        ds.z.values, ds.t.values, kind=t_interp_method, bounds_error=True
     )
-    t_new = ft(z_level_new)
+    t_new = ft(z_new)
 
     # Interpolate number density
     fn = interpolate.interp1d(
-        ds.z_level.values, ds.n.values, kind=n_interp_method, bounds_error=True
+        ds.z.values, ds.n.values, kind=n_interp_method, bounds_error=True
     )
-    n_new = fn(z_level_new)
+    n_new = fn(z_new)
 
     # Interpolate volume mixing ratio
     mr_new = ds.mr.interp(
-        z_level=z_level_new, method=x_interp_method, kwargs=dict(bounds_error=True)
+        z=z_new, method=x_interp_method, kwargs=dict(bounds_error=True)
     )
 
     # Reform data set
@@ -81,7 +81,7 @@ def interp(
         t=t_new,
         n=n_new,
         mr=mr_new.values,
-        z_level=z_level_new,
+        z=z_new,
         species=ds.species.values,
         func_name="joseki.core.interp",
         operation="data set interpolation",
@@ -90,24 +90,27 @@ def interp(
     return interpolated
 
 
-def set_main_coord_to_layer_altitude(
+def represent_profile_in_cells(
     ds: xr.Dataset,
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
     n_interp_method: str = "linear",
     x_interp_method: str = "linear",
 ) -> xr.Dataset:
-    """Set the main coordinate to the layer altitude.
+    """Compute the cells representation of the atmospheric profile.
 
-    For an atmospheric profile with level altitude as the main coordinate,
-    compute the corresponding layer altitude mesh and interpolate the
-    data variables onto that layer altitude mesh.
-    A z_layer_bounds coordinate is added to indicate the position of each layer.
+    The initial altitude values are used to define the altitude bounds of each
+    altitude cell.
+    The pressure, temperature, number density and mixing ratio fields are then
+    interpolated at the altitude cells' centers.
+    In the new atmospheric profile, the altitude coordinate provides the
+    cells' centers.
+    The cells altitude bounds are given by a new 'z_bounds' coordinate.
 
     Parameters
     ----------
     ds: :class:`~xarray.Dataset`
-        Atmospheric profile with level altitude as main coordinate.
+        Initial atmospheric profile.
 
     p_interp_method: str
         Pressure interpolation method.
@@ -124,54 +127,27 @@ def set_main_coord_to_layer_altitude(
     Returns
     -------
     :class:`~xarray.Dataset`
-        Atmospheric profile with layer altitude as main coordinate.
+        Cells representation of the atmospheric profile.
     """
-    # Compute layer altitudes
-    z_level = to_quantity(ds.z_level)
-    z_layer = (z_level[:-1] + z_level[1:]) / 2.0
-
-    # Interpolate at the layer altitudes (z_layer)
+    z = to_quantity(ds.z)
+    z_center = (z[:-1] + z[1:]) / 2.0
     interpolated: xr.Dataset = interp(
         ds=ds,
-        z_level_new=z_layer,
+        z_new=z_center,
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
         n_interp_method=n_interp_method,
         x_interp_method=x_interp_method,
     )
-
-    # Rename z_level into z_layer
-    interpolated = interpolated.rename({"z_level": "z_layer"})
-
-    # Add attributes to z_layer coordinate
-    interpolated.z_layer.attrs = dict(
-        standard_name="layer_altitude",
-        long_name="layer altitude",
-        units="km",
-    )
-
-    # Add layer boundaries info
-    interval_dtype = np.dtype([("start", float), ("stop", float)])
-    z_layer_bounds = np.array(
-        [
-            (start, stop)
-            for start, stop in zip(z_level.m_as("km")[:-1], z_level.m_as("km")[1:])
-        ],
-        dtype=interval_dtype,
-    )
-    interpolated.coords["z_layer_bounds"] = (
-        "z_layer",
-        z_layer_bounds,
+    interpolated.z.attrs.update(
         dict(
-            standard_name="layer_bounds_altitudes",
-            long_name="layer bounds altitudes",
-            units="km",
-        ),
+            bounds="altitude_bounds",
+        )
     )
-
+    z_bounds = np.array([z.magnitude[:-1], z.magnitude[1:]]).swapaxes(0, 1)
+    interpolated.coords["z_bounds"] = (("z", "zbv"), z_bounds)
     interpolated.attrs.update(
-        history=interpolated.history
-        + f"\n{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} "
+        history=interpolated.history + f"\n{datetime.datetime.utcnow()} "
         "- data set coords update - joseki.core.set_main_coord_to_layer_altitude"
     )
 
@@ -180,8 +156,8 @@ def set_main_coord_to_layer_altitude(
 
 def make(
     identifier: str,
-    level_altitudes: Optional[pathlib.Path] = None,
-    main_coord_to_layer_altitude: bool = False,
+    altitudes: Optional[pathlib.Path] = None,
+    represent_in_cells: bool = False,
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
     n_interp_method: str = "linear",
@@ -200,12 +176,12 @@ def make(
     identifier: str
         Atmospheric profile identifier.
 
-    level_altitudes: pathlib.Path
-        Level altitudes data file.
-        If ``None``, the original atmospheric profile level altitudes are used.
+    altitudes: pathlib.Path
+        Altitudes data file.
+        If ``None``, the original atmospheric profile altitudes are used.
 
-    main_coord_to_layer_altitude: bool
-        If ``True``, set the layer altitude as the data set's main coordinate.
+    represent_in_cells: bool
+        If ``True``, compute the cells representation of the atmospheric profile.
 
     p_interp_method: str
         Pressure interpolation method.
@@ -237,19 +213,19 @@ def make(
     else:
         raise ValueError("Invalid identifier '{identifier}': unknown group '{group}'")
 
-    if level_altitudes is not None:
-        z_level = np.loadtxt(fname=level_altitudes, dtype=float, comments="#")
+    if altitudes is not None:
+        z_level = np.loadtxt(fname=altitudes, dtype=float, comments="#")
         ds = interp(
             ds=ds,
-            z_level_new=z_level,
+            z_new=z_level,
             p_interp_method=p_interp_method,
             t_interp_method=t_interp_method,
             n_interp_method=n_interp_method,
             x_interp_method=x_interp_method,
         )
 
-    if main_coord_to_layer_altitude:
-        ds = set_main_coord_to_layer_altitude(
+    if represent_in_cells:
+        ds = represent_profile_in_cells(
             ds=ds,
             p_interp_method=p_interp_method,
             t_interp_method=t_interp_method,

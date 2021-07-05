@@ -23,13 +23,13 @@ def test_main_succeeds(runner: CliRunner, tmpdir: Any) -> None:
 
 
 def test_main_set_main_coord_to_layer_altitude(runner: CliRunner, tmpdir: Any) -> None:
-    """Exits with a status code of zero with option '-s'."""
+    """Exits with a status code of zero with option --represent-in-cells."""
     result = runner.invoke(
         __main__.main,
         [
             "--identifier=afgl_1986-tropical",
             f"--file-name={tmpdir / 'ds.nc'}",
-            "--set-main-coord-to-layer-altitude",
+            "--represent-in-cells",
         ],
     )
     assert result.exit_code == 0
