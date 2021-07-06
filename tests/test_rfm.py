@@ -136,28 +136,40 @@ def test_parse_content_2() -> None:
 
 
 @pytest.mark.parametrize("name", [n for n in rfm.Name])
-def test_read_file_content(name) -> None:
+def test_read_file_content(name: rfm.Name) -> None:
     """Returns a tuple."""
     output = rfm.read_file_content(name=name)
     assert isinstance(output, tuple)
 
 
 @pytest.mark.parametrize("name", [n for n in rfm.Name])
-def test_read_additional_species(name) -> None:
+def test_read_additional_species(name: rfm.Name) -> None:
     """Returns a tuple."""
     output = rfm.read_additional_species(name=name)
     assert isinstance(output, tuple)
 
 
 @pytest.mark.parametrize("name", [n for n in rfm.Name])
-def test_read(name) -> None:
+def test_find_name(name: rfm.Name) -> None:
+    """Returns name object corresponding to name str."""
+    assert rfm.find_name(name.value) == name
+
+
+def test_find_name_invalid() -> None:
+    """Raises a ValueError when an invalid name is provided."""
+    with pytest.raises(ValueError):
+        rfm.find_name("invalid_name")
+
+
+@pytest.mark.parametrize("name", [n for n in rfm.Name])
+def test_read(name: rfm.Name) -> None:
     """Returns a :class:`~xarray.Dataset`."""
     ds = rfm.read(name=name.value)
     assert isinstance(ds, xr.Dataset)
 
 
 @pytest.mark.parametrize("name", [n for n in rfm.Name])
-def test_read_additional_species_true(name) -> None:
+def test_read_additional_species_true(name: rfm.Name) -> None:
     """Returns a :class:`~xarray.Dataset`."""
     ds = rfm.read(name=name.value, additional_species=True)
     assert isinstance(ds, xr.Dataset)
@@ -171,7 +183,7 @@ class MockConnectionError:
 
 
 @pytest.mark.parametrize("name", [n for n in rfm.Name])
-def test_read_connection_error(monkeypatch: pytest.MonkeyPatch, name) -> None:
+def test_read_connection_error(monkeypatch: pytest.MonkeyPatch, name: rfm.Name) -> None:
     """Reads archived raw data files if connection error occurs."""
     monkeypatch.setattr("requests.get", MockConnectionError)
     ds = rfm.read(name=name.value)

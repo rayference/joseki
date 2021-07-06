@@ -224,9 +224,9 @@ def read_additional_species(
     """
     if name in [Name.DAY, Name.EQU, Name.NGT, Name.SUM, Name.WIN]:
         add_species_name = "extra"
-    elif name in [Name.DAY_IMK, Name.NGT_IMK, Name.SUM_IMK, Name.WIN_IMK]:
+    if name in [Name.DAY_IMK, Name.NGT_IMK, Name.SUM_IMK, Name.WIN_IMK]:
         add_species_name = "extra_imk"
-    elif name in [Name.MLS, Name.MLW, Name.SAS, Name.SAW, Name.STD, Name.TRO]:
+    if name in [Name.MLS, Name.MLW, Name.SAS, Name.SAW, Name.STD, Name.TRO]:
         add_species_name = "minor"
 
     content, url_info = _read_file_content(name=add_species_name)
@@ -234,7 +234,7 @@ def read_additional_species(
     return parsed_content, url_info
 
 
-def find_name(s):
+def find_name(s: str) -> Name:
     """Return :class:`Name` object corresponding to str representation.
 
     Parameters

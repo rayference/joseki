@@ -158,7 +158,7 @@ def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
     return ds
 
 
-def find_name(s):
+def find_name(s: str) -> Name:
     """Return :class:`Name` object corresponding to str representation.
 
     Parameters
