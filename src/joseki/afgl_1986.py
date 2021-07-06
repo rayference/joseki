@@ -1,4 +1,5 @@
 """Module to read AFGL 1986 data files."""
+import enum
 import importlib.resources as pkg_resources
 
 import numpy as np
@@ -8,6 +9,18 @@ import xarray as xr
 from .data import afgl_1986
 from joseki import ureg
 from joseki import util
+
+
+class Name(enum.Enum):
+    """AFGL 1986 atmospheric profile name enumeration."""
+
+    TROPICAL = "tropical"
+    MIDLATITUDE_SUMMER = "midlatitude_summer"
+    MIDLATITUDE_WINTER = "midlatitude_winter"
+    SUBARCTIC_SUMMER = "subarctic_summer"
+    SUBARCTIC_WINTER = "subarctic_winter"
+    US_STANDARD = "us_standard"
+
 
 SOURCE = (
     "Atmospheric model (U.S. Standard Atmosphere) adapted from "
@@ -30,16 +43,16 @@ TABLE_2_DATA_FILES = (
 )
 
 DATA_FILES = {
-    "tropical": ("table_1a.csv", *TABLE_2_DATA_FILES),
-    "midlatitude_summer": ("table_1b.csv", *TABLE_2_DATA_FILES),
-    "midlatitude_winter": ("table_1c.csv", *TABLE_2_DATA_FILES),
-    "subarctic_summer": ("table_1d.csv", *TABLE_2_DATA_FILES),
-    "subarctic_winter": ("table_1e.csv", *TABLE_2_DATA_FILES),
-    "us_standard": ("table_1f.csv", *TABLE_2_DATA_FILES),
+    Name.TROPICAL: ("table_1a.csv", *TABLE_2_DATA_FILES),
+    Name.MIDLATITUDE_SUMMER: ("table_1b.csv", *TABLE_2_DATA_FILES),
+    Name.MIDLATITUDE_WINTER: ("table_1c.csv", *TABLE_2_DATA_FILES),
+    Name.SUBARCTIC_SUMMER: ("table_1d.csv", *TABLE_2_DATA_FILES),
+    Name.SUBARCTIC_WINTER: ("table_1e.csv", *TABLE_2_DATA_FILES),
+    Name.US_STANDARD: ("table_1f.csv", *TABLE_2_DATA_FILES),
 }
 
 
-def parse(name: str) -> pd.DataFrame:
+def parse(name: Name) -> pd.DataFrame:
     """Parse table data files for a given atmospheric profile.
 
     Read the relevant raw data files corresponding to the atmospheric profile.
@@ -55,31 +68,15 @@ def parse(name: str) -> pd.DataFrame:
 
     Parameters
     ----------
-    name: str
-        Atmospheric profile name in [``"tropical"``,
-        ``"midlatitude_summer"``, ``"midlatitude_winter"``,
-        ``"subarctic_summer"``, ``"subarctic_winter"``,
-        ``"us_standard"``].
+    name: Name
+        Atmospheric profile name.
 
     Returns
     -------
     :class:`~pandas.DataFrame`
         Atmospheric profile data set.
-
-    Raises
-    ------
-    ValueError
-        If ``name`` is invalid.
     """
-    try:
-        files = DATA_FILES[name]
-    except KeyError:
-        raise ValueError(
-            f"'name' must be either 'tropical', "
-            f"'midlatitude_summer', 'midlatitude_winter', "
-            f"'subarctic_summer', 'subarctic_winter', "
-            f"or 'us_standard' (got {name})"
-        )
+    files = DATA_FILES[name]
     dataframes = []
     for file in files:
         with pkg_resources.path(afgl_1986, file) as path:
@@ -109,10 +106,7 @@ def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
         Atmospheric profile data.
 
     name: str
-        Atmospheric profile name in [``"tropical"``,
-        ``"midlatitude_summer"``, ``"midlatitude_winter"``,
-        ``"subarctic_summer"``, ``"subarctic_winter"``,
-        ``"us_standard"``].
+        Atmospheric profile name.
 
     kwargs: str
         Additional arguments passed to :meth:`util.make_data_set`.
@@ -164,6 +158,30 @@ def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
     return ds
 
 
+def find_name(s):
+    """Return :class:`Name` object corresponding to str representation.
+
+    Parameters
+    ----------
+    s: str
+        Atmospheric profile name.
+
+    Returns
+    -------
+    :class:`Name`
+        Atmospheric profile :class:`Name` object.
+
+    Raises
+    ------
+    ValueError:
+        When the atmospheric profile name is unknown.
+    """
+    for name in Name:
+        if name.value == s:
+            return name
+    raise ValueError(f"unknown name {s}")
+
+
 def read(name: str) -> xr.Dataset:
     """Read data files for a given atmospheric profile.
 
@@ -172,17 +190,15 @@ def read(name: str) -> xr.Dataset:
     Parameters
     ----------
     name: str
-        Atmospheric profile name in [``"tropical"``,
-        ``"midlatitude_summer"``, ``"midlatitude_winter"``,
-        ``"subarctic_summer"``, ``"subarctic_winter"``,
-        ``"us_standard"``].
+        Atmospheric profile name.
+        See :class:`.Name` for possible values.
 
     Returns
     -------
     :class:`~xarray.Dataset`
         Atmospheric profile data set.
     """
-    df = parse(name=name)
+    df = parse(name=find_name(name))
     return to_xarray(
         df=df,
         name=name,
