@@ -32,7 +32,7 @@ def test_main_open_data_set(runner: CliRunner, tmpdir: Any) -> None:
         __main__.main,
         ["--identifier=afgl_1986-tropical", f"--file-name={path}"],
     )
-    assert isinstance(xr.open_dataset(path), xr.Dataset)
+    assert isinstance(xr.open_dataset(path), xr.Dataset)  # type: ignore
 
 
 @pytest.fixture

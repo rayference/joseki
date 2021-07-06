@@ -142,7 +142,7 @@ from .core import make
 def main(
     file_name: str,
     identifier: str,
-    altitudes: Optional[pathlib.Path],
+    altitudes: Optional[str],
     represent_in_cells: bool,
     p_interp_method: str,
     t_interp_method: str,
@@ -152,7 +152,7 @@ def main(
     """Joseki command-line interface."""
     ds = make(
         identifier=identifier,
-        altitudes=altitudes,
+        altitudes=altitudes if altitudes is None else pathlib.Path(altitudes),
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
         n_interp_method=n_interp_method,
