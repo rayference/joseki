@@ -135,53 +135,32 @@ def test_parse_content_2() -> None:
     assert isinstance(output, dict)
 
 
-def test_read_file_content_day() -> None:
+@pytest.mark.parametrize("name", [n for n in rfm.Name])
+def test_read_file_content(name) -> None:
     """Returns a tuple."""
-    output = rfm.read_file_content(name="day")
+    output = rfm.read_file_content(name=name)
     assert isinstance(output, tuple)
 
 
-def test_read_additional_species_day() -> None:
+@pytest.mark.parametrize("name", [n for n in rfm.Name])
+def test_read_additional_species(name) -> None:
     """Returns a tuple."""
-    output = rfm.read_additional_species(name="day")
+    output = rfm.read_additional_species(name=name)
     assert isinstance(output, tuple)
 
 
-def test_read_additional_species_day_imk() -> None:
-    """Returns a tuple."""
-    output = rfm.read_additional_species(name="day_imk")
-    assert isinstance(output, tuple)
-
-
-def test_read_additional_species_std() -> None:
-    """Returns a tuple."""
-    output = rfm.read_additional_species(name="std")
-    assert isinstance(output, tuple)
-
-
-def test_read_additional_species_invalid() -> None:
-    """Invalid name raises ValueError."""
-    with pytest.raises(ValueError):
-        rfm.read_additional_species(name="invalid")
-
-
-def test_read() -> None:
+@pytest.mark.parametrize("name", [n for n in rfm.Name])
+def test_read(name) -> None:
     """Returns a :class:`~xarray.Dataset`."""
-    ds = rfm.read(name="day")
+    ds = rfm.read(name=name.value)
     assert isinstance(ds, xr.Dataset)
 
 
-def test_read_additional_species_true() -> None:
+@pytest.mark.parametrize("name", [n for n in rfm.Name])
+def test_read_additional_species_true(name) -> None:
     """Returns a :class:`~xarray.Dataset`."""
-    ds = rfm.read(name="day", additional_species=True)
+    ds = rfm.read(name=name.value, additional_species=True)
     assert isinstance(ds, xr.Dataset)
-
-
-def test_read_name() -> None:
-    """Returns a :class:`~xarray.Dataset` for all identifier values."""
-    for name in ["day", "equ", "ngt", "sum", "win"]:
-        ds = rfm.read(name=name)
-        assert isinstance(ds, xr.Dataset)
 
 
 class MockConnectionError:
@@ -191,8 +170,9 @@ class MockConnectionError:
         raise requests.exceptions.ConnectionError
 
 
-def test_read_connection_error(monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("name", [n for n in rfm.Name])
+def test_read_connection_error(monkeypatch: pytest.MonkeyPatch, name) -> None:
     """Reads archived raw data files if connection error occurs."""
     monkeypatch.setattr("requests.get", MockConnectionError)
-    ds = rfm.read(name="day")
+    ds = rfm.read(name=name.value)
     assert isinstance(ds, xr.Dataset)
