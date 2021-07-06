@@ -17,7 +17,7 @@ def runner() -> CliRunner:
 
 
 def test_main_succeeds(runner: CliRunner, tmpdir: Any) -> None:
-    """It exits with a status code of zero."""
+    """Exits with a status code of zero."""
     result = runner.invoke(
         __main__.main,
         ["--identifier=afgl_1986-tropical", f"--file-name={tmpdir / 'ds.nc'}"],
@@ -47,7 +47,7 @@ def altitudes_path(tmpdir: Any) -> pathlib.Path:
 def test_main_altitude_path(
     runner: CliRunner, tmpdir: Any, altitudes_path: pathlib.Path
 ) -> None:
-    """."""
+    """Exits with a status code of zero when --altitudes option is used."""
     result = runner.invoke(
         __main__.main,
         [
