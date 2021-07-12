@@ -32,12 +32,11 @@ def test_represent_profile_in_cells() -> None:
 
 
 def test_represent_profile_in_cells_coords() -> None:
-    """'z' and 'z_bounds' are both coordinates but first is dim."""
+    """'z' and 'zc' are both coordinates."""
     ds = afgl_1986.read(name="tropical")
     interpolated = core.represent_profile_in_cells(ds)
-    for coord in ["z", "z_bounds"]:
+    for coord in ["zn", "zc"]:
         assert coord in interpolated.coords
-    assert "z" in interpolated.dims and "z_bounds" not in interpolated.dims
 
 
 def test_make() -> None:
@@ -107,12 +106,12 @@ def test_make_invalid_identifier() -> None:
 
 
 def test_make_represent_in_cells() -> None:
-    """Returned data set has z and zbv dimensions."""
+    """Returned data set has z and zc dimensions."""
     ds = core.make(
         identifier="afgl_1986-tropical",
         represent_in_cells=True,
     )
-    for dim in ["z", "zbv"]:
+    for dim in ["zn", "zc"]:
         assert dim in ds.dims
 
 
@@ -122,4 +121,4 @@ def test_make_altitudes(tmpdir: Any) -> None:
     path = pathlib.Path(tmpdir, "z.txt")
     np.savetxt(path, z_values)
     ds = core.make(identifier="afgl_1986-tropical", altitudes=path)
-    assert np.allclose(ds.z.values, z_values)
+    assert np.allclose(ds.zn.values, z_values)

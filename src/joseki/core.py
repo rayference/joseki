@@ -54,25 +54,25 @@ def interp(
     """
     # Interpolate pressure
     fp = interpolate.interp1d(
-        ds.z.values, ds.p.values, kind=p_interp_method, bounds_error=True
+        ds.zn.values, ds.p.values, kind=p_interp_method, bounds_error=True
     )
     p_new = fp(z_new)
 
     # Interpolate temperature
     ft = interpolate.interp1d(
-        ds.z.values, ds.t.values, kind=t_interp_method, bounds_error=True
+        ds.zn.values, ds.t.values, kind=t_interp_method, bounds_error=True
     )
     t_new = ft(z_new)
 
     # Interpolate number density
     fn = interpolate.interp1d(
-        ds.z.values, ds.n.values, kind=n_interp_method, bounds_error=True
+        ds.zn.values, ds.n.values, kind=n_interp_method, bounds_error=True
     )
     n_new = fn(z_new)
 
     # Interpolate volume mixing ratio
     mr_new = ds.mr.interp(
-        z=z_new, method=x_interp_method, kwargs=dict(bounds_error=True)
+        zn=z_new, method=x_interp_method, kwargs=dict(bounds_error=True)
     )
 
     # Reform data set
@@ -99,13 +99,13 @@ def represent_profile_in_cells(
 ) -> xr.Dataset:
     """Compute the cells representation of the atmospheric profile.
 
-    The initial altitude values are used to define the altitude bounds of each
-    altitude cell.
-    The pressure, temperature, number density and mixing ratio fields are then
-    interpolated at the altitude cells' centers.
-    In the new atmospheric profile, the altitude coordinate provides the
-    cells' centers.
-    The cells altitude bounds are given by a new 'z_bounds' coordinate.
+    Atmosphere cells (or layers) are defined by two consecutive altitude values.
+    The layer's center altitude is defined as the average of these two values.
+    The pressure, temperature, number density and mixing ratio fields are
+    interpolated at these layer' center altitude values.
+    In the new atmospheric profile, a layer' center altitude coordinate is
+    added (if not already present).
+
 
     Parameters
     ----------
@@ -129,26 +129,34 @@ def represent_profile_in_cells(
     :class:`~xarray.Dataset`
         Cells representation of the atmospheric profile.
     """
-    z = to_quantity(ds.z)
-    z_center = (z[:-1] + z[1:]) / 2.0
+    zn = to_quantity(ds.zn)
+    zc = (zn[:-1] + zn[1:]) / 2.0
     interpolated: xr.Dataset = interp(
         ds=ds,
-        z_new=z_center,
+        z_new=zc,
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
         n_interp_method=n_interp_method,
         x_interp_method=x_interp_method,
     )
-    interpolated.z.attrs.update(
-        dict(
-            bounds="altitude_bounds",
-        )
+    interpolated = interpolated.rename({"zn": "zc"})
+    interpolated.zc.attrs = dict(
+        standard_name="layer_center_altitude",
+        long_name="layer center altitude",
+        units="km",
     )
-    z_bounds = np.array([z.magnitude[:-1], z.magnitude[1:]]).swapaxes(0, 1)
-    interpolated.coords["z_bounds"] = (("z", "zbv"), z_bounds)
+    interpolated.coords["zn"] = (
+        "zn",
+        zn.magnitude,
+        dict(
+            standard_name="altitude",
+            long_name="altitude",
+            units="km",
+        ),
+    )
     interpolated.attrs.update(
         history=interpolated.history + f"\n{datetime.datetime.utcnow()} "
-        "- data set coords update - joseki.core.set_main_coord_to_layer_altitude"
+        "- data set coords update - joseki.core.represent_profile_in_cells"
     )
 
     return interpolated
@@ -214,10 +222,9 @@ def make(
         raise ValueError("Invalid identifier '{identifier}': unknown group '{group}'")
 
     if altitudes is not None:
-        z_level = np.loadtxt(fname=altitudes, dtype=float, comments="#")
         ds = interp(
             ds=ds,
-            z_new=z_level,
+            z_new=np.loadtxt(fname=altitudes, dtype=float, comments="#"),
             p_interp_method=p_interp_method,
             t_interp_method=t_interp_method,
             n_interp_method=n_interp_method,

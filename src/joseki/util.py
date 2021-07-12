@@ -125,7 +125,7 @@ def make_data_set(
     return xr.Dataset(
         data_vars=dict(
             p=(
-                "z",
+                "zn",
                 p,
                 dict(
                     standard_name="air_pressure",
@@ -134,7 +134,7 @@ def make_data_set(
                 ),
             ),
             t=(
-                "z",
+                "zn",
                 t,
                 dict(
                     standard_name="air_temperature",
@@ -143,7 +143,7 @@ def make_data_set(
                 ),
             ),
             n=(
-                "z",
+                "zn",
                 n,
                 dict(
                     standard_name="air_number_density",
@@ -152,7 +152,7 @@ def make_data_set(
                 ),
             ),
             mr=(
-                ("species", "z"),
+                ("species", "zn"),
                 mr,
                 dict(
                     standard_name="mixing_ratio",
@@ -162,8 +162,8 @@ def make_data_set(
             ),
         ),
         coords=dict(
-            z=(
-                "z",
+            zn=(
+                "zn",
                 z,
                 dict(
                     standard_name="altitude",

@@ -31,7 +31,7 @@ def test_to_xarray_all_coords(name: afgl_1986.Name) -> None:
     """Adds all expected coordinates to data set."""
     df = afgl_1986.parse(name=name)
     ds = afgl_1986.to_xarray(df=df, name=name.value)
-    expected_coords = ["z", "species"]
+    expected_coords = ["zn", "species"]
     assert all([coord in ds.coords for coord in expected_coords])
 
 
