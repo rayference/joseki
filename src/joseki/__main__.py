@@ -4,13 +4,9 @@ from typing import Optional
 
 import click
 
-from . import afgl_1986
-from . import rfm
-from .core import make
+from joseki import core
 
-IDENTIFIER_CHOICES = [f"rfm-{n.value}" for n in rfm.Name] + [
-    f"afgl_1986-{n.value}" for n in afgl_1986.Name
-]
+IDENTIFIER_CHOICES = [identifier.value for identifier in core.Identifier]
 
 
 @click.command()
@@ -144,8 +140,8 @@ def main(
     x_interp_method: str,
 ) -> None:
     """Joseki command-line interface."""
-    ds = make(
-        identifier=identifier,
+    ds = core.make(
+        identifier=core.Identifier(identifier),
         altitudes=altitudes if altitudes is None else pathlib.Path(altitudes),
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,

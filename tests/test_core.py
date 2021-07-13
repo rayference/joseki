@@ -8,39 +8,38 @@ import xarray as xr
 
 from joseki import afgl_1986
 from joseki import core
-from joseki import rfm
 
 
-IDENTIFIER_CHOICES = [f"rfm-{n.value}" for n in rfm.Name] + [
-    f"afgl_1986-{n.value}" for n in afgl_1986.Name
-]
+IDENTIFIER_CHOICES = [i for i in core.Identifier]
 
 
-def test_interp_returns_data_set() -> None:
+@pytest.fixture
+def test_data_set() -> xr.Dataset:
+    """Test data set fixture."""
+    return afgl_1986.read(identifier=afgl_1986.Identifier.TROPICAL)
+
+
+def test_interp_returns_data_set(test_data_set: xr.Dataset) -> None:
     """Returns an xarray.Dataset."""
-    ds = afgl_1986.read(name="tropical")
-    interpolated = core.interp(ds=ds, z_new=np.linspace(0, 120, 121))
+    interpolated = core.interp(ds=test_data_set, z_new=np.linspace(0, 120, 121))
     assert isinstance(interpolated, xr.Dataset)
 
 
-def test_interp_out_of_bound() -> None:
+def test_interp_out_of_bound(test_data_set: xr.Dataset) -> None:
     """Raises when out of bounds values are provided."""
     with pytest.raises(ValueError):
-        ds = afgl_1986.read(name="tropical")
-        core.interp(ds=ds, z_new=np.linspace(0, 150))
+        core.interp(ds=test_data_set, z_new=np.linspace(0, 150))
 
 
-def test_represent_profile_in_cells() -> None:
+def test_represent_profile_in_cells(test_data_set: xr.Dataset) -> None:
     """Returns a xarray.Dataset object."""
-    ds = afgl_1986.read(name="tropical")
-    interpolated = core.represent_profile_in_cells(ds)
+    interpolated = core.represent_profile_in_cells(ds=test_data_set)
     assert isinstance(interpolated, xr.Dataset)
 
 
-def test_represent_profile_in_cells_coords() -> None:
+def test_represent_profile_in_cells_coords(test_data_set: xr.Dataset) -> None:
     """'z' and 'zc' are both coordinates."""
-    ds = afgl_1986.read(name="tropical")
-    interpolated = core.represent_profile_in_cells(ds)
+    interpolated = core.represent_profile_in_cells(ds=test_data_set)
     for coord in ["zn", "zc"]:
         assert coord in interpolated.coords
 
@@ -49,22 +48,16 @@ def test_represent_profile_in_cells_coords() -> None:
     "identifier",
     IDENTIFIER_CHOICES,
 )
-def test_make(identifier: str) -> None:
+def test_make(identifier: core.Identifier) -> None:
     """Returns xr.Dataset."""
     assert isinstance(core.make(identifier=identifier), xr.Dataset)
-
-
-def test_make_invalid_identifier() -> None:
-    """Raises if identifier is invalid."""
-    with pytest.raises(ValueError):
-        core.make(identifier="unknown-tropical"), xr.Dataset
 
 
 @pytest.mark.parametrize(
     "identifier",
     IDENTIFIER_CHOICES,
 )
-def test_make_represent_in_cells(identifier: str) -> None:
+def test_make_represent_in_cells(identifier: core.Identifier) -> None:
     """Returned data set has z and zc dimensions."""
     ds = core.make(
         identifier=identifier,
@@ -78,7 +71,7 @@ def test_make_represent_in_cells(identifier: str) -> None:
     "identifier",
     IDENTIFIER_CHOICES,
 )
-def test_make_altitudes(tmpdir: Any, identifier: str) -> None:
+def test_make_altitudes(tmpdir: Any, identifier: core.Identifier) -> None:
     """Assigns data set' altitude values from file."""
     z_values = np.linspace(0, 120, 121)
     path = pathlib.Path(tmpdir, "z.txt")

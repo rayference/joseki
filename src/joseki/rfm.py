@@ -42,8 +42,8 @@ DESCRIPTION = {
 }
 
 
-class Name(enum.Enum):
-    """RFM atmospheric profile name enumeration."""
+class Identifier(enum.Enum):
+    """RFM atmospheric profile identifier enumeration."""
 
     WIN = "win"
     SUM = "sum"
@@ -159,31 +159,32 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
     return quantities
 
 
-def read_file_content(name: Name) -> Tuple[str, Dict[str, str]]:
+def read_file_content(identifier: Identifier) -> Tuple[str, Dict[str, str]]:
     """
     Read atmospheric profile data file content.
 
     Parameters
     ----------
-    name: Name
-        Atmospheric profile name.
-        See :class:`.Name` for possible values.
+    identifier: Identifier
+        Atmospheric profile identifier.
+        See :class:`.Identifier` for possible values.
 
     Returns
     -------
     tuple:
         file content, URL, URL date.
     """
-    return _read_file_content(name.value)
+    file_name = identifier.value.split("-")[-1]
+    return _read_file_content(file_name=file_name)
 
 
-def _read_file_content(name: str) -> Tuple[str, Dict[str, str]]:
+def _read_file_content(file_name: str) -> Tuple[str, Dict[str, str]]:
     """
     Read data file content.
 
     Parameters
     ----------
-    name: str
+    file_name: str
         Atmospheric data file name.
 
     Returns
@@ -192,13 +193,13 @@ def _read_file_content(name: str) -> Tuple[str, Dict[str, str]]:
         file content, URL, URL date.
     """
     try:
-        url = f"http://eodg.atm.ox.ac.uk/RFM/atm/{name}.atm"
+        url = f"http://eodg.atm.ox.ac.uk/RFM/atm/{file_name}.atm"
         url_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         response = requests.get(url)
         content = response.text
         return content, dict(url=url, url_date=url_date)
     except requests.ConnectionError:
-        file = f"{name}.atm"
+        file = f"{file_name}.atm"
         with pkg_resources.path(rfm, file) as path:
             with open(path, "r") as f:
                 content = f.read()
@@ -206,59 +207,55 @@ def _read_file_content(name: str) -> Tuple[str, Dict[str, str]]:
 
 
 def read_additional_species(
-    name: Name,
+    identifier: Identifier,
 ) -> Tuple[Dict[str, ureg.Quantity], Dict[str, str]]:
     """
     Read additional species data file.
 
     Parameters
     ----------
-    name: Name
-        Atmospheric profile name.
-        See :class:`.Name` for possible values.
+    identifier: Identifier
+        Atmospheric profile identifier.
+        See :class:`.Identifier` for possible values.
 
     Returns
     -------
     tuple of dict of str and :class:`~pint.Quantity` and dict of str and str:
         Additional species parsed content, URL information.
     """
-    if name in [Name.DAY, Name.EQU, Name.NGT, Name.SUM, Name.WIN]:
+    if identifier in [
+        Identifier.DAY,
+        Identifier.EQU,
+        Identifier.NGT,
+        Identifier.SUM,
+        Identifier.WIN,
+    ]:
         add_species_name = "extra"
-    if name in [Name.DAY_IMK, Name.NGT_IMK, Name.SUM_IMK, Name.WIN_IMK]:
+    if identifier in [
+        Identifier.DAY_IMK,
+        Identifier.NGT_IMK,
+        Identifier.SUM_IMK,
+        Identifier.WIN_IMK,
+    ]:
         add_species_name = "extra_imk"
-    if name in [Name.MLS, Name.MLW, Name.SAS, Name.SAW, Name.STD, Name.TRO]:
+    if identifier in [
+        Identifier.MLS,
+        Identifier.MLW,
+        Identifier.SAS,
+        Identifier.SAW,
+        Identifier.STD,
+        Identifier.TRO,
+    ]:
         add_species_name = "minor"
 
-    content, url_info = _read_file_content(name=add_species_name)
+    content, url_info = _read_file_content(file_name=add_species_name)
     parsed_content = _parse_content(content.splitlines())
     return parsed_content, url_info
 
 
-def find_name(s: str) -> Name:
-    """Return :class:`Name` object corresponding to str representation.
-
-    Parameters
-    ----------
-    s: str
-        Atmospheric profile name.
-
-    Returns
-    -------
-    :class:`Name`
-        Atmospheric profile :class:`Name` object.
-
-    Raises
-    ------
-    ValueError:
-        When the atmospheric profile name is unknown.
-    """
-    for name in Name:
-        if name.value == s:
-            return name
-    raise ValueError(f"unknown name {s}")
-
-
-def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
+def read(
+    identifier: Identifier, additional_species: Optional[bool] = False
+) -> xr.Dataset:
     """Read RFM atmospheric data files.
 
     Try to read the data from http://eodg.atm.ox.ac.uk/RFM/atm/
@@ -268,9 +265,9 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
 
     Parameters
     ----------
-    name: str
-        Atmospheric profile name.
-        See :class:`.Name` for possible values.
+    identifier: Identifier
+        Atmospheric profile identifier.
+        See :class:`.Identifier` for possible values.
 
     additional_species: bool
         Set to ``True`` to include the additional species to the atmospheric
@@ -281,7 +278,7 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
     :class:`~xarray.Dataset`
         Atmospheric profile.
     """
-    content, url_info = read_file_content(name=find_name(name))
+    content, url_info = read_file_content(identifier=identifier)
     url = url_info.get("url")
     url_date = url_info.get("url_date")
     quantities = _parse_content(content.splitlines())
@@ -294,7 +291,9 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
     mr = np.array([quantities[s].magnitude for s in species])
 
     if additional_species:
-        extra_quantities, extra_url_info = read_additional_species(name=find_name(name))
+        extra_quantities, extra_url_info = read_additional_species(
+            identifier=identifier
+        )
         extra_z = extra_quantities.pop("z")
         extra_species = np.array(list(extra_quantities.keys()))
         extra_mr = np.array([extra_quantities[s].magnitude for s in extra_species])
@@ -334,7 +333,7 @@ def read(name: str, additional_species: Optional[bool] = False) -> xr.Dataset:
         species=species,
         func_name="joseki.rfm.read",
         operation="data set creation",
-        title=f"RFM {DESCRIPTION[name]} atmospheric profile",
+        title=f"RFM {DESCRIPTION[identifier.value]} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,
         url=url,

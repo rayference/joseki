@@ -1,5 +1,6 @@
 """Core module."""
 import datetime
+import enum
 import pathlib
 from typing import Optional
 from typing import Union
@@ -14,6 +15,32 @@ from joseki import afgl_1986
 from joseki import rfm
 from joseki import ureg
 from joseki import util
+
+
+class Identifier(enum.Enum):
+    """Atmospheric profile data set identifier."""
+
+    AFGL_1986_TROPICAL = "afgl_1986-tropical"
+    AFGL_1986_MIDLATITUDE_SUMMER = "afgl_1986-midlatitude_summer"
+    AFGL_1986_MIDLATITUDE_WINTER = "afgl_1986-midlatitude_winter"
+    AFGL_1986_SUBARCTIC_SUMMER = "afgl_1986-subarctic_summer"
+    AFGL_1986_SUBARCTIC_WINTER = "afgl_1986-subarctic_winter"
+    AFGL_1986_US_STANDARD = "afgl_1986-us_standard"
+    RFM_WIN = "rfm-win"
+    RFM_SUM = "rfm-sum"
+    RFM_DAY = "rfm-day"
+    RFM_NGT = "rfm-ngt"
+    RFM_EQU = "rfm-equ"
+    RFM_DAY_IMK = "rfm-day_imk"
+    RFM_NGT_IMK = "rfm-ngt_imk"
+    RFM_SUM_IMK = "rfm-sum_imk"
+    RFM_WIN_IMK = "rfm-win_imk"
+    RFM_MLS = "rfm-mls"
+    RFM_MLW = "rfm-mlw"
+    RFM_SAS = "rfm-sas"
+    RFM_SAW = "rfm-saw"
+    RFM_STD = "rfm-std"
+    RFM_TRO = "rfm-tro"
 
 
 @ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
@@ -163,7 +190,7 @@ def represent_profile_in_cells(
 
 
 def make(
-    identifier: str,
+    identifier: Identifier,
     altitudes: Optional[pathlib.Path] = None,
     represent_in_cells: bool = False,
     p_interp_method: str = "linear",
@@ -181,7 +208,7 @@ def make(
 
     Parameters
     ----------
-    identifier: str
+    identifier: Identifier
         Atmospheric profile identifier.
 
     altitudes: pathlib.Path
@@ -207,19 +234,12 @@ def make(
     -------
     :class:`~xarray.Dataset`
         Atmospheric profile.
-
-    Raises
-    ------
-    ValueError:
-        If atmospheric profile set is unknown.
     """
-    group, name = identifier.split("-")
-    if group == "afgl_1986":
-        ds = afgl_1986.read(name=name)
-    elif group == "rfm":
-        ds = rfm.read(name=name)
-    else:
-        raise ValueError("Invalid identifier '{identifier}': unknown group '{group}'")
+    group_name, identifier_name = identifier.value.split("-")
+    if group_name == "afgl_1986":
+        ds = afgl_1986.read(identifier=afgl_1986.Identifier(identifier_name))
+    if group_name == "rfm":
+        ds = rfm.read(identifier=rfm.Identifier(identifier_name))
 
     if altitudes is not None:
         ds = interp(

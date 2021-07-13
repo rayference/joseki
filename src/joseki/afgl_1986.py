@@ -11,8 +11,8 @@ from joseki import ureg
 from joseki import util
 
 
-class Name(enum.Enum):
-    """AFGL 1986 atmospheric profile name enumeration."""
+class Identifier(enum.Enum):
+    """AFGL 1986 atmospheric profile identifier enumeration."""
 
     TROPICAL = "tropical"
     MIDLATITUDE_SUMMER = "midlatitude_summer"
@@ -43,16 +43,16 @@ TABLE_2_DATA_FILES = (
 )
 
 DATA_FILES = {
-    Name.TROPICAL: ("table_1a.csv", *TABLE_2_DATA_FILES),
-    Name.MIDLATITUDE_SUMMER: ("table_1b.csv", *TABLE_2_DATA_FILES),
-    Name.MIDLATITUDE_WINTER: ("table_1c.csv", *TABLE_2_DATA_FILES),
-    Name.SUBARCTIC_SUMMER: ("table_1d.csv", *TABLE_2_DATA_FILES),
-    Name.SUBARCTIC_WINTER: ("table_1e.csv", *TABLE_2_DATA_FILES),
-    Name.US_STANDARD: ("table_1f.csv", *TABLE_2_DATA_FILES),
+    Identifier.TROPICAL: ("table_1a.csv", *TABLE_2_DATA_FILES),
+    Identifier.MIDLATITUDE_SUMMER: ("table_1b.csv", *TABLE_2_DATA_FILES),
+    Identifier.MIDLATITUDE_WINTER: ("table_1c.csv", *TABLE_2_DATA_FILES),
+    Identifier.SUBARCTIC_SUMMER: ("table_1d.csv", *TABLE_2_DATA_FILES),
+    Identifier.SUBARCTIC_WINTER: ("table_1e.csv", *TABLE_2_DATA_FILES),
+    Identifier.US_STANDARD: ("table_1f.csv", *TABLE_2_DATA_FILES),
 }
 
 
-def parse(name: Name) -> pd.DataFrame:
+def parse(identifier: Identifier) -> pd.DataFrame:
     """Parse table data files for a given atmospheric profile.
 
     Read the relevant raw data files corresponding to the atmospheric profile.
@@ -68,15 +68,15 @@ def parse(name: Name) -> pd.DataFrame:
 
     Parameters
     ----------
-    name: Name
-        Atmospheric profile name.
+    identifier: Identifier
+        Atmospheric profile identifier.
 
     Returns
     -------
     :class:`~pandas.DataFrame`
         Atmospheric profile data set.
     """
-    files = DATA_FILES[name]
+    files = DATA_FILES[identifier]
     dataframes = []
     for file in files:
         with pkg_resources.path(afgl_1986, file) as path:
@@ -88,7 +88,7 @@ def parse(name: Name) -> pd.DataFrame:
     return pd.concat(dataframes, axis=1)
 
 
-def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
+def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dataset:
     """Convert :meth:`parse`'s output to a :class:`~xarray.Dataset`.
 
     Use the ``z`` column of the output pandas.DataFrame of read_raw_data
@@ -105,8 +105,8 @@ def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
     df: :class:`~pandas.DataFrame`
         Atmospheric profile data.
 
-    name: str
-        Atmospheric profile name.
+    identifier: Identifier
+        Atmospheric profile identifier.
 
     kwargs: str
         Additional arguments passed to :meth:`util.make_data_set`.
@@ -150,7 +150,7 @@ def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
         mr=mr,
         z=z,
         species=np.array(species),
-        title=f"AFGL (1986) {name.replace('_', '-')} atmospheric profile",
+        title=f"AFGL (1986) {identifier.value.replace('_', '-')} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,
         **kwargs,
@@ -158,50 +158,26 @@ def to_xarray(df: pd.DataFrame, name: str, **kwargs: str) -> xr.Dataset:
     return ds
 
 
-def find_name(s: str) -> Name:
-    """Return :class:`Name` object corresponding to str representation.
-
-    Parameters
-    ----------
-    s: str
-        Atmospheric profile name.
-
-    Returns
-    -------
-    :class:`Name`
-        Atmospheric profile :class:`Name` object.
-
-    Raises
-    ------
-    ValueError:
-        When the atmospheric profile name is unknown.
-    """
-    for name in Name:
-        if name.value == s:
-            return name
-    raise ValueError(f"unknown name {s}")
-
-
-def read(name: str) -> xr.Dataset:
+def read(identifier: Identifier) -> xr.Dataset:
     """Read data files for a given atmospheric profile.
 
     Chain calls to :meth:`parse` and :meth:`to_xarray`.
 
     Parameters
     ----------
-    name: str
-        Atmospheric profile name.
-        See :class:`.Name` for possible values.
+    identifier: Identifier
+        Atmospheric profile identifier.
+        See :class:`.Identifier` for possible values.
 
     Returns
     -------
     :class:`~xarray.Dataset`
         Atmospheric profile data set.
     """
-    df = parse(name=find_name(name))
+    df = parse(identifier=identifier)
     return to_xarray(
         df=df,
-        name=name,
+        identifier=identifier,
         func_name="joseki.afgl_1986.read",
         operation="data set creation",
     )
