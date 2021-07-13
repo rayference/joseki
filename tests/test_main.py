@@ -16,11 +16,12 @@ def runner() -> CliRunner:
     return CliRunner()
 
 
-def test_main_succeeds(runner: CliRunner, tmpdir: Any) -> None:
+@pytest.mark.parametrize("identifier", __main__.IDENTIFIER_CHOICES)
+def test_main_succeeds(runner: CliRunner, tmpdir: Any, identifier: str) -> None:
     """Exits with a status code of zero."""
     result = runner.invoke(
         __main__.main,
-        ["--identifier=afgl_1986-tropical", f"--file-name={tmpdir / 'ds.nc'}"],
+        [f"--identifier={identifier}", f"--file-name={tmpdir / 'ds.nc'}"],
     )
     assert result.exit_code == 0
 
