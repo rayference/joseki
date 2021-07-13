@@ -4,7 +4,13 @@ from typing import Optional
 
 import click
 
+from . import afgl_1986
+from . import rfm
 from .core import make
+
+IDENTIFIER_CHOICES = [f"rfm-{n.value}" for n in rfm.Name] + [
+    f"afgl_1986-{n.value}" for n in afgl_1986.Name
+]
 
 
 @click.command()
@@ -21,19 +27,7 @@ from .core import make
     help="Atmospheric profile identifier.",
     required=True,
     type=click.Choice(
-        [
-            "afgl_1986-tropical",
-            "afgl_1986-midlatitude_summer",
-            "afgl_1986-midlatitude_winter",
-            "afgl_1986-subarctic_summer",
-            "afgl_1986-subarctic_winter",
-            "afgl_1986-us_standard",
-            "rfm-day",
-            "rfm-equ",
-            "rfm-ngt",
-            "rfm-sum",
-            "rfm-win",
-        ],
+        choices=IDENTIFIER_CHOICES,
         case_sensitive=True,
     ),
 )

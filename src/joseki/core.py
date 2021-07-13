@@ -176,7 +176,7 @@ def make(
     This method creates an atmospheric profile data set corresponding to the
     specified identifier.
     It allows to interpolate the atmospheric profile on a different
-    level altitude mesh as well as to set the layer altitude as the data
+    level altitude mesh as well as to set the layer center altitude as the data
     set's main coordinate.
 
     Parameters
