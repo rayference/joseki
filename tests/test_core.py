@@ -8,6 +8,12 @@ import xarray as xr
 
 from joseki import afgl_1986
 from joseki import core
+from joseki import rfm
+
+
+IDENTIFIER_CHOICES = [f"rfm-{n.value}" for n in rfm.Name] + [
+    f"afgl_1986-{n.value}" for n in afgl_1986.Name
+]
 
 
 def test_interp_returns_data_set() -> None:
@@ -39,64 +45,13 @@ def test_represent_profile_in_cells_coords() -> None:
         assert coord in interpolated.coords
 
 
-def test_make() -> None:
+@pytest.mark.parametrize(
+    "identifier",
+    IDENTIFIER_CHOICES,
+)
+def test_make(identifier: str) -> None:
     """Returns xr.Dataset."""
-    assert isinstance(core.make(identifier="afgl_1986-tropical"), xr.Dataset)
-
-
-def test_make_rfm_day() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-day"), xr.Dataset)
-
-
-def test_make_rfm_equ() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-equ"), xr.Dataset)
-
-
-def test_make_rfm_ngt() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-ngt"), xr.Dataset)
-
-
-def test_make_rfm_sum() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-sum"), xr.Dataset)
-
-
-def test_make_rfm_win() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-win"), xr.Dataset)
-
-
-def test_make_rfm_mls() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-mls"), xr.Dataset)
-
-
-def test_make_rfm_mlw() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-mlw"), xr.Dataset)
-
-
-def test_make_rfm_saw() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-saw"), xr.Dataset)
-
-
-def test_make_rfm_sas() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-sas"), xr.Dataset)
-
-
-def test_make_rfm_std() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-std"), xr.Dataset)
-
-
-def test_make_rfm_tro() -> None:
-    """."""
-    assert isinstance(core.make(identifier="rfm-tro"), xr.Dataset)
+    assert isinstance(core.make(identifier=identifier), xr.Dataset)
 
 
 def test_make_invalid_identifier() -> None:
@@ -105,20 +60,28 @@ def test_make_invalid_identifier() -> None:
         core.make(identifier="unknown-tropical"), xr.Dataset
 
 
-def test_make_represent_in_cells() -> None:
+@pytest.mark.parametrize(
+    "identifier",
+    IDENTIFIER_CHOICES,
+)
+def test_make_represent_in_cells(identifier: str) -> None:
     """Returned data set has z and zc dimensions."""
     ds = core.make(
-        identifier="afgl_1986-tropical",
+        identifier=identifier,
         represent_in_cells=True,
     )
     for dim in ["zn", "zc"]:
         assert dim in ds.dims
 
 
-def test_make_altitudes(tmpdir: Any) -> None:
+@pytest.mark.parametrize(
+    "identifier",
+    IDENTIFIER_CHOICES,
+)
+def test_make_altitudes(tmpdir: Any, identifier: str) -> None:
     """Assigns data set' altitude values from file."""
     z_values = np.linspace(0, 120, 121)
     path = pathlib.Path(tmpdir, "z.txt")
     np.savetxt(path, z_values)
-    ds = core.make(identifier="afgl_1986-tropical", altitudes=path)
+    ds = core.make(identifier=identifier, altitudes=path)
     assert np.allclose(ds.zn.values, z_values)
