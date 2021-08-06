@@ -9,6 +9,7 @@
    :maxdepth: 1
 
    usage
+   user_guide
    bibliography
    reference
    contributing
