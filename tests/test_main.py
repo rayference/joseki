@@ -41,7 +41,7 @@ def altitudes_path(tmpdir: Any) -> pathlib.Path:
     """Fixture for altitudes file path."""
     z_values = np.linspace(0, 120, 121)
     path = pathlib.Path(tmpdir, "z.txt")
-    np.savetxt(path, z_values)
+    np.savetxt(path, z_values)  # type: ignore[no-untyped-call]
     return path
 
 

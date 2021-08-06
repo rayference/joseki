@@ -35,12 +35,12 @@ from .units import ureg
     strict=False,
 )
 def make_data_set(
-    p: Union[pint.Quantity, np.ndarray],
-    t: Union[pint.Quantity, np.ndarray],
-    n: Union[pint.Quantity, np.ndarray],
-    mr: Union[pint.Quantity, np.ndarray],
-    z: Union[pint.Quantity, np.ndarray],
-    species: Union[pint.Quantity, np.ndarray],
+    p: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    t: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    n: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    mr: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    z: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    species: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     convention: str = "CF-1.8",
     title: str = "unknown",
     history: Optional[str] = None,

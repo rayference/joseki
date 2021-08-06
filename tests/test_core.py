@@ -79,6 +79,6 @@ def test_make_altitudes(tmpdir: Any, identifier: Identifier) -> None:
     """Assigns data set' altitude values from file."""
     z_values = np.linspace(0, 120, 121)
     path = pathlib.Path(tmpdir, "z.txt")
-    np.savetxt(path, z_values)
+    np.savetxt(path, z_values)  # type: ignore[no-untyped-call]
     ds = make(identifier=identifier, altitudes=path)
     assert np.allclose(ds.zn.values, z_values)

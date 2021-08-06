@@ -48,7 +48,7 @@ class Identifier(enum.Enum):
 @ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
 def interp(
     ds: xr.Dataset,
-    z_new: Union[pint.Quantity, np.ndarray],
+    z_new: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
     n_interp_method: str = "linear",
@@ -246,7 +246,11 @@ def make(
     if altitudes is not None:
         ds = interp(
             ds=ds,
-            z_new=np.loadtxt(fname=altitudes, dtype=float, comments="#"),
+            z_new=np.loadtxt(
+                fname=altitudes,
+                dtype=float,
+                comments="#",
+            ),  # type: ignore[no-untyped-call]
             p_interp_method=p_interp_method,
             t_interp_method=t_interp_method,
             n_interp_method=n_interp_method,
