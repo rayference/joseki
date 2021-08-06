@@ -255,7 +255,7 @@ def make(
     if altitudes is not None:
         ds = interp(
             ds=ds,
-            z_new=np.loadtxt(
+            z_new=np.loadtxt(  # type: ignore[no-untyped-call]
                 fname=altitudes,
                 dtype=float,
                 comments="#",
