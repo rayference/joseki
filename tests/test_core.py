@@ -76,3 +76,37 @@ def test_make_altitudes(tmpdir: Any, identifier: Identifier) -> None:
     np.savetxt(path, z_values)  # type: ignore[no-untyped-call]
     ds = make(identifier=identifier, altitudes=path)
     assert np.allclose(ds.zn.values, z_values)
+
+
+@pytest.mark.parametrize(
+    "identifier",
+    [
+        Identifier.AFGL_1986_TROPICAL,
+        Identifier.AFGL_1986_MIDLATITUDE_SUMMER,
+        Identifier.AFGL_1986_MIDLATITUDE_WINTER,
+        Identifier.AFGL_1986_SUBARCTIC_SUMMER,
+        Identifier.AFGL_1986_SUBARCTIC_WINTER,
+        Identifier.AFGL_1986_US_STANDARD,
+    ],
+)
+def test_make_additional_molecules_false(identifier: AFGL1986Identifier) -> None:
+    """Additional molecules not included when additional_molecules=False."""
+    ds = make(identifier=identifier, additional_molecules=False)
+    assert ds.molecules.size == 7
+
+
+@pytest.mark.parametrize(
+    "identifier",
+    [
+        Identifier.AFGL_1986_TROPICAL,
+        Identifier.AFGL_1986_MIDLATITUDE_SUMMER,
+        Identifier.AFGL_1986_MIDLATITUDE_WINTER,
+        Identifier.AFGL_1986_SUBARCTIC_SUMMER,
+        Identifier.AFGL_1986_SUBARCTIC_WINTER,
+        Identifier.AFGL_1986_US_STANDARD,
+    ],
+)
+def test_make_additional_molecules_true(identifier: AFGL1986Identifier) -> None:
+    """Additional molecules are included when additional_molecules=True."""
+    ds = make(identifier=identifier, additional_molecules=True)
+    assert ds.molecules.size == 28

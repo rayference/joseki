@@ -2,6 +2,7 @@
 import datetime
 import enum
 import pathlib
+from typing import Any
 from typing import Optional
 from typing import Union
 
@@ -203,6 +204,7 @@ def make(
     t_interp_method: str = "linear",
     n_interp_method: str = "linear",
     x_interp_method: str = "linear",
+    **kwargs: Any,
 ) -> xr.Dataset:
     """Make atmospheric profile data set.
 
@@ -236,6 +238,9 @@ def make(
     x_interp_method: str
         Volume mixing ratios interpolation method
 
+    kwargs: Any
+        Parameters passed to lower-level readers.
+
     Returns
     -------
     :class:`~xarray.Dataset`
@@ -243,9 +248,9 @@ def make(
     """
     group_name, identifier_name = identifier.value.split("-")
     if group_name == "afgl_1986":
-        ds = afgl_1986_read(identifier=AFGL1986Identifier(identifier_name))
+        ds = afgl_1986_read(identifier=AFGL1986Identifier(identifier_name), **kwargs)
     if group_name == "rfm":
-        ds = rfm_read(identifier=RFMIdentifier(identifier_name))
+        ds = rfm_read(identifier=RFMIdentifier(identifier_name), **kwargs)
 
     if altitudes is not None:
         ds = interp(

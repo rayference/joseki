@@ -88,7 +88,12 @@ def parse(identifier: Identifier) -> pd.DataFrame:
     return pd.concat(dataframes, axis=1)
 
 
-def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dataset:
+def to_xarray(
+    df: pd.DataFrame,
+    identifier: Identifier,
+    additional_molecules: bool = True,
+    **kwargs: str,
+) -> xr.Dataset:
     """Convert :meth:`parse`'s output to a :class:`~xarray.Dataset`.
 
     Use the ``z`` column of the output pandas.DataFrame of read_raw_data
@@ -107,6 +112,11 @@ def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dat
 
     identifier: Identifier
         Atmospheric profile identifier.
+
+    additional_molecules: bool
+        If ``True``, include molecules 8-28 as numbered in
+        :cite:`Anderson1986AtmosphericConstituentProfiles`.
+        Else, discard molecules 8-28.
 
     kwargs: str
         Additional arguments passed to :meth:`util.make_data_set`.
@@ -155,10 +165,13 @@ def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dat
         references=REFERENCE,
         **kwargs,
     )
-    return ds
+    if additional_molecules:
+        return ds
+    else:
+        return ds.isel(molecules=range(1, 8))
 
 
-def read(identifier: Identifier) -> xr.Dataset:
+def read(identifier: Identifier, additional_molecules: bool = True) -> xr.Dataset:
     """Read data files for a given atmospheric profile.
 
     Chain calls to :meth:`parse` and :meth:`to_xarray`.
@@ -169,6 +182,11 @@ def read(identifier: Identifier) -> xr.Dataset:
         Atmospheric profile identifier.
         See :class:`.Identifier` for possible values.
 
+    additional_molecules: bool
+        If ``True``, include molecules 8-28 as numbered in
+        :cite:`Anderson1986AtmosphericConstituentProfiles`.
+        Else, discard molecules 8-28.
+
     Returns
     -------
     :class:`~xarray.Dataset`
@@ -178,6 +196,7 @@ def read(identifier: Identifier) -> xr.Dataset:
     return to_xarray(
         df=df,
         identifier=identifier,
+        additional_molecules=additional_molecules,
         func_name="joseki.afgl_1986.read",
         operation="data set creation",
     )
