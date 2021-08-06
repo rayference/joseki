@@ -10,7 +10,7 @@ import numpy as np
 import pint
 import xarray as xr
 
-from joseki import ureg
+from .units import ureg
 
 
 @ureg.wraps(

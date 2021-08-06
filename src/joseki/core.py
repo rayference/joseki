@@ -10,11 +10,13 @@ import pint
 import xarray as xr
 from scipy import interpolate
 
+from .afgl_1986 import Identifier as AFGL1986Identifier
+from .afgl_1986 import read as afgl_1986_read
+from .rfm import Identifier as RFMIdentifier
+from .rfm import read as rfm_read
+from .units import ureg
+from .util import make_data_set
 from .util import to_quantity
-from joseki import afgl_1986
-from joseki import rfm
-from joseki import ureg
-from joseki import util
 
 
 class Identifier(enum.Enum):
@@ -103,7 +105,7 @@ def interp(
     )
 
     # Reform data set
-    interpolated: xr.Dataset = util.make_data_set(
+    interpolated: xr.Dataset = make_data_set(
         p=p_new,
         t=t_new,
         n=n_new,
@@ -237,9 +239,9 @@ def make(
     """
     group_name, identifier_name = identifier.value.split("-")
     if group_name == "afgl_1986":
-        ds = afgl_1986.read(identifier=afgl_1986.Identifier(identifier_name))
+        ds = afgl_1986_read(identifier=AFGL1986Identifier(identifier_name))
     if group_name == "rfm":
-        ds = rfm.read(identifier=rfm.Identifier(identifier_name))
+        ds = rfm_read(identifier=RFMIdentifier(identifier_name))
 
     if altitudes is not None:
         ds = interp(

@@ -16,8 +16,9 @@ import xarray as xr
 from scipy.constants import physical_constants
 
 from .data import rfm
-from joseki import ureg
-from joseki import util
+from .units import ureg
+from .util import make_data_set
+from .util import to_chemical_formula
 
 SOURCE = "unknown"
 
@@ -84,7 +85,7 @@ def _parse_var_name(n: str) -> str:
     if n in translate.keys():
         return translate[n]
     else:
-        return util.to_chemical_formula(n)
+        return to_chemical_formula(n)
 
 
 def _parse_var_line(s: str) -> Tuple[str, str]:
@@ -324,7 +325,7 @@ def read(
         species = da_total.species.values
         mr = da_total.values
 
-    ds: xr.Dataset = util.make_data_set(
+    ds: xr.Dataset = make_data_set(
         p=p,
         t=t,
         n=n,

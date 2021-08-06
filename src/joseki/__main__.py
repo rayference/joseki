@@ -4,9 +4,10 @@ from typing import Optional
 
 import click
 
-from joseki import core
+from .core import Identifier
+from .core import make
 
-IDENTIFIER_CHOICES = [identifier.value for identifier in core.Identifier]
+IDENTIFIER_CHOICES = [identifier.value for identifier in Identifier]
 
 
 @click.command()
@@ -140,8 +141,8 @@ def main(
     x_interp_method: str,
 ) -> None:
     """Joseki command-line interface."""
-    ds = core.make(
-        identifier=core.Identifier(identifier),
+    ds = make(
+        identifier=Identifier(identifier),
         altitudes=altitudes if altitudes is None else pathlib.Path(altitudes),
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,

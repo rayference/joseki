@@ -4,7 +4,9 @@ import pint
 import pytest
 import xarray as xr
 
-from joseki import util
+from joseki.util import to_chemical_formula
+from joseki.util import to_quantity
+from joseki.util import translate_cfc
 
 
 @pytest.fixture
@@ -21,31 +23,31 @@ def dataset() -> xr.Dataset:
 
 def test_to_quantity(dataset: xr.Dataset) -> None:
     """Returns a quantity."""
-    assert isinstance(util.to_quantity(dataset.x), pint.Quantity)
+    assert isinstance(to_quantity(dataset.x), pint.Quantity)
 
 
 def test_to_quantity_raises(dataset: xr.Dataset) -> None:
     """Raises when the DataArray's metadata does not contain a units field."""
     with pytest.raises(ValueError):
-        util.to_quantity(dataset.y)
+        to_quantity(dataset.y)
 
 
 def test_translate_cfc() -> None:
     """Converts F13 into CClF3."""
-    assert util.translate_cfc("F13") == "CClF3"
+    assert translate_cfc("F13") == "CClF3"
 
 
 def test_translate_cfc_unknown() -> None:
     """Raises when the chlorofulorocarbon is unknown."""
     with pytest.raises(ValueError):
-        util.translate_cfc("unknown")
+        translate_cfc("unknown")
 
 
 def test_to_chemical_formula_cfc() -> None:
     """Converts a chlorofulorocarbon name to its chemical formula."""
-    assert util.to_chemical_formula("F13") == "CClF3"
+    assert to_chemical_formula("F13") == "CClF3"
 
 
 def test_to_chemical_formula_h2o() -> None:
     """Returns non-chlorofulorocarbon name unchanged."""
-    assert util.to_chemical_formula("H2O") == "H2O"
+    assert to_chemical_formula("H2O") == "H2O"

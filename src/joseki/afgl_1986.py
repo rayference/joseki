@@ -7,8 +7,8 @@ import pandas as pd
 import xarray as xr
 
 from .data import afgl_1986
-from joseki import ureg
-from joseki import util
+from .units import ureg
+from .util import make_data_set
 
 
 class Identifier(enum.Enum):
@@ -143,7 +143,7 @@ def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dat
         mr_values.append(mrs)
     mr = ureg.Quantity(np.array(mr_values), "")
 
-    ds: xr.Dataset = util.make_data_set(
+    ds: xr.Dataset = make_data_set(
         p=p,
         t=t,
         n=n,
