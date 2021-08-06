@@ -43,7 +43,7 @@ def test_to_xarray_all_data_vars(identifier: Identifier) -> None:
     """Adds all expected data variables to data set."""
     df = parse(identifier=identifier)
     ds = to_xarray(df=df, identifier=identifier)
-    expected_data_vars = ["p", "t", "n", "mr"]
+    expected_data_vars = ["p", "t", "n", "x"]
     assert all([data_var in ds.data_vars for data_var in expected_data_vars])
 
 

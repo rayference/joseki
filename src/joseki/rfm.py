@@ -289,7 +289,7 @@ def read(
     t = quantities.pop("t")
     n = p / (K * t)  # perfect gas equation
     species = np.array(list(quantities.keys()))
-    mr = np.array([quantities[s].magnitude for s in species])
+    x = np.array([quantities[s].magnitude for s in species])
 
     if additional_species:
         extra_quantities, extra_url_info = read_additional_species(
@@ -297,18 +297,18 @@ def read(
         )
         extra_z = extra_quantities.pop("z")
         extra_species = np.array(list(extra_quantities.keys()))
-        extra_mr = np.array([extra_quantities[s].magnitude for s in extra_species])
+        extra_x = np.array([extra_quantities[s].magnitude for s in extra_species])
 
         # initial species
         da = xr.DataArray(
-            mr,
+            x,
             dims=["species", "z"],
             coords={"species": species, "z": z.magnitude},
         )
 
         # additional species
         da_extra = xr.DataArray(
-            extra_mr,
+            extra_x,
             dims=["species", "z"],
             coords={
                 "species": extra_species,
@@ -323,13 +323,13 @@ def read(
         # concatenate initial and additional species
         da_total = xr.concat([da, da_extra_interp], dim="species")
         species = da_total.species.values
-        mr = da_total.values
+        x = da_total.values
 
     ds: xr.Dataset = make_data_set(
         p=p,
         t=t,
         n=n,
-        mr=mr,
+        x=x,
         z=z,
         species=species,
         func_name="joseki.rfm.read",

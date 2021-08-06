@@ -137,17 +137,17 @@ def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dat
     n = ureg.Quantity(df.n.values, "cm^-3").to("m^-3")
 
     # mixing ratios
-    mr_values = []
+    x_values = []
     for s in species:
-        mrs = df[s].values * 1e-6  # raw data mixing ratios are in ppmv
-        mr_values.append(mrs)
-    mr = ureg.Quantity(np.array(mr_values), "")
+        xs = df[s].values * 1e-6  # raw data mixing ratios are in ppmv
+        x_values.append(xs)
+    x = ureg.Quantity(np.array(x_values), "")
 
     ds: xr.Dataset = make_data_set(
         p=p,
         t=t,
         n=n,
-        mr=mr,
+        x=x,
         z=z,
         species=np.array(species),
         title=f"AFGL (1986) {identifier.value.replace('_', '-')} atmospheric profile",

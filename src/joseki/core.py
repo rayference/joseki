@@ -100,7 +100,7 @@ def interp(
     n_new = fn(z_new)
 
     # Interpolate volume mixing ratio
-    mr_new = ds.mr.interp(
+    x_new = ds.x.interp(
         zn=z_new, method=x_interp_method, kwargs=dict(bounds_error=True)
     )
 
@@ -109,7 +109,7 @@ def interp(
         p=p_new,
         t=t_new,
         n=n_new,
-        mr=mr_new.values,
+        x=x_new.values,
         z=z_new,
         species=ds.species.values,
         func_name="joseki.core.interp",

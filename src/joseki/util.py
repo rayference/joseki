@@ -38,7 +38,7 @@ def make_data_set(
     p: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     t: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     n: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    mr: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    x: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     z: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     species: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     convention: str = "CF-1.8",
@@ -64,7 +64,7 @@ def make_data_set(
     n: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Number density [m^-3].
 
-    mr: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+    x: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Volume mixing ratios [/].
 
     z: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
@@ -151,12 +151,12 @@ def make_data_set(
                     units="m^-3",
                 ),
             ),
-            mr=(
+            x=(
                 ("species", "zn"),
-                mr,
+                x,
                 dict(
-                    standard_name="mixing_ratio",
-                    long_name="mixing ratio",
+                    standard_name="volume_mixing_ratio",
+                    long_name="volume mixing ratio",
                     units="",
                 ),
             ),
