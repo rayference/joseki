@@ -34,7 +34,7 @@ def test_to_xarray_all_coords(identifier: Identifier) -> None:
     """Adds all expected coordinates to data set."""
     df = parse(identifier=identifier)
     ds = to_xarray(df=df, identifier=identifier)
-    expected_coords = ["zn", "species"]
+    expected_coords = ["zn", "molecules"]
     assert all([coord in ds.coords for coord in expected_coords])
 
 

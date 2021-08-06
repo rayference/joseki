@@ -207,11 +207,11 @@ def _read_file_content(file_name: str) -> Tuple[str, Dict[str, str]]:
         return content, dict()
 
 
-def read_additional_species(
+def read_additional_molecules(
     identifier: Identifier,
 ) -> Tuple[Dict[str, ureg.Quantity], Dict[str, str]]:
     """
-    Read additional species data file.
+    Read additional molecules data file.
 
     Parameters
     ----------
@@ -222,7 +222,7 @@ def read_additional_species(
     Returns
     -------
     tuple of dict of str and :class:`~pint.Quantity` and dict of str and str:
-        Additional species parsed content, URL information.
+        Additional molecules parsed content, URL information.
     """
     if identifier in [
         Identifier.DAY,
@@ -231,14 +231,14 @@ def read_additional_species(
         Identifier.SUM,
         Identifier.WIN,
     ]:
-        add_species_name = "extra"
+        add_molecules_name = "extra"
     if identifier in [
         Identifier.DAY_IMK,
         Identifier.NGT_IMK,
         Identifier.SUM_IMK,
         Identifier.WIN_IMK,
     ]:
-        add_species_name = "extra_imk"
+        add_molecules_name = "extra_imk"
     if identifier in [
         Identifier.MLS,
         Identifier.MLW,
@@ -247,15 +247,15 @@ def read_additional_species(
         Identifier.STD,
         Identifier.TRO,
     ]:
-        add_species_name = "minor"
+        add_molecules_name = "minor"
 
-    content, url_info = _read_file_content(file_name=add_species_name)
+    content, url_info = _read_file_content(file_name=add_molecules_name)
     parsed_content = _parse_content(content.splitlines())
     return parsed_content, url_info
 
 
 def read(
-    identifier: Identifier, additional_species: Optional[bool] = False
+    identifier: Identifier, additional_molecules: Optional[bool] = False
 ) -> xr.Dataset:
     """Read RFM atmospheric data files.
 
@@ -270,8 +270,8 @@ def read(
         Atmospheric profile identifier.
         See :class:`.Identifier` for possible values.
 
-    additional_species: bool
-        Set to ``True`` to include the additional species to the atmospheric
+    additional_molecules: bool
+        Set to ``True`` to include the additional molecules to the atmospheric
         profile.
 
     Returns
@@ -288,41 +288,41 @@ def read(
     p = quantities.pop("p")
     t = quantities.pop("t")
     n = p / (K * t)  # perfect gas equation
-    species = np.array(list(quantities.keys()))
-    x = np.array([quantities[s].magnitude for s in species])
+    molecules = np.array(list(quantities.keys()))
+    x = np.array([quantities[molecule].magnitude for molecule in molecules])
 
-    if additional_species:
-        extra_quantities, extra_url_info = read_additional_species(
+    if additional_molecules:
+        extra_quantities, extra_url_info = read_additional_molecules(
             identifier=identifier
         )
         extra_z = extra_quantities.pop("z")
-        extra_species = np.array(list(extra_quantities.keys()))
-        extra_x = np.array([extra_quantities[s].magnitude for s in extra_species])
+        extra_molecules = np.array(list(extra_quantities.keys()))
+        extra_x = np.array([extra_quantities[s].magnitude for s in extra_molecules])
 
-        # initial species
+        # initial molecules
         da = xr.DataArray(
             x,
-            dims=["species", "z"],
-            coords={"species": species, "z": z.magnitude},
+            dims=["molecules", "z"],
+            coords={"molecules": molecules, "z": z.magnitude},
         )
 
-        # additional species
+        # additional molecules
         da_extra = xr.DataArray(
             extra_x,
-            dims=["species", "z"],
+            dims=["molecules", "z"],
             coords={
-                "species": extra_species,
+                "molecules": extra_molecules,
                 "z": extra_z.m_as(z.units),
             },
         )
 
-        # interpolate additional species mixing ratio on altitude mesh used
-        # for initial species mixing ratio:
+        # interpolate additional molecules mixing ratio on altitude mesh used
+        # for initial molecules mixing ratio:
         da_extra_interp = np.exp(np.log(da_extra).interp(z=z.m_as(z.units)))
 
-        # concatenate initial and additional species
-        da_total = xr.concat([da, da_extra_interp], dim="species")
-        species = da_total.species.values
+        # concatenate initial and additional molecules
+        da_total = xr.concat([da, da_extra_interp], dim="molecules")
+        molecules = da_total.molecules.values
         x = da_total.values
 
     ds: xr.Dataset = make_data_set(
@@ -331,7 +331,7 @@ def read(
         n=n,
         x=x,
         z=z,
-        species=species,
+        molecules=molecules,
         func_name="joseki.rfm.read",
         operation="data set creation",
         title=f"RFM {DESCRIPTION[identifier.value]} atmospheric profile",

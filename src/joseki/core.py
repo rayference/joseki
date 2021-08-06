@@ -111,7 +111,7 @@ def interp(
         n=n_new,
         x=x_new.values,
         z=z_new,
-        species=ds.species.values,
+        molecules=ds.molecules.values,
         func_name="joseki.core.interp",
         operation="data set interpolation",
         **ds.attrs,

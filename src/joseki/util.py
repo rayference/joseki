@@ -40,7 +40,7 @@ def make_data_set(
     n: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     x: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     z: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    species: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    molecules: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     convention: str = "CF-1.8",
     title: str = "unknown",
     history: Optional[str] = None,
@@ -70,8 +70,8 @@ def make_data_set(
     z: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
         Altitude [km].
 
-    species: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Species [/].
+    molecules: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
+        Molecules [/].
 
     convention: str
         Metadata convention.
@@ -152,7 +152,7 @@ def make_data_set(
                 ),
             ),
             x=(
-                ("species", "zn"),
+                ("molecules", "zn"),
                 x,
                 dict(
                     standard_name="volume_mixing_ratio",
@@ -171,12 +171,12 @@ def make_data_set(
                     units="km",
                 ),
             ),
-            species=(
-                "species",
-                species,
+            molecules=(
+                "molecules",
+                molecules,
                 dict(
-                    standard_name="species",
-                    long_name="species",
+                    standard_name="molecules",
+                    long_name="molecules",
                     units="",
                 ),
             ),

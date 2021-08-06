@@ -116,13 +116,13 @@ def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dat
     :class:`~xarray.Dataset`
         Atmospheric profile data set.
     """
-    # list species
-    # species labels correspond to column with upper case first letter in
+    # list molecules
+    # molecules labels correspond to column with upper case first letter in
     # raw data DataFrames
-    species = []
+    molecules = []
     for column in df.columns:
         if column[0].isupper():
-            species.append(column)
+            molecules.append(column)
 
     # level altitudes
     z = ureg.Quantity(df.z.values, "km")
@@ -138,7 +138,7 @@ def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dat
 
     # mixing ratios
     x_values = []
-    for s in species:
+    for s in molecules:
         xs = df[s].values * 1e-6  # raw data mixing ratios are in ppmv
         x_values.append(xs)
     x = ureg.Quantity(np.array(x_values), "")
@@ -149,7 +149,7 @@ def to_xarray(df: pd.DataFrame, identifier: Identifier, **kwargs: str) -> xr.Dat
         n=n,
         x=x,
         z=z,
-        species=np.array(species),
+        molecules=np.array(molecules),
         title=f"AFGL (1986) {identifier.value.replace('_', '-')} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,

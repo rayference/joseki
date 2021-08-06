@@ -12,7 +12,7 @@ from joseki.rfm import _parse_var_line
 from joseki.rfm import _parse_var_name
 from joseki.rfm import Identifier
 from joseki.rfm import read
-from joseki.rfm import read_additional_species
+from joseki.rfm import read_additional_molecules
 from joseki.rfm import read_file_content
 
 
@@ -151,9 +151,9 @@ def test_read_file_content(identifier: Identifier) -> None:
 
 
 @pytest.mark.parametrize("identifier", [n for n in Identifier])
-def test_read_additional_species(identifier: Identifier) -> None:
+def test_read_additional_molecules(identifier: Identifier) -> None:
     """Returns a tuple."""
-    output = read_additional_species(identifier=identifier)
+    output = read_additional_molecules(identifier=identifier)
     assert isinstance(output, tuple)
 
 
@@ -165,9 +165,9 @@ def test_read(identifier: Identifier) -> None:
 
 
 @pytest.mark.parametrize("identifier", [n for n in Identifier])
-def test_read_additional_species_true(identifier: Identifier) -> None:
+def test_read_additional_molecules_true(identifier: Identifier) -> None:
     """Returns a :class:`~xarray.Dataset`."""
-    ds = read(identifier=identifier, additional_species=True)
+    ds = read(identifier=identifier, additional_molecules=True)
     assert isinstance(ds, xr.Dataset)
 
 
