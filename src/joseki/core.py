@@ -132,8 +132,9 @@ def represent_profile_in_cells(
     The layer's center altitude is defined as the average of these two values.
     The pressure, temperature, number density and mixing ratio fields are
     interpolated at these layer' center altitude values.
-    In the new atmospheric profile, a layer' center altitude coordinate is
-    added (if not already present).
+    In the new atmospheric profile, the 'zn' coordinate is removed, a layer'
+    center altitude coordinate 'z' is added and a data variable 'z_bounds'
+    indicating the altitude bounds of each layer, is added.
 
 
     Parameters
@@ -159,29 +160,32 @@ def represent_profile_in_cells(
         Cells representation of the atmospheric profile.
     """
     zn = to_quantity(ds.zn)
-    zc = (zn[:-1] + zn[1:]) / 2.0
+    z = (zn[:-1] + zn[1:]) / 2.0
     interpolated: xr.Dataset = interp(
         ds=ds,
-        z_new=zc,
+        z_new=z,
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
         n_interp_method=n_interp_method,
         x_interp_method=x_interp_method,
     )
-    interpolated = interpolated.rename({"zn": "zc"})
-    interpolated.zc.attrs = dict(
+    interpolated = interpolated.rename({"zn": "z"})
+    interpolated.z.attrs = dict(
         standard_name="layer_center_altitude",
         long_name="layer center altitude",
         units="km",
     )
-    interpolated.coords["zn"] = (
-        "zn",
-        zn.magnitude,
-        dict(
-            standard_name="altitude",
-            long_name="altitude",
-            units="km",
-        ),
+    zb = np.array([zn.magnitude[:-1], zn.magnitude[1:]])
+    interpolated = interpolated.assign(
+        z_bounds=(
+            ("zbv", "z"),
+            zb,
+            dict(
+                standard_name="altitude",
+                long_name="altitude",
+                units="km",
+            ),
+        )
     )
     interpolated.attrs.update(
         history=interpolated.history + f"\n{datetime.datetime.utcnow()} "

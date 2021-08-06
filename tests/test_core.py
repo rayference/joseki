@@ -41,13 +41,6 @@ def test_represent_profile_in_cells(test_data_set: xr.Dataset) -> None:
     assert isinstance(interpolated, xr.Dataset)
 
 
-def test_represent_profile_in_cells_coords(test_data_set: xr.Dataset) -> None:
-    """'z' and 'zc' are both coordinates."""
-    interpolated = represent_profile_in_cells(ds=test_data_set)
-    for coord in ["zn", "zc"]:
-        assert coord in interpolated.coords
-
-
 @pytest.mark.parametrize(
     "identifier",
     IDENTIFIER_CHOICES,
@@ -62,13 +55,14 @@ def test_make(identifier: Identifier) -> None:
     IDENTIFIER_CHOICES,
 )
 def test_make_represent_in_cells(identifier: Identifier) -> None:
-    """Returned data set has z and zc dimensions."""
+    """Returned data set has dimensions zbv and z and data variable z_bounds."""
     ds = make(
         identifier=identifier,
         represent_in_cells=True,
     )
-    for dim in ["zn", "zc"]:
+    for dim in ["zbv", "z"]:
         assert dim in ds.dims
+    assert "z_bounds" in ds.data_vars
 
 
 @pytest.mark.parametrize(
