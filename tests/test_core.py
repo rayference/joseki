@@ -41,6 +41,13 @@ def test_represent_profile_in_cells(test_data_set: xr.Dataset) -> None:
     assert isinstance(interpolated, xr.Dataset)
 
 
+def test_represent_profile_in_cells_twice(test_data_set: xr.Dataset) -> None:
+    """Running function twice has no effect."""
+    ds1 = represent_profile_in_cells(ds=test_data_set)
+    ds2 = represent_profile_in_cells(ds=ds1)
+    assert ds1 == ds2
+
+
 @pytest.mark.parametrize(
     "identifier",
     IDENTIFIER_CHOICES,
@@ -75,7 +82,7 @@ def test_make_altitudes(tmpdir: Any, identifier: Identifier) -> None:
     path = pathlib.Path(tmpdir, "z.txt")
     np.savetxt(path, z_values)  # type: ignore[no-untyped-call]
     ds = make(identifier=identifier, altitudes=path)
-    assert np.allclose(ds.zn.values, z_values)
+    assert np.allclose(ds.z.values, z_values)
 
 
 @pytest.mark.parametrize(

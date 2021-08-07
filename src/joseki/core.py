@@ -84,26 +84,24 @@ def interp(
     """
     # Interpolate pressure
     fp = interpolate.interp1d(
-        ds.zn.values, ds.p.values, kind=p_interp_method, bounds_error=True
+        ds.z.values, ds.p.values, kind=p_interp_method, bounds_error=True
     )
     p_new = fp(z_new)
 
     # Interpolate temperature
     ft = interpolate.interp1d(
-        ds.zn.values, ds.t.values, kind=t_interp_method, bounds_error=True
+        ds.z.values, ds.t.values, kind=t_interp_method, bounds_error=True
     )
     t_new = ft(z_new)
 
     # Interpolate number density
     fn = interpolate.interp1d(
-        ds.zn.values, ds.n.values, kind=n_interp_method, bounds_error=True
+        ds.z.values, ds.n.values, kind=n_interp_method, bounds_error=True
     )
     n_new = fn(z_new)
 
     # Interpolate volume mixing ratio
-    x_new = ds.x.interp(
-        zn=z_new, method=x_interp_method, kwargs=dict(bounds_error=True)
-    )
+    x_new = ds.x.interp(z=z_new, method=x_interp_method, kwargs=dict(bounds_error=True))
 
     # Reform data set
     interpolated: xr.Dataset = make_data_set(
@@ -160,27 +158,30 @@ def represent_profile_in_cells(
     :class:`~xarray.Dataset`
         Cells representation of the atmospheric profile.
     """
-    zn = to_quantity(ds.zn)
-    z = (zn[:-1] + zn[1:]) / 2.0
+    # if the profile is already represented in cells, do nothing
+    if ds.z.standard_name == "layer_center_altitude":
+        return ds
+
+    z_nodes = to_quantity(ds.z)
+    z_centers = (z_nodes[:-1] + z_nodes[1:]) / 2.0
     interpolated: xr.Dataset = interp(
         ds=ds,
-        z_new=z,
+        z_new=z_centers,
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
         n_interp_method=n_interp_method,
         x_interp_method=x_interp_method,
     )
-    interpolated = interpolated.rename({"zn": "z"})
     interpolated.z.attrs = dict(
         standard_name="layer_center_altitude",
         long_name="layer center altitude",
         units="km",
     )
-    zb = np.array([zn.magnitude[:-1], zn.magnitude[1:]])
+    z_bounds = np.array([z_nodes.magnitude[:-1], z_nodes.magnitude[1:]])
     interpolated = interpolated.assign(
         z_bounds=(
             ("zbv", "z"),
-            zb,
+            z_bounds,
             dict(
                 standard_name="altitude",
                 long_name="altitude",
