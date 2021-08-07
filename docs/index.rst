@@ -10,6 +10,7 @@
 
    usage
    user_guide
+   format
    bibliography
    reference
    contributing

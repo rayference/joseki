@@ -33,6 +33,15 @@ If you want, you can save the data set to the disk as a NETCDF file:
 
    ds.to_netcdf("my_data_set.nc")
 
+Open the data set again using :class:`xarray.open_dataset`:
+
+.. code-block:: python
+
+   import xarray as xr
+
+   ds = xr.open_dataset("my_data_set.nc")
+
+The data sets format is described :ref:`here <format>`.
 
 Cells representation
 --------------------
