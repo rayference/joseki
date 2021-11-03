@@ -15,9 +15,9 @@ from .afgl_1986 import Identifier as AFGL1986Identifier
 from .afgl_1986 import read as afgl_1986_read
 from .rfm import Identifier as RFMIdentifier
 from .rfm import read as rfm_read
+from .units import to_quantity
 from .units import ureg
 from .util import make_data_set
-from .util import to_quantity
 
 
 class Identifier(enum.Enum):
