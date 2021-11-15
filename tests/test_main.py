@@ -1,6 +1,6 @@
 """Test cases for the __main__ module."""
 import pathlib
-from typing import Any
+import typing as t
 
 import numpy as np
 import pytest
@@ -17,7 +17,7 @@ def runner() -> CliRunner:
 
 
 @pytest.mark.parametrize("identifier", __main__.IDENTIFIER_CHOICES)
-def test_main_succeeds(runner: CliRunner, tmpdir: Any, identifier: str) -> None:
+def test_main_succeeds(runner: CliRunner, tmpdir: t.Any, identifier: str) -> None:
     """Exits with a status code of zero."""
     result = runner.invoke(
         __main__.main,
@@ -26,7 +26,7 @@ def test_main_succeeds(runner: CliRunner, tmpdir: Any, identifier: str) -> None:
     assert result.exit_code == 0
 
 
-def test_main_open_data_set(runner: CliRunner, tmpdir: Any) -> None:
+def test_main_open_data_set(runner: CliRunner, tmpdir: t.Any) -> None:
     """Returns a xarray.Dataset."""
     path = pathlib.Path(tmpdir / "ds.nc")
     runner.invoke(
@@ -37,7 +37,7 @@ def test_main_open_data_set(runner: CliRunner, tmpdir: Any) -> None:
 
 
 @pytest.fixture
-def altitudes_path(tmpdir: Any) -> pathlib.Path:
+def altitudes_path(tmpdir: t.Any) -> pathlib.Path:
     """Fixture for altitudes file path."""
     z_values = np.linspace(0, 120, 121)
     path = pathlib.Path(tmpdir, "z.txt")
@@ -46,7 +46,7 @@ def altitudes_path(tmpdir: Any) -> pathlib.Path:
 
 
 def test_main_altitude_path(
-    runner: CliRunner, tmpdir: Any, altitudes_path: pathlib.Path
+    runner: CliRunner, tmpdir: t.Any, altitudes_path: pathlib.Path
 ) -> None:
     """Exits with a status code of zero when --altitudes option is used."""
     result = runner.invoke(
@@ -60,7 +60,7 @@ def test_main_altitude_path(
     assert result.exit_code == 0
 
 
-def test_main_represent_in_cells(runner: CliRunner, tmpdir: Any) -> None:
+def test_main_represent_in_cells(runner: CliRunner, tmpdir: t.Any) -> None:
     """Exits with a status code of zero with option --represent-in-cells."""
     result = runner.invoke(
         __main__.main,

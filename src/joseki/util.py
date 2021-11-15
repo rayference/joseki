@@ -1,10 +1,6 @@
 """Utility module."""
 import datetime
-from typing import Any
-from typing import Dict
-from typing import Hashable
-from typing import Optional
-from typing import Union
+import typing as t
 
 import numpy as np
 import pint
@@ -35,21 +31,21 @@ from .units import ureg
     strict=False,
 )
 def make_data_set(
-    p: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    t: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    n: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    x: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    z: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    molecules: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    p: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    t: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    n: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    x: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    z: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    molecules: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     convention: str = "CF-1.8",
     title: str = "unknown",
-    history: Optional[str] = None,
+    history: t.Optional[str] = None,
     func_name: str = "unknown",
     operation: str = "unknown",
     source: str = "unknown",
     references: str = "unknown",
-    url: Optional[str] = None,
-    url_date: Optional[str] = None,
+    url: t.Optional[str] = None,
+    url_date: t.Optional[str] = None,
 ) -> xr.Dataset:
     """Make an atmospheric profile data set.
 
@@ -110,7 +106,7 @@ def make_data_set(
         history = f"{datetime.datetime.utcnow()}" f"- {operation} - {func_name}\n"
     else:
         history += f"{datetime.datetime.utcnow()} " f"- {operation} - {func_name}\n"
-    attrs: Dict[Hashable, Any] = dict(
+    attrs = dict(
         convention=convention,
         title=title,
         history=history,
@@ -181,7 +177,7 @@ def make_data_set(
                 ),
             ),
         ),
-        attrs=attrs,
+        attrs=attrs,  # type: ignore
     )
 
 

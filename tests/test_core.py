@@ -1,6 +1,6 @@
 """Test cases for the core module."""
 import pathlib
-from typing import Any
+import typing as t
 
 import numpy as np
 import pytest
@@ -76,7 +76,7 @@ def test_make_represent_in_cells(identifier: Identifier) -> None:
     "identifier",
     IDENTIFIER_CHOICES,
 )
-def test_make_altitudes(tmpdir: Any, identifier: Identifier) -> None:
+def test_make_altitudes(tmpdir: t.Any, identifier: Identifier) -> None:
     """Assigns data set' altitude values from file."""
     z_values = np.linspace(0, 120, 121)
     path = pathlib.Path(tmpdir, "z.txt")

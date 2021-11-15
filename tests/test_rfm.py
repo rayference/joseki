@@ -1,5 +1,5 @@
 """Test cases for the rfm module."""
-from typing import Any
+import typing as t
 
 import pytest
 import requests
@@ -174,7 +174,7 @@ def test_read_additional_molecules_true(identifier: Identifier) -> None:
 class MockConnectionError:
     """ConnectionError mock."""
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, *args: t.Any, **kwargs: t.Any) -> None:
         raise requests.exceptions.ConnectionError
 
 

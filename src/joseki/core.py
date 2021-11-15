@@ -2,9 +2,7 @@
 import datetime
 import enum
 import pathlib
-from typing import Any
-from typing import Optional
-from typing import Union
+import typing as t
 
 import numpy as np
 import pint
@@ -49,7 +47,7 @@ class Identifier(enum.Enum):
 @ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
 def interp(
     ds: xr.Dataset,
-    z_new: Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    z_new: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
     n_interp_method: str = "linear",
@@ -199,13 +197,13 @@ def represent_profile_in_cells(
 
 def make(
     identifier: Identifier,
-    altitudes: Optional[pathlib.Path] = None,
+    altitudes: t.Optional[pathlib.Path] = None,
     represent_in_cells: bool = False,
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
     n_interp_method: str = "linear",
     x_interp_method: str = "linear",
-    **kwargs: Any,
+    **kwargs: t.Any,
 ) -> xr.Dataset:
     """Make atmospheric profile data set.
 

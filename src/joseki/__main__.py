@@ -1,6 +1,6 @@
 """Command-line interface."""
 import pathlib
-from typing import Optional
+import typing as t
 
 import click
 
@@ -133,7 +133,7 @@ IDENTIFIER_CHOICES = [identifier.value for identifier in Identifier]
 def main(
     file_name: str,
     identifier: str,
-    altitudes: Optional[str],
+    altitudes: t.Optional[str],
     represent_in_cells: bool,
     p_interp_method: str,
     t_interp_method: str,

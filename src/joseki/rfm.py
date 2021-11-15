@@ -4,11 +4,8 @@ Reference Forward Model (RFM) website: http://eodg.atm.ox.ac.uk/RFM/.
 """
 import enum
 import importlib.resources as pkg_resources
+import typing as t
 from datetime import datetime
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
 
 import numpy as np
 import requests
@@ -88,7 +85,7 @@ def _parse_var_name(n: str) -> str:
         return to_chemical_formula(n)
 
 
-def _parse_var_line(s: str) -> Tuple[str, str]:
+def _parse_var_line(s: str) -> t.Tuple[str, str]:
     """Parse a line with the declaration of a variable and its units."""
     parts = s[1:].strip().split()
     if len(parts) == 2:
@@ -102,7 +99,7 @@ def _parse_var_line(s: str) -> Tuple[str, str]:
     return var, units
 
 
-def _parse_values_line(s: str) -> List[str]:
+def _parse_values_line(s: str) -> t.List[str]:
     """Parse a line with numeric values."""
     if "," in s:  # delimiter is comma and whitespace combined
         s_strip = s.strip()
@@ -113,12 +110,12 @@ def _parse_values_line(s: str) -> List[str]:
         return s.split()
 
 
-def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
+def _parse_content(lines: t.List[str]) -> t.Dict[str, ureg.Quantity]:
     """Parse lines."""
     iterator = iter(lines)
     line = next(iterator)
 
-    quantities: Dict[str, ureg.Quantity] = {}
+    quantities: t.Dict[str, ureg.Quantity] = {}
 
     def _add_to_quantities(quantity: ureg.Quantity, name: str) -> None:
         if quantity.units == "ppmv":
@@ -128,7 +125,7 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
 
     var: str = ""
     units: str = ""
-    values: List[str] = []
+    values: t.List[str] = []
     while line != "*END":
         if line.startswith("!"):
             pass  # this is a comment, ignore the line
@@ -160,7 +157,7 @@ def _parse_content(lines: List[str]) -> Dict[str, ureg.Quantity]:
     return quantities
 
 
-def read_file_content(identifier: Identifier) -> Tuple[str, Dict[str, str]]:
+def read_file_content(identifier: Identifier) -> t.Tuple[str, t.Dict[str, str]]:
     """
     Read atmospheric profile data file content.
 
@@ -179,7 +176,7 @@ def read_file_content(identifier: Identifier) -> Tuple[str, Dict[str, str]]:
     return _read_file_content(file_name=file_name)
 
 
-def _read_file_content(file_name: str) -> Tuple[str, Dict[str, str]]:
+def _read_file_content(file_name: str) -> t.Tuple[str, t.Dict[str, str]]:
     """
     Read data file content.
 
@@ -209,7 +206,7 @@ def _read_file_content(file_name: str) -> Tuple[str, Dict[str, str]]:
 
 def read_additional_molecules(
     identifier: Identifier,
-) -> Tuple[Dict[str, ureg.Quantity], Dict[str, str]]:
+) -> t.Tuple[t.Dict[str, ureg.Quantity], t.Dict[str, str]]:
     """
     Read additional molecules data file.
 
@@ -255,7 +252,7 @@ def read_additional_molecules(
 
 
 def read(
-    identifier: Identifier, additional_molecules: Optional[bool] = False
+    identifier: Identifier, additional_molecules: t.Optional[bool] = False
 ) -> xr.Dataset:
     """Read RFM atmospheric data files.
 
