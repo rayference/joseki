@@ -159,7 +159,7 @@ def to_xarray(
         n=n,
         x=x,
         z=z,
-        molecules=np.array(molecules),
+        m=np.array(molecules),
         title=f"AFGL (1986) {identifier.value.replace('_', '-')} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,
@@ -168,7 +168,7 @@ def to_xarray(
     if additional_molecules:
         return ds
     else:
-        return ds.isel(molecules=range(1, 8))
+        return ds.isel(m=range(1, 8))
 
 
 def read(identifier: Identifier, additional_molecules: bool = True) -> xr.Dataset:

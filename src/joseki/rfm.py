@@ -328,7 +328,7 @@ def read(
         n=n,
         x=x,
         z=z,
-        molecules=molecules,
+        m=molecules,
         func_name="joseki.rfm.read",
         operation="data set creation",
         title=f"RFM {DESCRIPTION[identifier.value]} atmospheric profile",
