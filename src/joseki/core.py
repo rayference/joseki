@@ -44,6 +44,14 @@ class Identifier(enum.Enum):
     RFM_TRO = "rfm-tro"
 
 
+def convert_to_identifier(identifier: str) -> Identifier:
+    """Convert identifier's value to Identifier object."""
+    for i in Identifier:
+        if i.value == identifier:
+            return i
+    raise ValueError(f"Unknown identifier '{identifier}'")
+
+
 @ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
 def interp(
     ds: xr.Dataset,
@@ -196,7 +204,7 @@ def represent_profile_in_cells(
 
 
 def make(
-    identifier: Identifier,
+    identifier: t.Union[str, Identifier],
     altitudes: t.Optional[pathlib.Path] = None,
     represent_in_cells: bool = False,
     p_interp_method: str = "linear",
@@ -245,6 +253,8 @@ def make(
     :class:`~xarray.Dataset`
         Atmospheric profile.
     """
+    if isinstance(identifier, str):
+        identifier = convert_to_identifier(identifier=identifier)
     group_name, identifier_name = identifier.value.split("-")
     if group_name == "afgl_1986":
         ds = afgl_1986_read(identifier=AFGL1986Identifier(identifier_name), **kwargs)

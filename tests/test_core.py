@@ -8,13 +8,19 @@ import xarray as xr
 
 from joseki.afgl_1986 import Identifier as AFGL1986Identifier
 from joseki.afgl_1986 import read as afgl_1986_read
+from joseki.core import convert_to_identifier
 from joseki.core import Identifier
 from joseki.core import interp
 from joseki.core import make
 from joseki.core import represent_profile_in_cells
 
 
-IDENTIFIER_CHOICES = [i for i in Identifier]
+IDENTIFIER_CHOICES = [
+    Identifier.AFGL_1986_TROPICAL,
+    Identifier.RFM_WIN,
+    "afgl_1986-tropical",
+    "rfm-win",
+]
 
 
 @pytest.fixture
@@ -52,7 +58,7 @@ def test_represent_profile_in_cells_twice(test_data_set: xr.Dataset) -> None:
     "identifier",
     IDENTIFIER_CHOICES,
 )
-def test_make(identifier: Identifier) -> None:
+def test_make(identifier: t.Union[str, Identifier]) -> None:
     """Returns xr.Dataset."""
     assert isinstance(make(identifier=identifier), xr.Dataset)
 
@@ -61,7 +67,7 @@ def test_make(identifier: Identifier) -> None:
     "identifier",
     IDENTIFIER_CHOICES,
 )
-def test_make_represent_in_cells(identifier: Identifier) -> None:
+def test_make_represent_in_cells(identifier: t.Union[str, Identifier]) -> None:
     """Returned data set has dimensions zbv and z and data variable z_bounds."""
     ds = make(
         identifier=identifier,
@@ -76,7 +82,7 @@ def test_make_represent_in_cells(identifier: Identifier) -> None:
     "identifier",
     IDENTIFIER_CHOICES,
 )
-def test_make_altitudes(tmpdir: t.Any, identifier: Identifier) -> None:
+def test_make_altitudes(tmpdir: t.Any, identifier: t.Union[str, Identifier]) -> None:
     """Assigns data set' altitude values from file."""
     z_values = np.linspace(0, 120, 121)
     path = pathlib.Path(tmpdir, "z.txt")
@@ -117,3 +123,14 @@ def test_make_additional_molecules_true(identifier: Identifier) -> None:
     """Additional molecules are included when additional_molecules=True."""
     ds = make(identifier=identifier, additional_molecules=True)
     assert ds.m.size == 28
+
+
+def test_convert_to_identifier() -> None:
+    """rfm-mls is converted to Identifier.RFM_MLS."""
+    assert convert_to_identifier("rfm-mls") == Identifier.RFM_MLS
+
+
+def test_convert_to_identifier_unknown() -> None:
+    """Unknown identifier raises ValueError."""
+    with pytest.raises(ValueError):
+        convert_to_identifier("unknown_identifier")
