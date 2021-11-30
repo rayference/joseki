@@ -41,7 +41,7 @@ in the table and was derived:
      - ``dimensionless``
    * - ``molecules``
      - ``molecules``
-     - ``dimensionless``
+     -
    * - ``layer_center_altitude``
      - ``layer center altitude``
      - ``km``
@@ -96,5 +96,5 @@ and two coordinates variables:
      - ``km``
    * - ``molecules``
      - ``molecules``
-     - ``molecules``
-     - ``dimensionless``
+     - ``m``
+     -

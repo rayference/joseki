@@ -2,13 +2,15 @@
    :end-before: github-only
 
 .. _Contributor Guide: contributing.html
-.. _Usage: usage.html
+.. _User Guide: user_guide.html
+.. _API Reference: reference.html
+.. _Command-line Reference: cli.html
 
 .. toctree::
    :hidden:
    :maxdepth: 1
 
-   usage
+   cli
    user_guide
    format
    bibliography

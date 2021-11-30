@@ -36,12 +36,12 @@ Joseki
 Features
 --------
 
-* Original *AFGL Atmospheric Constituent Profiles (0-120 km)* data sets in both
+* *AFGL Atmospheric Constituent Profiles (0-120 km)* data sets in
   `csv <https://en.wikipedia.org/wiki/Comma-separated_values>`_ and
   `netCDF <https://www.unidata.ucar.edu/software/netcdf/>`_ formats.
 * Atmospheric profiles from `RFM <http://eodg.atm.ox.ac.uk/RFM/>`_
-* Interpolate the data sets on a different level altitude mesh.
-* Compute the atmospheric profile on the corresponding layer altitude mesh.
+* Atmospheric profile interpolation on altitude.
+* Projection of the nodes-based profile on the corresponding centers-based altitude mesh.
 * Command-line interface.
 * Python API.
 
@@ -62,10 +62,17 @@ You can install *Joseki* via pip_ from PyPI_:
    $ pip install joseki
 
 
-Usage
------
+Python API
+----------
 
-Please see the `Command-line Reference <Usage_>`_ for details.
+Please see the `User Guide`_ for basic use.
+For more details, refer to the `API Reference`_.
+
+
+Command-line interface
+----------------------
+
+Please see the `Command-line Reference`_ for details.
 
 
 Contributing
@@ -92,7 +99,8 @@ please `file an issue`_ along with a detailed description.
 Credits
 -------
 
-This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter`_ template.
+This project was generated from `@cjolowicz`_'s
+`Hypermodern Python Cookiecutter`_ template.
 
 
 .. _@cjolowicz: https://github.com/cjolowicz
@@ -104,4 +112,6 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _pip: https://pip.pypa.io/
 .. github-only
 .. _Contributor Guide: CONTRIBUTING.rst
-.. _Usage: https://joseki.readthedocs.io/en/latest/usage.html
+.. _Command-line Reference: https://joseki.readthedocs.io/en/latest/cli.html
+.. _User Guide: https://joseki.readthedocs.io/en/latest/user_guide.html
+.. _API Reference: https://joseki.readthedocs.io/en/latest/reference.html
