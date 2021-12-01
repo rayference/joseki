@@ -20,13 +20,13 @@ Changelog = "https://github.com/nollety/joseki/releases"
 [tool.poetry.dependencies]
 Pint = "^0.17"
 click = "^7.0"
+netCDF4 = "^1.5.7"
 numpy = "^1.20.3"
 pandas = "^1.2.4"
 python = ">=3.7.1,<3.10"
+requests = "^2.25.1"
 scipy = "^1.6.3"
 xarray = "^0.18.2"
-requests = "^2.25.1"
-netCDF4 = "^1.5.7"
 
 [tool.poetry.dev-dependencies]
 Pygments = "^2.7.1"
@@ -39,6 +39,9 @@ flake8-bugbear = "^20.1.4"
 flake8-docstrings = "^1.5.0"
 flake8-rst-docstrings = "^0.0.14"
 furo = "^2021.4.11-beta.34"
+ipython = "^7.24.0"
+jupyterlab = "^3.0.16"
+matplotlib = "^3.4.2"
 mypy = "^0.790"
 pep8-naming = "^0.11.1"
 pre-commit = "^2.7.1"
@@ -49,12 +52,9 @@ safety = "^1.9.0"
 sphinx = "^3.2.1"
 sphinx-autobuild = "^2020.9.1"
 sphinx-click = "^2.5.0"
+sphinxcontrib-bibtex = "^2.3.0"
 typeguard = "^2.9.1"
 xdoctest = {extras = ["colors"], version = "^0.15.0"}
-ipython = "^7.24.0"
-jupyterlab = "^3.0.16"
-matplotlib = "^3.4.2"
-sphinxcontrib-bibtex = "^2.3.0"
 
 [tool.poetry.scripts]
 joseki = "joseki.__main__:main"
@@ -72,4 +72,4 @@ show_missing = true
 
 [build-system]
 build-backend = "poetry.masonry.api"
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.0"]
