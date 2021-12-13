@@ -8,7 +8,6 @@ import xarray as xr
 from click.testing import CliRunner
 
 from joseki import __main__
-from joseki import Identifier
 
 
 @pytest.fixture
@@ -17,7 +16,6 @@ def runner() -> CliRunner:
     return CliRunner()
 
 
-#@pytest.mark.parametrize("identifier", __main__.IDENTIFIER_CHOICES)
 @pytest.mark.parametrize("identifier", ["afgl_1986-midlatitude_summer", "rfm-day"])
 def test_main_succeeds(runner: CliRunner, tmpdir: t.Any, identifier: str) -> None:
     """Exits with a status code of zero."""

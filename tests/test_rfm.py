@@ -149,7 +149,9 @@ def test_read_file_content() -> None:
     assert isinstance(output, tuple)
 
 
-@pytest.mark.parametrize("identifier", [Identifier.DAY, Identifier.DAY_IMK, Identifier.MLS])
+@pytest.mark.parametrize(
+    "identifier", [Identifier.DAY, Identifier.DAY_IMK, Identifier.MLS]
+)
 def test_read_additional_molecules(identifier: Identifier) -> None:
     """Returns a tuple."""
     output = read_additional_molecules(identifier=identifier)
@@ -175,10 +177,7 @@ class MockConnectionError:
         raise requests.exceptions.ConnectionError
 
 
-#@pytest.mark.parametrize("identifier", [n for n in Identifier])
-def test_read_connection_error(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_read_connection_error(monkeypatch: pytest.MonkeyPatch) -> None:
     """Reads archived raw data files if connection error occurs."""
     monkeypatch.setattr("requests.get", MockConnectionError)
     ds = read(identifier=Identifier.DAY)
