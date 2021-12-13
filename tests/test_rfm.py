@@ -143,31 +143,28 @@ def test_parse_content_2() -> None:
     assert isinstance(output, dict)
 
 
-@pytest.mark.parametrize("identifier", [n for n in Identifier])
-def test_read_file_content(identifier: Identifier) -> None:
+def test_read_file_content() -> None:
     """Returns a tuple."""
-    output = read_file_content(identifier=identifier)
+    output = read_file_content(identifier=Identifier.DAY)
     assert isinstance(output, tuple)
 
 
-@pytest.mark.parametrize("identifier", [n for n in Identifier])
+@pytest.mark.parametrize("identifier", [Identifier.DAY, Identifier.DAY_IMK, Identifier.MLS])
 def test_read_additional_molecules(identifier: Identifier) -> None:
     """Returns a tuple."""
     output = read_additional_molecules(identifier=identifier)
     assert isinstance(output, tuple)
 
 
-@pytest.mark.parametrize("identifier", [n for n in Identifier])
-def test_read(identifier: Identifier) -> None:
+def test_read() -> None:
     """Returns a :class:`~xarray.Dataset`."""
-    ds = read(identifier=identifier)
+    ds = read(identifier=Identifier.DAY)
     assert isinstance(ds, xr.Dataset)
 
 
-@pytest.mark.parametrize("identifier", [n for n in Identifier])
-def test_read_additional_molecules_true(identifier: Identifier) -> None:
+def test_read_additional_molecules_true() -> None:
     """Returns a :class:`~xarray.Dataset`."""
-    ds = read(identifier=identifier, additional_molecules=True)
+    ds = read(identifier=Identifier.DAY, additional_molecules=True)
     assert isinstance(ds, xr.Dataset)
 
 
@@ -178,11 +175,11 @@ class MockConnectionError:
         raise requests.exceptions.ConnectionError
 
 
-@pytest.mark.parametrize("identifier", [n for n in Identifier])
+#@pytest.mark.parametrize("identifier", [n for n in Identifier])
 def test_read_connection_error(
-    monkeypatch: pytest.MonkeyPatch, identifier: Identifier
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Reads archived raw data files if connection error occurs."""
     monkeypatch.setattr("requests.get", MockConnectionError)
-    ds = read(identifier=identifier)
+    ds = read(identifier=Identifier.DAY)
     assert isinstance(ds, xr.Dataset)

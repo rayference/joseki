@@ -54,23 +54,15 @@ def test_represent_profile_in_cells_twice(test_data_set: xr.Dataset) -> None:
     assert ds1 == ds2
 
 
-@pytest.mark.parametrize(
-    "identifier",
-    IDENTIFIER_CHOICES,
-)
-def test_make(identifier: t.Union[str, Identifier]) -> None:
+def test_make() -> None:
     """Returns xr.Dataset."""
-    assert isinstance(make(identifier=identifier), xr.Dataset)
+    assert isinstance(make(identifier="afgl_1986-tropical"), xr.Dataset)
 
 
-@pytest.mark.parametrize(
-    "identifier",
-    IDENTIFIER_CHOICES,
-)
-def test_make_represent_in_cells(identifier: t.Union[str, Identifier]) -> None:
+def test_make_represent_in_cells() -> None:
     """Returned data set has dimensions zbv and z and data variable z_bounds."""
     ds = make(
-        identifier=identifier,
+        identifier="afgl_1986-tropical",
         represent_in_cells=True,
     )
     for dim in ["zbv", "z"]:
@@ -78,16 +70,12 @@ def test_make_represent_in_cells(identifier: t.Union[str, Identifier]) -> None:
     assert "z_bounds" in ds.data_vars
 
 
-@pytest.mark.parametrize(
-    "identifier",
-    IDENTIFIER_CHOICES,
-)
-def test_make_altitudes(tmpdir: t.Any, identifier: t.Union[str, Identifier]) -> None:
+def test_make_altitudes(tmpdir: t.Any) -> None:
     """Assigns data set' altitude values from file."""
     z_values = np.linspace(0, 120, 121)
     path = pathlib.Path(tmpdir, "z.txt")
     np.savetxt(path, z_values)  # type: ignore[no-untyped-call]
-    ds = make(identifier=identifier, altitudes=path)
+    ds = make(identifier="afgl_1986-tropical", altitudes=path)
     assert np.allclose(ds.z.values, z_values)
 
 
