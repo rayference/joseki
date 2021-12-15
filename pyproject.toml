@@ -31,7 +31,7 @@ xarray = ">=0.18.2,<0.21.0"
 [tool.poetry.dev-dependencies]
 Pygments = "^2.7.1"
 black = "^21.12b0"
-coverage = {extras = ["toml"], version = "^5.3"}
+coverage = {extras = ["toml"], version = "^6.2"}
 darglint = "^1.5.5"
 flake8 = "^3.8.4"
 flake8-bandit = "^2.1.2"
