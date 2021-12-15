@@ -27,10 +27,11 @@ DESCRIPTION = {
     "day": "MIPAS (2001) mid-latitude daytime",
     "ngt": "MIPAS (2001) mid-latitude nighttime",
     "equ": "MIPAS (2001) equatorial",
-    "day_imk": "MIPAS (1998) mid-latitude daytime",
-    "ngt_imk": "MIPAS (1998) mid-latitude nighttime",
-    "sum_imk": "MIPAS (1998) polar summer",
-    "win_imk": "MIPAS (1998) polar winter",
+    "day_200km": "Extended MIPAS Model Atmospheres (2011) - Mid-Latitude, day-time",
+    "ngt_200km": "Extended MIPAS Model Atmospheres (2011) - Mid-Latitude, night-time",
+    "win_200km": "Extended MIPAS Model Atmospheres (2011) - Polar Winter",
+    "sum_200km": "Extended MIPAS Model Atmospheres (2011) - Polar Summer",
+    "equ_200km": "Extended MIPAS Model Atmospheres (2011) - Equatorial, day-time",
     "mls": "AFGL (1986) Mid-latitude summer",
     "mlw": "AFGL (1986) Mid-latitude winter",
     "sas": "AFGL (1986) Sub-arctic summer",
@@ -48,10 +49,11 @@ class Identifier(enum.Enum):
     DAY = "day"
     NGT = "ngt"
     EQU = "equ"
-    DAY_IMK = "day_imk"
-    NGT_IMK = "ngt_imk"
-    SUM_IMK = "sum_imk"
-    WIN_IMK = "win_imk"
+    DAY_200KM = "day_200km"
+    NGT_200KM = "ngt_200km"
+    WIN_200KM = "win_200km"
+    SUM_200KM = "sum_200km"
+    EQU_200KM = "equ_200km"
     MLS = "mls"
     MLW = "mlw"
     SAS = "sas"
@@ -216,6 +218,11 @@ def read_additional_molecules(
         Atmospheric profile identifier.
         See :class:`.Identifier` for possible values.
 
+    Raises
+    ------
+    ValueError
+        If the profile does not have additional molecules.
+
     Returns
     -------
     tuple of dict of str and :class:`~pint.Quantity` and dict of str and str:
@@ -229,14 +236,7 @@ def read_additional_molecules(
         Identifier.WIN,
     ]:
         add_molecules_name = "extra"
-    if identifier in [
-        Identifier.DAY_IMK,
-        Identifier.NGT_IMK,
-        Identifier.SUM_IMK,
-        Identifier.WIN_IMK,
-    ]:
-        add_molecules_name = "extra_imk"
-    if identifier in [
+    elif identifier in [
         Identifier.MLS,
         Identifier.MLW,
         Identifier.SAS,
@@ -245,6 +245,8 @@ def read_additional_molecules(
         Identifier.TRO,
     ]:
         add_molecules_name = "minor"
+    else:
+        raise ValueError
 
     content, url_info = _read_file_content(file_name=add_molecules_name)
     parsed_content = _parse_content(content.splitlines())

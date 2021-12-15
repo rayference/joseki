@@ -149,13 +149,17 @@ def test_read_file_content() -> None:
     assert isinstance(output, tuple)
 
 
-@pytest.mark.parametrize(
-    "identifier", [Identifier.DAY, Identifier.DAY_IMK, Identifier.MLS]
-)
+@pytest.mark.parametrize("identifier", [Identifier.DAY, Identifier.MLS])
 def test_read_additional_molecules(identifier: Identifier) -> None:
     """Returns a tuple."""
     output = read_additional_molecules(identifier=identifier)
     assert isinstance(output, tuple)
+
+
+def test_read_additional_molecules_invalid() -> None:
+    """Raises ValueError for profiles without additional molecules."""
+    with pytest.raises(ValueError):
+        read_additional_molecules(Identifier.DAY_200KM)
 
 
 def test_read() -> None:
