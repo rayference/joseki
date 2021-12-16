@@ -18,7 +18,7 @@ version = "1.1.0"
 Changelog = "https://github.com/nollety/joseki/releases"
 
 [tool.poetry.dependencies]
-Pint = "^0.17"
+Pint = ">=0.17,<0.19"
 click = "^7.0"
 netCDF4 = "^1.5.7"
 numpy = "^1.20.3"
