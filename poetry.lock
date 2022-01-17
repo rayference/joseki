@@ -492,7 +492,7 @@ woff = ["zopfli (>=0.1.4)", "brotlicffi (>=0.8.0)", "brotli (>=1.0.1)"]
 
 [[package]]
 name = "furo"
-version = "2021.6.18b36"
+version = "2022.1.2"
 description = "A clean customisable Sphinx documentation theme."
 category = "dev"
 optional = false
@@ -500,11 +500,12 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 beautifulsoup4 = "*"
-sphinx = ">=3.0,<5.0"
+pygments = ">=2.7,<3.0"
+sphinx = ">=4.0,<5.0"
 
 [package.extras]
-doc = ["myst-parser", "sphinx-copybutton", "sphinx-inline-tabs", "docutils (!=0.17)"]
 test = ["pytest", "pytest-cov", "pytest-xdist"]
+doc = ["myst-parser", "sphinx-copybutton", "sphinx-design", "sphinx-inline-tabs"]
 
 [[package]]
 name = "gitdb"
@@ -1996,7 +1997,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "e34f9e65b614a253d90e098f412938a1897ae9c738c0f3c99f90d9effa925bb9"
+content-hash = "7e64994140fd3991f0919fe161ea8b3d85ffe904734ed961898a39d41a43c952"
 
 [metadata.files]
 alabaster = [
@@ -2321,8 +2322,8 @@ fonttools = [
     {file = "fonttools-4.28.3.zip", hash = "sha256:edb48922873d3fda489ab400bd40888ac239ae8070b53f494b839bcdff0d01f6"},
 ]
 furo = [
-    {file = "furo-2021.6.18b36-py3-none-any.whl", hash = "sha256:a4c00634afeb5896a34d141a5dffb62f20c5eca7831b78269823a8cd8b09a5e4"},
-    {file = "furo-2021.6.18b36.tar.gz", hash = "sha256:46a30bc597a9067088d39d730e7d9bf6c1a1d71967e4af062f796769f66b3bdb"},
+    {file = "furo-2022.1.2-py3-none-any.whl", hash = "sha256:958016bfe1387c1e8ddf5b9d71696b69c4eaa5cd8afc9492abfb008aba2d300c"},
+    {file = "furo-2022.1.2.tar.gz", hash = "sha256:b217f218cbcd423ffbfe69baa79389d4ecebf2d86f0d593c44ef31da7b5aed30"},
 ]
 gitdb = [
     {file = "gitdb-4.0.9-py3-none-any.whl", hash = "sha256:8033ad4e853066ba6ca92050b9df2f89301b8fc8bf7e9324d412a63f8bf1a8fd"},
