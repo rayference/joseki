@@ -12,7 +12,7 @@ from .units import ureg
 @ureg.wraps(
     ret=None,
     args=(  # type: ignore [arg-type]
-        "Pa",
+        "Pa",  # type: ignore
         "K",
         "m^-3",
         "",

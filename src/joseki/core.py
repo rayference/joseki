@@ -54,7 +54,7 @@ def convert_to_identifier(identifier: str) -> Identifier:
 
 @ureg.wraps(
     ret=None,
-    args=(None, "km", None, None, None, None),
+    args=(None, "km", None, None, None, None),  # type: ignore
     strict=False,
 )  # type: ignore
 def interp(
