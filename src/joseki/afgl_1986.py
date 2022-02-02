@@ -153,7 +153,7 @@ def to_xarray(
         x_values.append(xs)
     x = ureg.Quantity(np.array(x_values), "")
 
-    ds: xr.Dataset = make_data_set(
+    ds: xr.Dataset = make_data_set(  # type: ignore
         p=p,
         t=t,
         n=n,

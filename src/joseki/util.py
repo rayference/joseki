@@ -11,7 +11,7 @@ from .units import ureg
 
 @ureg.wraps(
     ret=None,
-    args=(
+    args=(  # type: ignore [arg-type]
         "Pa",
         "K",
         "m^-3",

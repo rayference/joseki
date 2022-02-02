@@ -52,7 +52,7 @@ def convert_to_identifier(identifier: str) -> Identifier:
     raise ValueError(f"Unknown identifier '{identifier}'")
 
 
-@ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)
+@ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)  # type: ignore
 def interp(
     ds: xr.Dataset,
     z_new: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
@@ -110,7 +110,7 @@ def interp(
     x_new = ds.x.interp(z=z_new, method=x_interp_method, kwargs=dict(bounds_error=True))
 
     # Reform data set
-    interpolated: xr.Dataset = make_data_set(
+    interpolated = make_data_set(  # type: ignore
         p=p_new,
         t=t_new,
         n=n_new,
@@ -121,7 +121,7 @@ def interp(
         operation="data set interpolation",
         **ds.attrs,
     )
-    return interpolated
+    return interpolated  # type: ignore
 
 
 def represent_profile_in_cells(
@@ -170,7 +170,7 @@ def represent_profile_in_cells(
 
     z_nodes = to_quantity(ds.z)
     z_centers = (z_nodes[:-1] + z_nodes[1:]) / 2.0
-    interpolated: xr.Dataset = interp(
+    interpolated: xr.Dataset = interp(  # type: ignore
         ds=ds,
         z_new=z_centers,
         p_interp_method=p_interp_method,
@@ -262,7 +262,7 @@ def make(
         ds = rfm_read(identifier=RFMIdentifier(identifier_name), **kwargs)
 
     if altitudes is not None:
-        ds = interp(
+        ds = interp(  # type: ignore
             ds=ds,
             z_new=np.loadtxt(  # type: ignore[no-untyped-call]
                 fname=altitudes,

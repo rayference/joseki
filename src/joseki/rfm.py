@@ -8,9 +8,10 @@ import typing as t
 from datetime import datetime
 
 import numpy as np
+import pint
 import requests
-import xarray as xr
 from scipy.constants import physical_constants
+import xarray as xr
 
 from .data import rfm
 from .units import ureg
@@ -112,14 +113,14 @@ def _parse_values_line(s: str) -> t.List[str]:
         return s.split()
 
 
-def _parse_content(lines: t.List[str]) -> t.Dict[str, ureg.Quantity]:
+def _parse_content(lines: t.List[str]) -> t.Dict[str, pint.Quantity]:  # type: ignore [type-arg]
     """Parse lines."""
     iterator = iter(lines)
     line = next(iterator)
 
-    quantities: t.Dict[str, ureg.Quantity] = {}
+    quantities: t.Dict[str, pint.Quantity] = {}  # type: ignore [type-arg]
 
-    def _add_to_quantities(quantity: ureg.Quantity, name: str) -> None:
+    def _add_to_quantities(quantity: pint.Quantity, name: str) -> None:  # type: ignore [type-arg]
         if quantity.units == "ppmv":
             quantities[name] = quantity.to("dimensionless")
         else:
@@ -208,7 +209,7 @@ def _read_file_content(file_name: str) -> t.Tuple[str, t.Dict[str, str]]:
 
 def read_additional_molecules(
     identifier: Identifier,
-) -> t.Tuple[t.Dict[str, ureg.Quantity], t.Dict[str, str]]:
+) -> t.Tuple[t.Dict[str, pint.Quantity], t.Dict[str, str]]:  # type: ignore [type-arg]
     """
     Read additional molecules data file.
 
@@ -324,7 +325,7 @@ def read(
         molecules = da_total.molecules.values
         x = da_total.values
 
-    ds: xr.Dataset = make_data_set(
+    ds = make_data_set(
         p=p,
         t=t,
         n=n,
@@ -339,4 +340,4 @@ def read(
         url=url,
         url_date=url_date,
     )
-    return ds
+    return ds  # type: ignore

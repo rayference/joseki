@@ -32,7 +32,7 @@ def test_data_set() -> xr.Dataset:
 def test_interp_returns_data_set(test_data_set: xr.Dataset) -> None:
     """Returns an xarray.Dataset."""
     interpolated = interp(ds=test_data_set, z_new=np.linspace(0, 120, 121))
-    assert isinstance(interpolated, xr.Dataset)
+    assert isinstance(interpolated, xr.Dataset)  # type: ignore
 
 
 def test_interp_out_of_bound(test_data_set: xr.Dataset) -> None:

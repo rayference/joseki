@@ -8,7 +8,7 @@ ureg = pint.UnitRegistry()
 ureg.define("ppmv = 1e-6 * m^3 / m^3")
 
 
-def to_quantity(da: xr.DataArray) -> pint.Quantity:
+def to_quantity(da: xr.DataArray) -> pint.Quantity:  # type: ignore [type-arg]
     """Convert a :class:`~xarray.DataArray` to a :class:`~pint.Quantity`.
 
     The array's ``attrs`` metadata mapping must contain a ``units`` field.
