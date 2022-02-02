@@ -52,7 +52,11 @@ def convert_to_identifier(identifier: str) -> Identifier:
     raise ValueError(f"Unknown identifier '{identifier}'")
 
 
-@ureg.wraps(ret=None, args=(None, "km", None, None, None, None), strict=False)  # type: ignore
+@ureg.wraps(
+    ret=None,
+    args=(None, "km", None, None, None, None),
+    strict=False,
+)  # type: ignore
 def interp(
     ds: xr.Dataset,
     z_new: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]

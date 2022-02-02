@@ -10,8 +10,8 @@ from datetime import datetime
 import numpy as np
 import pint
 import requests
-from scipy.constants import physical_constants
 import xarray as xr
+from scipy.constants import physical_constants
 
 from .data import rfm
 from .units import ureg
@@ -113,14 +113,14 @@ def _parse_values_line(s: str) -> t.List[str]:
         return s.split()
 
 
-def _parse_content(lines: t.List[str]) -> t.Dict[str, pint.Quantity]:  # type: ignore [type-arg]
+def _parse_content(lines: t.List[str]) -> t.Dict[str, pint.Quantity]:  # type: ignore
     """Parse lines."""
     iterator = iter(lines)
     line = next(iterator)
 
     quantities: t.Dict[str, pint.Quantity] = {}  # type: ignore [type-arg]
 
-    def _add_to_quantities(quantity: pint.Quantity, name: str) -> None:  # type: ignore [type-arg]
+    def _add_to_quantities(quantity: pint.Quantity, name: str) -> None:  # type: ignore
         if quantity.units == "ppmv":
             quantities[name] = quantity.to("dimensionless")
         else:
