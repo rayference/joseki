@@ -103,9 +103,9 @@ def make_data_set(
         Atmospheric profile.
     """
     if history is None:
-        history = f"{datetime.datetime.utcnow()}" f"- {operation} - {func_name}\n"
+        history = f"{datetime.datetime.utcnow()}" f"- {operation} - {func_name}"
     else:
-        history += f"{datetime.datetime.utcnow()} " f"- {operation} - {func_name}\n"
+        history += f"{datetime.datetime.utcnow()} " f"- {operation} - {func_name}"
     attrs = dict(
         convention=convention,
         title=title,

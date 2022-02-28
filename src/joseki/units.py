@@ -7,6 +7,9 @@ ureg = pint.UnitRegistry()
 # define ppmv unit
 ureg.define("ppmv = 1e-6 * m^3 / m^3")
 
+# define dobson unit
+ureg.define("dobson_unit = 2.687e20 * meter^-2 = du = dobson = dobson_units")
+
 
 def to_quantity(da: xr.DataArray) -> pint.Quantity:  # type: ignore [type-arg]
     """Convert a :class:`~xarray.DataArray` to a :class:`~pint.Quantity`.

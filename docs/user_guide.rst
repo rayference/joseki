@@ -13,13 +13,13 @@ Quickstart
 
 Make an atmospheric profile using the function :meth:`joseki.make`.
 Use its ``identifier`` parameter to specify the atmospheric profile.
-For example, make the *AFGL (1986) tropical* atmospheric profile with:
+For example, make the *AFGL (1986) US Standard* atmospheric profile with:
 
 .. code-block:: python
 
    import joseki
 
-   ds = joseki.make(identifier="afgl_1986-tropical")
+   ds = joseki.make(identifier="afgl_1986-us_standard")
 
 
 Display the available identifiers with:
@@ -55,7 +55,7 @@ instead of at altitude levels, set the parameter ``represent_in_cells`` to
 .. code-block:: python
 
    ds = joseki.make(
-       identifier="afgl_1986-tropical",
+       identifier="afgl_1986-us_standard",
        represent_in_cells=True,
    )
 
@@ -76,9 +76,119 @@ parameter to ``False``:
 .. code-block:: python
 
    ds = joseki.make(
-       identifier="afgl_1986-tropical",
+       identifier="afgl_1986-us_standard",
        represent_in_cells=True,
        additional_molecules=False,
    )
 
 The resulting data set now includes only 7 molecules, instead of 28.
+
+Derived quantities
+------------------
+
+You can compute various derived quantities from a thermophysical properties
+data set produced by ``joseki``:
+
+* the column number density of each molecule in the data set.
+
+  Example:
+
+  .. code:: python
+
+     ds = joseki.make(identifier="afgl_1986-us_standard")
+     ds.joseki.column_number_density["O3"].to("dobson_unit")
+
+
+* the column mass density of each molecule in the data set
+
+  Example:
+
+  .. code:: python
+
+     ds.joseki.column_mass_density["H2O"]
+
+* the number density at sea level of each molecule in the data set
+
+  Example:
+
+  .. code:: python
+
+     ds.joseki.number_density_at_sea_level["CO2"]
+
+* the mass density at sea level of each molecule in the data set
+
+  Example:
+
+   .. code:: python
+
+     ds.joseki.mass_density_at_sea_level["CH4"]
+
+For further details on these methods, refer to the :ref:`API reference<api_reference>`.
+
+Rescaling
+---------
+
+You can modify the amount of a given set of molecules in your thermophysical
+properties data set by applying a rescale transformation:
+
+.. code-block:: python
+
+   ds = joseki.make(identifier="afgl_1986-us_standard")
+   ds.joseki.rescale(factors={
+       "H2O": 0.5,
+       "CO2": 1.5,
+       "CH4": 1.1,
+   })
+
+In the example above, the amount of water vapor is halfed whereas the amount of
+carbon dioxide and methane is increased by 150% and 110%, respectively.
+When a rescale transformation has been applied to a data set, its ``rescaled``
+attribute is set to ``True`` and its ``history`` attribute is updated to
+indicate what scaling factors were applied to what molecules.
+If the scaling factors are such that the volume mixing ratio sum is larger than
+1.0 at any altitude, an error is raised.
+
+.. code-block:: python
+
+   ds = joseki.make(identifier="afgl_1986-us_standard")
+   ds.joseki.rescale(factors={
+       "O2": 2.0,  # invalid
+   })
+
+When executed, the above code will raise a ``ValueError`` because the scaling
+factor is invalid.
+
+Plotting
+--------
+
+You can easily make a plot of any of the four variables of a dataset, i.e.,
+air pressure (``p``), air temperature (``t``), air number density (``n``) or
+volume mixing ratio (``x``):
+
+.. code-block:: python
+
+   ds = joseki.make(
+       identifier="afgl_1986-us_standard",
+       additional_molecules=False
+   )
+   ds.joseki.plot(var="p")
+
+.. image:: fig/user_guide/plotting-p.png
+
+.. code-block:: python
+
+   ds.joseki.plot(var="t")
+
+.. image:: fig/user_guide/plotting-t.png
+
+.. code-block:: python
+
+   ds.joseki.plot(var="n")
+
+.. image:: fig/user_guide/plotting-n.png
+
+.. code-block:: python
+
+   ds.joseki.plot(var="x")
+
+.. image:: fig/user_guide/plotting-x.png
