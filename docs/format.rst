@@ -39,8 +39,8 @@ in the table and was derived:
    * - ``volume_mixing_ratio``
      - ``volume mixing ratio``
      - ``dimensionless``
-   * - ``molecules``
-     - ``molecules``
+   * - ``molecule``
+     - ``molecule``
      -
    * - ``layer_center_altitude``
      - ``layer center altitude``
@@ -76,7 +76,8 @@ The data set includes four data variables:
      - ``x``
      - ``dimensionless``
 
-and two coordinates variables:
+and two coordinates variables (``altitude`` and ``layer_center_altitude``
+exclude each other):
 
 .. list-table:: Coordinate variables
    :widths: 35 35 5 15
@@ -94,7 +95,11 @@ and two coordinates variables:
      - ``layer center altitude``
      - ``z``
      - ``km``
-   * - ``molecules``
-     - ``molecules``
+   * - ``molecule``
+     - ``molecule``
      - ``m``
      -
+
+All data variables depend on the altitude (either ``altitude`` or
+``layer_center_altitude``) except the volume mixing ratio variable
+that depends on both the altitude and the molecule.
