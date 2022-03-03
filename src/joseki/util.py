@@ -171,8 +171,8 @@ def make_data_set(
                 "m",
                 m,
                 dict(
-                    standard_name="molecules",
-                    long_name="molecules",
+                    standard_name="molecule",
+                    long_name="molecule",
                     units="",
                 ),
             ),
