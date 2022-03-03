@@ -119,7 +119,7 @@ data set produced by ``joseki``:
 
   Example:
 
-   .. code:: python
+  .. code:: python
 
      ds.joseki.mass_density_at_sea_level["CH4"]
 
@@ -157,6 +157,49 @@ If the scaling factors are such that the volume mixing ratio sum is larger than
 
 When executed, the above code will raise a ``ValueError`` because the scaling
 factor is invalid.
+
+.. warning::
+
+   For some profiles of the ``afgl_1986-*`` series, namely
+   ``afgl_1986-tropical``, ``afgl_1986-midlatitude_summer`` and
+   ``afgl_1986-subarctic_summer``,  a ``ValueError`` is raised
+   while rescaling although the scaling factors are valid.
+   For example, the code below:
+
+   .. code-block:: python
+
+      ds = joseki.make(identifier="afgl_1986-tropical")
+      ds.joseki.rescale(factors={
+          "H2O": 0.5,
+      })
+
+   will raise a ``ValueError`` with a message indicating that the volume
+   mixing ratio sum is larger than one, although all that we did is
+   decrease the amount the water vapor by half.
+
+   The reason is, that the volume mixing ratio sum **was** larger than one
+   before the rescaling transformation, and the transformation was not
+   significant enough to change that.
+   The original paper :cite:`Anderson1986AtmosphericConstituentProfiles` does
+   not make any comment about the sum of volume mixing ratios being larger than
+   one for the mentioned profiles.
+
+   The suggested way to circumvent this issue is to decrease the amount of a
+   molecule that is not relevant to your application, e.g. ``N2`` so that
+   the volume mixing ratio sum is less than one, and apply your original
+   rescaling transformation:
+
+   .. code-block:: python
+
+      ds = joseki.make(identifier="afgl_1986-tropical")
+      ds.joseki.rescale(factors={
+          "N2": 0.99,
+          "H2O": 0.5,
+      })
+
+   where the value of the scaling factor for ``N2`` may have to be adjusted
+   depending on your rescaling transformation.
+
 
 Plotting
 --------
