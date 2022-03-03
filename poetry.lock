@@ -1141,6 +1141,7 @@ numpy = [
     {version = ">=1.18.5", markers = "platform_machine != \"aarch64\" and platform_machine != \"arm64\" and python_version < \"3.10\""},
     {version = ">=1.19.2", markers = "platform_machine == \"aarch64\" and python_version < \"3.10\""},
     {version = ">=1.20.0", markers = "platform_machine == \"arm64\" and python_version < \"3.10\""},
+    {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
 ]
 python-dateutil = ">=2.8.1"
 pytz = ">=2020.1"
@@ -2052,8 +2053,8 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.8,<3.10"
-content-hash = "0e4814f6c9f982e93d26a48b04144bf5157a7d08c90d2ee6c54a4b8ef0a3fe69"
+python-versions = ">=3.8,<3.11"
+content-hash = "e12fb2017ffd7b62372b0a80f45e7cc9e1354e949df2de785e9899049a0a9610"
 
 [metadata.files]
 alabaster = [
