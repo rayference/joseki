@@ -135,7 +135,10 @@ def _parse_content(lines: t.List[str]) -> t.Dict[str, pint.Quantity]:  # type: i
         elif line.startswith("*"):
             # convert previously read values (if any) and units to quantity
             if len(values) > 0:
-                quantity = ureg.Quantity(np.array(values, dtype=float), units)
+                quantity = ureg.Quantity(
+                    np.array(values, dtype=float),
+                    units,
+                )  # type: ignore[var-annotated]
                 _add_to_quantities(quantity=quantity, name=var)
 
             # this is a variable line, parse variable name and units
@@ -288,16 +291,20 @@ def read(
     p = quantities.pop("p")
     t = quantities.pop("t")
     n = p / (K * t)  # perfect gas equation
-    molecules = np.array(list(quantities.keys()))
-    x = np.array([quantities[molecule].magnitude for molecule in molecules])
+    molecules = np.array(list(quantities.keys()))  # type: ignore[var-annotated]
+    x = np.array(
+        [quantities[molecule].magnitude for molecule in molecules]
+    )  # type: ignore[var-annotated]
 
     if additional_molecules:
         extra_quantities, extra_url_info = read_additional_molecules(
             identifier=identifier
         )
         extra_z = extra_quantities.pop("z")
-        extra_molecules = np.array(list(extra_quantities.keys()))
-        extra_x = np.array([extra_quantities[s].magnitude for s in extra_molecules])
+        extra_m = np.array(list(extra_quantities.keys()))  # type: ignore[var-annotated]
+        extra_x = np.array(
+            [extra_quantities[s].magnitude for s in extra_m]
+        )  # type: ignore[var-annotated]
 
         # initial molecules
         da = xr.DataArray(
@@ -311,7 +318,7 @@ def read(
             extra_x,
             dims=["molecules", "z"],
             coords={
-                "molecules": extra_molecules,
+                "molecules": extra_m,
                 "z": extra_z.m_as(z.units),
             },
         )

@@ -187,7 +187,9 @@ def represent_profile_in_cells(
         long_name="layer center altitude",
         units="km",
     )
-    z_bounds = np.array([z_nodes.magnitude[:-1], z_nodes.magnitude[1:]])
+    z_bounds = np.array(
+        [z_nodes.magnitude[:-1], z_nodes.magnitude[1:]]
+    )  # type: ignore[var-annotated]
     interpolated = interpolated.assign(
         z_bounds=(
             ("zbv", "z"),
