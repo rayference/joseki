@@ -3,6 +3,7 @@ authors = ["Yvan Nollet <yvan.nollet@rayference.eu>"]
 classifiers = [
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
 ]
 description = "Joseki"
 documentation = "https://joseki.readthedocs.io"
