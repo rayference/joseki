@@ -12,6 +12,7 @@
 
    cli
    user_guide
+   terminology
    format
    bibliography
    reference
