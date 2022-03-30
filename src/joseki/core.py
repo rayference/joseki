@@ -1,5 +1,4 @@
 """Core module."""
-import datetime
 import enum
 import pathlib
 import typing as t
@@ -15,6 +14,7 @@ from .rfm import Identifier as RFMIdentifier
 from .rfm import read as rfm_read
 from .units import to_quantity
 from .units import ureg
+from .util import datetime_utcnow_stripped
 from .util import make_data_set
 
 
@@ -202,7 +202,7 @@ def represent_profile_in_cells(
         )
     )
     interpolated.attrs.update(
-        history=interpolated.history + f"\n{datetime.datetime.utcnow()} "
+        history=interpolated.history + f"\n{datetime_utcnow_stripped()} "
         "- data set coords update - joseki.core.represent_profile_in_cells"
     )
 

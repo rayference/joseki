@@ -9,6 +9,11 @@ import xarray as xr
 from .units import ureg
 
 
+def datetime_utcnow_stripped() -> datetime.datetime:
+    """Return current UTC with seconds and microseconds stripped."""
+    return datetime.datetime.utcnow().replace(second=0, microsecond=0)
+
+
 @ureg.wraps(
     ret=None,
     args=(  # type: ignore [arg-type]
@@ -103,9 +108,9 @@ def make_data_set(
         Atmospheric profile.
     """
     if history is None:
-        history = f"{datetime.datetime.utcnow()}" f"- {operation} - {func_name}"
+        history = f"{datetime_utcnow_stripped()} - {operation} - {func_name}"
     else:
-        history += f"{datetime.datetime.utcnow()} " f"- {operation} - {func_name}"
+        history += f"\n{datetime_utcnow_stripped()} - {operation} - {func_name}"
     attrs = dict(
         convention=convention,
         title=title,
