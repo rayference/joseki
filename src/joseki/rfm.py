@@ -325,7 +325,9 @@ def read(
 
         # interpolate additional molecules mixing ratio on altitude mesh used
         # for initial molecules mixing ratio:
-        da_extra_interp = np.exp(np.log(da_extra).interp(z=z.m_as(z.units)))
+        da_extra_interp = np.exp(
+            np.log(da_extra).interp(z=z.m_as(z.units))  # type: ignore
+        )
 
         # concatenate initial and additional molecules
         da_total = xr.concat([da, da_extra_interp], dim="molecules")
