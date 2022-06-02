@@ -5,8 +5,8 @@ from pathlib import Path
 from textwrap import dedent
 
 import nox
-import nox_poetry.patch
 from nox.sessions import Session
+from nox_poetry import session
 
 
 package = "joseki"
@@ -97,10 +97,10 @@ def precommit(session: Session) -> None:
         activate_virtualenv_in_precommit_hooks(session)
 
 
-@nox.session(python="3.9")
-def safety(session: Session) -> None:
+@session(python="3.9")
+def safety(session) -> None:  # type: ignore
     """Scan dependencies for insecure packages."""
-    requirements = nox_poetry.export_requirements(session)
+    requirements = session.poetry.export_requirements()
     session.install("safety")
     session.run("safety", "check", f"--file={requirements}", "--bare")
 
