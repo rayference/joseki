@@ -204,6 +204,11 @@ factor is invalid.
 Plotting
 --------
 
+.. note::
+   
+   For plotting, you will need to install the
+   `https://matplotlib.org <matplotlib library>`_.
+
 You can easily make a plot of any of the four variables of a dataset, i.e.,
 air pressure (``p``), air temperature (``t``), air number density (``n``) or
 volume mixing ratio (``x``):
@@ -214,24 +219,50 @@ volume mixing ratio (``x``):
        identifier="afgl_1986-us_standard",
        additional_molecules=False
    )
-   ds.joseki.plot(var="p")
+
+   ds.p.plot(
+       figsize=(4, 8),
+       ls="dotted",
+       marker=".",
+       y="z",
+       xscale="log",
+   )
 
 .. image:: fig/user_guide/plotting-p.png
 
 .. code-block:: python
 
-   ds.joseki.plot(var="t")
+   ds.t.plot(
+       figsize=(4, 8),
+       ls="dotted",
+       marker=".",
+       y="z",
+       xscale="linear",
+   )
 
 .. image:: fig/user_guide/plotting-t.png
 
 .. code-block:: python
 
-   ds.joseki.plot(var="n")
+   ds.n.plot(
+       figsize=(4, 8),
+       ls="dotted",
+       marker=".",
+       y="z",
+       xscale="log",
+   )
 
 .. image:: fig/user_guide/plotting-n.png
 
 .. code-block:: python
 
-   ds.joseki.plot(var="x")
+   ds.x.plot(
+       figsize=(4, 8),
+       ls="dotted",
+       marker=".",
+       y="z",
+       xscale="log",
+       hue="m",
+   )
 
 .. image:: fig/user_guide/plotting-x.png
