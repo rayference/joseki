@@ -29,6 +29,7 @@ scipy = ">=1.6.3"
 xarray = ">=0.18.2"
 molmass = ">=2021.6.18"
 matplotlib = ">=3.5.1"
+h5py = "^3.7.0"
 
 [tool.poetry.dev-dependencies]
 Pygments = ">=2.7.1"
