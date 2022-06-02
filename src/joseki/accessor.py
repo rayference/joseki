@@ -200,26 +200,3 @@ class JosekiAccessor:  # pragma: no cover
             )
 
         ds.attrs.update(dict(rescaled="True"))
-
-    def plot(self, var: str) -> None:
-        """Plot using y axis as altitude axis."""
-        scale = {
-            "n": "log",
-            "p": "log",
-            "t": "linear",
-            "x": "log",
-        }
-        aspect = {
-            "n": 1 / 2,
-            "p": 1 / 2,
-            "t": 1 / 2,
-            "x": 3 / 2,
-        }
-        size = 8
-        params = dict(
-            figsize=(aspect[var] * size, size),
-            ls="dotted",
-            marker=".",
-            y="z",
-        )
-        self._obj[var].plot(**params, xscale=scale[var], hue="m")

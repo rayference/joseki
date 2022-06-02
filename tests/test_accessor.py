@@ -106,8 +106,3 @@ def test_rescale_invalid(test_dataset: xr.Dataset) -> None:
     factors = dict(O2=2)
     with pytest.raises(ValueError):
         test_dataset.joseki.rescale(factors)
-
-
-def test_plot(test_dataset: xr.Dataset) -> None:
-    """Does not raise."""
-    test_dataset.joseki.plot(var="n")
