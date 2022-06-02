@@ -80,7 +80,7 @@ class JosekiAccessor:  # pragma: no cover
             n = to_quantity(ds.n)
 
             _column_number_density = {}
-            for m in list(ds.m.values):
+            for m in ds.m.values:
                 xm = to_quantity(ds.x.sel(m=m))
                 _column_number_density[m] = (
                     (xm * n * dz).sum().to_base_units()
@@ -91,7 +91,7 @@ class JosekiAccessor:  # pragma: no cover
         except AttributeError:  # z_bounds attribute does not exist
 
             _column_number_density = {}
-            for m in list(ds.m.values):
+            for m in ds.m.values:
                 integral = (ds.x.sel(m=m) * ds.n).integrate(
                     coord="z"
                 )  # integrate  using the trapeziodal rule
@@ -127,7 +127,7 @@ class JosekiAccessor:  # pragma: no cover
         _column_number_density = self.column_number_density
         return {
             m: (molecular_mass(m) * _column_number_density[m]).to("kg/m^2")
-            for m in list(self._obj.m.values)
+            for m in self._obj.m.values
         }
 
     @property
@@ -143,9 +143,7 @@ class JosekiAccessor:  # pragma: no cover
         """
         ds = self._obj
         n = to_quantity(ds.n.isel(z=0))
-        return {
-            m: (to_quantity(ds.x.sel(m=m).isel(z=0)) * n) for m in list(ds.m.values)
-        }
+        return {m: (to_quantity(ds.x.sel(m=m).isel(z=0)) * n) for m in ds.m.values}
 
     @property
     def mass_density_at_sea_level(
@@ -161,7 +159,7 @@ class JosekiAccessor:  # pragma: no cover
         _number_density_at_sea_level = self.number_density_at_sea_level
         return {
             m: (molecular_mass(m) * _number_density_at_sea_level[m]).to("kg/m^3")
-            for m in list(self._obj.m.values)
+            for m in self._obj.m.values
         }
 
     def rescale(self, factors: t.MutableMapping[str, float]) -> None:
@@ -180,7 +178,7 @@ class JosekiAccessor:  # pragma: no cover
         """
         ds = self._obj
         f = xr.DataArray(
-            [factors[m] if m in factors else 1.0 for m in list(ds.m.values)],
+            [factors[m] if m in factors else 1.0 for m in ds.m.values],
             coords={"m": ds.m},
             dims="m",
         )
@@ -195,7 +193,7 @@ class JosekiAccessor:  # pragma: no cover
         ds["x"].values = x_new
 
         now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-        for m in list(factors.keys()):
+        for m in factors.keys():
             ds.attrs["history"] += (
                 f"\n{now} - rescaled {m}'s volume mixing ratio using a scaling "
                 f"factor of {round(factors[m], 3)}"

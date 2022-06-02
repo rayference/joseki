@@ -159,7 +159,7 @@ def to_xarray(
         n=n,
         x=x,
         z=z,
-        m=np.array(molecules),
+        m=molecules,
         title=f"AFGL (1986) {identifier.value.replace('_', '-')} atmospheric profile",
         source=SOURCE,
         references=REFERENCE,

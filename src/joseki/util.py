@@ -2,7 +2,6 @@
 import datetime
 import typing as t
 
-import numpy as np
 import pint
 import xarray as xr
 
@@ -14,34 +13,13 @@ def datetime_utcnow_stripped() -> datetime.datetime:
     return datetime.datetime.utcnow().replace(second=0, microsecond=0)
 
 
-@ureg.wraps(
-    ret=None,
-    args=(  # type: ignore [arg-type]
-        "Pa",  # type: ignore
-        "K",
-        "m^-3",
-        "",
-        "km",
-        "",
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-    ),
-    strict=False,
-)
 def make_data_set(
-    p: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    t: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    n: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    x: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    z: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
-    m: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    p: pint.Quantity,  # type: ignore[type-arg]
+    t: pint.Quantity,  # type: ignore[type-arg]
+    n: pint.Quantity,  # type: ignore[type-arg]
+    x: pint.Quantity,  # type: ignore[type-arg]
+    z: pint.Quantity,  # type: ignore[type-arg]
+    m: t.List[str],
     convention: str = "CF-1.8",
     title: str = "unknown",
     history: t.Optional[str] = None,
@@ -56,23 +34,23 @@ def make_data_set(
 
     Parameters
     ----------
-    p: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Pressure [Pa].
+    p: :class:`~pint.Quantity`
+        Pressure values.
 
-    t: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Temperature [K].
+    t: :class:`~pint.Quantity`
+        Temperature values.
 
-    n: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Number density [m^-3].
+    n: :class:`~pint.Quantity`
+        Number density values.
 
-    x: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Volume mixing ratios [/].
+    x: :class:`~pint.Quantity`
+        Volume mixing ratios values.
 
-    z: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Altitude [km].
+    z: :class:`~pint.Quantity`
+        Altitude values.
 
-    m: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Molecules [/].
+    m: list of str
+        Molecules.
 
     convention: str
         Metadata convention.
@@ -127,7 +105,7 @@ def make_data_set(
         data_vars=dict(
             p=(
                 "z",
-                p,
+                p.m_as(ureg.pascal),
                 dict(
                     standard_name="air_pressure",
                     long_name="air pressure",
@@ -136,7 +114,7 @@ def make_data_set(
             ),
             t=(
                 "z",
-                t,
+                t.m_as(ureg.kelvin),
                 dict(
                     standard_name="air_temperature",
                     long_name="air temperature",
@@ -145,7 +123,7 @@ def make_data_set(
             ),
             n=(
                 "z",
-                n,
+                n.m_as(ureg.m**-3),
                 dict(
                     standard_name="air_number_density",
                     long_name="air number density",
@@ -154,7 +132,7 @@ def make_data_set(
             ),
             x=(
                 ("m", "z"),
-                x,
+                x.m_as(ureg.dimensionless),
                 dict(
                     standard_name="volume_mixing_ratio",
                     long_name="volume mixing ratio",
@@ -165,7 +143,7 @@ def make_data_set(
         coords=dict(
             z=(
                 "z",
-                z,
+                z.m_as(ureg.kilometer),
                 dict(
                     standard_name="altitude",
                     long_name="altitude",
@@ -178,7 +156,6 @@ def make_data_set(
                 dict(
                     standard_name="molecule",
                     long_name="molecule",
-                    units="",
                 ),
             ),
         ),
