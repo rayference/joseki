@@ -28,6 +28,7 @@ scipy = ">=1.6.3"
 xarray = ">=0.18.2"
 molmass = ">=2021.6.18"
 matplotlib = ">=3.5.1"
+netCDF4 = "^1.5.8"
 
 [tool.poetry.dev-dependencies]
 Pygments = ">=2.7.1"
