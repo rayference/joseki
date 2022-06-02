@@ -205,7 +205,7 @@ Plotting
 --------
 
 .. note::
-   
+
    For plotting, you will need to install the
    `https://matplotlib.org <matplotlib library>`_.
 
