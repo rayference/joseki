@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 import xarray as xr
 
+from joseki import unit_registry as ureg
 from joseki.afgl_1986 import Identifier as AFGL1986Identifier
 from joseki.afgl_1986 import read as afgl_1986_read
 from joseki.core import convert_to_identifier
@@ -31,14 +32,17 @@ def test_data_set() -> xr.Dataset:
 
 def test_interp_returns_data_set(test_data_set: xr.Dataset) -> None:
     """Returns an xarray.Dataset."""
-    interpolated = interp(ds=test_data_set, z_new=np.linspace(0, 120, 121))
+    interpolated = interp(
+        ds=test_data_set,
+        z_new=np.linspace(0, 120, 121) * ureg.km,
+    )
     assert isinstance(interpolated, xr.Dataset)  # type: ignore
 
 
 def test_interp_out_of_bound(test_data_set: xr.Dataset) -> None:
     """Raises when out of bounds values are provided."""
     with pytest.raises(ValueError):
-        interp(ds=test_data_set, z_new=np.linspace(0, 150))
+        interp(ds=test_data_set, z_new=np.linspace(0, 150) * ureg.km)
 
 
 def test_represent_profile_in_cells(test_data_set: xr.Dataset) -> None:

@@ -291,9 +291,10 @@ def read(
     p = quantities.pop("p")
     t = quantities.pop("t")
     n = p / (K * t)  # perfect gas equation
-    molecules = np.array(list(quantities.keys()))  # type: ignore[var-annotated]
-    x = np.array(
-        [quantities[molecule].magnitude for molecule in molecules]
+    molecules = list(quantities.keys())
+    x = (
+        np.array([quantities[molecule].magnitude for molecule in molecules])
+        * ureg.dimensionless
     )  # type: ignore[var-annotated]
 
     if additional_molecules:
@@ -301,7 +302,7 @@ def read(
             identifier=identifier
         )
         extra_z = extra_quantities.pop("z")
-        extra_m = np.array(list(extra_quantities.keys()))  # type: ignore[var-annotated]
+        extra_m = list(extra_quantities.keys())
         extra_x = np.array(
             [extra_quantities[s].magnitude for s in extra_m]
         )  # type: ignore[var-annotated]
@@ -331,8 +332,8 @@ def read(
 
         # concatenate initial and additional molecules
         da_total = xr.concat([da, da_extra_interp], dim="molecules")
-        molecules = da_total.molecules.values
-        x = da_total.values
+        molecules = list(da_total.molecules.values)
+        x = da_total.values * ureg.dimensionless
 
     ds = make_data_set(
         p=p,

@@ -52,14 +52,9 @@ def convert_to_identifier(identifier: str) -> Identifier:
     raise ValueError(f"Unknown identifier '{identifier}'")
 
 
-@ureg.wraps(
-    ret=None,
-    args=(None, "km", None, None, None, None),  # type: ignore
-    strict=False,
-)  # type: ignore
 def interp(
     ds: xr.Dataset,
-    z_new: t.Union[pint.Quantity, np.ndarray],  # type: ignore[type-arg]
+    z_new: pint.Quantity,  # type: ignore[type-arg]
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
     n_interp_method: str = "linear",
@@ -72,8 +67,8 @@ def interp(
     ds: :class:`~xarray.Dataset`
         Atmospheric profile to interpolate.
 
-    z_new: :class:`~pint.Quantity`, :class:`~numpy.ndarray`
-        Altitudes to interpolate the atmospheric profile at [km].
+    z_new: :class:`~pint.Quantity`
+        Altitudes values at which to interpolate the atmospheric profile.
 
     p_interp_method: str
         Pressure interpolation method.
@@ -92,35 +87,45 @@ def interp(
     :class:`~xarray.Dataset`
         Interpolated atmospheric profile.
     """
+    z_units = ds.z.attrs["units"]
+    z_new_values = z_new.m_as(z_units)
+
     # Interpolate pressure
     fp = interpolate.interp1d(
         ds.z.values, ds.p.values, kind=p_interp_method, bounds_error=True
     )
-    p_new = fp(z_new)
+    p_new = ureg.Quantity(fp(z_new_values), ds.p.attrs["units"])
 
     # Interpolate temperature
     ft = interpolate.interp1d(
         ds.z.values, ds.t.values, kind=t_interp_method, bounds_error=True
     )
-    t_new = ft(z_new)
+    t_new = ureg.Quantity(ft(z_new_values), ds.t.attrs["units"])
 
     # Interpolate number density
     fn = interpolate.interp1d(
         ds.z.values, ds.n.values, kind=n_interp_method, bounds_error=True
     )
-    n_new = fn(z_new)
+    n_new = ureg.Quantity(fn(z_new_values), ds.n.attrs["units"])
 
     # Interpolate volume mixing ratio
-    x_new = ds.x.interp(z=z_new, method=x_interp_method, kwargs=dict(bounds_error=True))
+    x_new = (
+        ds.x.interp(
+            z=z_new_values,
+            method=x_interp_method,
+            kwargs=dict(bounds_error=True),
+        ).values
+        * ureg.dimensionless
+    )
 
     # Reform data set
     interpolated = make_data_set(  # type: ignore
         p=p_new,
         t=t_new,
         n=n_new,
-        x=x_new.values,
+        x=x_new,
         z=z_new,
-        m=ds.m.values,
+        m=list(ds.m.values),
         func_name="joseki.core.interp",
         operation="data set interpolation",
         **ds.attrs,
@@ -212,6 +217,7 @@ def represent_profile_in_cells(
 def make(
     identifier: t.Union[str, Identifier],
     altitudes: t.Optional[pathlib.Path] = None,
+    altitude_units: str = "km",
     represent_in_cells: bool = False,
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
@@ -235,6 +241,9 @@ def make(
     altitudes: pathlib.Path
         Altitudes data file.
         If ``None``, the original atmospheric profile altitudes are used.
+
+    altitude_units: str
+        Altitude units.
 
     represent_in_cells: bool
         If ``True``, compute the cells representation of the atmospheric profile.
@@ -268,13 +277,14 @@ def make(
         ds = rfm_read(identifier=RFMIdentifier(identifier_name), **kwargs)
 
     if altitudes is not None:
+        z_new_values = np.loadtxt(  # type: ignore[no-untyped-call]
+            fname=altitudes,
+            dtype=float,
+            comments="#",
+        )
         ds = interp(  # type: ignore
             ds=ds,
-            z_new=np.loadtxt(  # type: ignore[no-untyped-call]
-                fname=altitudes,
-                dtype=float,
-                comments="#",
-            ),  # type: ignore[no-untyped-call]
+            z_new=ureg.Quantity(z_new_values, altitude_units),
             p_interp_method=p_interp_method,
             t_interp_method=t_interp_method,
             n_interp_method=n_interp_method,
