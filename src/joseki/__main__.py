@@ -9,6 +9,18 @@ from .core import make
 
 IDENTIFIER_CHOICES = [identifier.value for identifier in Identifier]
 
+INTERPOLATION_METHOD_CHOICES = [
+    "linear",
+    "nearest",
+    "nearest-up",
+    "zero",
+    "slinear",
+    "quadratic",
+    "cubic",
+    "previous",
+    "next",
+]
+
 
 @click.command()
 @click.option(
@@ -16,6 +28,7 @@ IDENTIFIER_CHOICES = [identifier.value for identifier in Identifier]
     "-f",
     help="Output file name.",
     default="ds.nc",
+    show_default=True,
     type=click.Path(writable=True),
 )
 @click.option(
@@ -39,6 +52,13 @@ IDENTIFIER_CHOICES = [identifier.value for identifier in Identifier]
     show_default=True,
 )
 @click.option(
+    "--altitude-units",
+    "-u",
+    help="Altitude units",
+    default="km",
+    show_default=True,
+)
+@click.option(
     "--represent-in-cells",
     "-r",
     help=(
@@ -54,86 +74,51 @@ IDENTIFIER_CHOICES = [identifier.value for identifier in Identifier]
     "-p",
     help="Pressure interpolation method.",
     type=click.Choice(
-        [
-            "linear",
-            "nearest",
-            "nearest-up",
-            "zero",
-            "slinear",
-            "quadratic",
-            "cubic",
-            "previous",
-            "next",
-        ],
+        INTERPOLATION_METHOD_CHOICES,
         case_sensitive=True,
     ),
     default="linear",
+    show_default=True,
 )
 @click.option(
     "--t-interp-method",
     "-t",
     help="Temperature interpolation method.",
     type=click.Choice(
-        [
-            "linear",
-            "nearest",
-            "nearest-up",
-            "zero",
-            "slinear",
-            "quadratic",
-            "cubic",
-            "previous",
-            "next",
-        ],
+        INTERPOLATION_METHOD_CHOICES,
         case_sensitive=True,
     ),
     default="linear",
+    show_default=True,
 )
 @click.option(
     "--n-interp-method",
     "-n",
     help="Number density interpolation method.",
     type=click.Choice(
-        [
-            "linear",
-            "nearest",
-            "nearest-up",
-            "zero",
-            "slinear",
-            "quadratic",
-            "cubic",
-            "previous",
-            "next",
-        ],
+        INTERPOLATION_METHOD_CHOICES,
         case_sensitive=True,
     ),
     default="linear",
+    show_default=True,
 )
 @click.option(
     "--x-interp-method",
     "-x",
     help="Volume mixing ratios interpolation method.",
     type=click.Choice(
-        [
-            "linear",
-            "nearest",
-            "nearest-up",
-            "zero",
-            "slinear",
-            "quadratic",
-            "cubic",
-            "previous",
-            "next",
-        ],
+        INTERPOLATION_METHOD_CHOICES,
         case_sensitive=True,
     ),
     default="linear",
+    show_default=True,
 )
 @click.version_option()
 def main(
     file_name: str,
     identifier: str,
     altitudes: t.Optional[str],
+    altitude_units: str,
     represent_in_cells: bool,
     p_interp_method: str,
     t_interp_method: str,
@@ -144,6 +129,7 @@ def main(
     ds = make(
         identifier=Identifier(identifier),
         altitudes=altitudes if altitudes is None else pathlib.Path(altitudes),
+        altitude_units=altitude_units,
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
         n_interp_method=n_interp_method,
