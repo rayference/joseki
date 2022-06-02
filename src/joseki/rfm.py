@@ -309,7 +309,7 @@ def read(
 
         # initial molecules
         da = xr.DataArray(
-            x,
+            x.m,
             dims=["molecules", "z"],
             coords={"molecules": molecules, "z": z.magnitude},
         )
