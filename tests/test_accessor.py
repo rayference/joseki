@@ -83,7 +83,7 @@ def test_mass_density_at_sea_level(test_dataset: xr.Dataset) -> None:
     )
 
 
-def test_volume_mixing_fraction_at_sea_level(test_dataset) -> None:
+def test_volume_mixing_fraction_at_sea_level(test_dataset: xr.Dataset) -> None:
     """CO2 volume mixing fraction at sea level in us_standard is 0.000333."""
     assert (
         test_dataset.joseki.volume_mixing_fraction_at_sea_level["CO2"]
@@ -113,7 +113,7 @@ def test_scaling_factor_raises() -> None:
         _scaling_factor(initial_amount=initial, target_amount=target)
 
 
-def test_scaling_factors(test_dataset):
+def test_scaling_factors(test_dataset: xr.Dataset) -> None:
     """Scaling factors keys match target amounts keys."""
     target = {
         "H2O": 20.0 * ureg.kg * ureg.m**-2,
