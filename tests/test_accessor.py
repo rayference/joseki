@@ -106,7 +106,7 @@ def test_scaling_factor_zero() -> None:
 
 
 def test_scaling_factor_raises() -> None:
-    """Raises when the initial amount is zero but not the target amount"""
+    """Raises when the initial amount is zero but not the target amount."""
     initial = 0 * ureg.m
     target = 10 * ureg.m
     with pytest.raises(ValueError):
