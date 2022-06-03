@@ -253,7 +253,7 @@ class JosekiAccessor:  # pragma: no cover
         with the original amount, for each molecule.
         """
         compute_initial_amount = {
-            "[length]^-2": self.column_mass_density,
+            "[length]^-2": self.column_number_density,
             "[mass] * [length]^-2": self.column_mass_density,
             "[length]^-3": self.number_density_at_sea_level,
             "[mass] * [length]^-3": self.mass_density_at_sea_level,

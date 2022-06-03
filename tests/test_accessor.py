@@ -4,6 +4,7 @@ import pytest
 import xarray as xr
 
 import joseki
+from joseki.accessor import _scaling_factor
 from joseki.units import to_quantity
 from joseki.units import ureg
 
@@ -80,6 +81,46 @@ def test_mass_density_at_sea_level(test_dataset: xr.Dataset) -> None:
         0.00590733 * ureg.kg / ureg.m**3,
         rtol=1e-2,
     )
+
+
+def test_volume_mixing_fraction_at_sea_level(test_dataset) -> None:
+    """CO2 volume mixing fraction at sea level in us_standard is 0.000333."""
+    assert (
+        test_dataset.joseki.volume_mixing_fraction_at_sea_level["CO2"]
+        == 0.000330 * ureg.dimensionless
+    )
+
+
+def test_scaling_factor() -> None:
+    """Returns 2.0 when target amount is twice larger than initial amount."""
+    initial = 5 * ureg.m
+    target = 10 * ureg.m
+    assert _scaling_factor(initial_amount=initial, target_amount=target) == 2.0
+
+
+def test_scaling_factor_zero() -> None:
+    """Returns 0.0 when target amount and initial amount are both zero."""
+    initial = 0.0 * ureg.m
+    target = 0.0 * ureg.m
+    assert _scaling_factor(initial_amount=initial, target_amount=target) == 0.0
+
+
+def test_scaling_factor_raises() -> None:
+    """Raises when the initial amount is zero but not the target amount"""
+    initial = 0 * ureg.m
+    target = 10 * ureg.m
+    with pytest.raises(ValueError):
+        _scaling_factor(initial_amount=initial, target_amount=target)
+
+
+def test_scaling_factors(test_dataset):
+    """Scaling factors keys match target amounts keys."""
+    target = {
+        "H2O": 20.0 * ureg.kg * ureg.m**-2,
+        "O3": 350.0 * ureg.dobson_unit,
+    }
+    factors = test_dataset.joseki.scaling_factors(target=target)
+    assert all([k1 == k2 for k1, k2 in zip(target.keys(), factors.keys())])
 
 
 def test_rescale(test_dataset: xr.Dataset) -> None:
