@@ -28,7 +28,8 @@ def molecular_mass(m: str) -> pint.Quantity:  # type: ignore[type-arg]
 
 
 def _scaling_factor(
-    initial_amount: pint.Quantity, target_amount: pint.Quantity  # type: ignore[type-arg]
+    initial_amount: pint.Quantity,  # type: ignore[type-arg]
+    target_amount: pint.Quantity,  # type: ignore[type-arg]
 ) -> float:
     """
     Compute scaling factor given initial and target amounts.
@@ -62,7 +63,8 @@ def _scaling_factor(
                 f"(got {target_amount})."
             )
     else:
-        return (target_amount / initial_amount).m_as(ureg.dimensionless)  # type: ignore[no-any-return]
+        factor = (target_amount / initial_amount).m_as(ureg.dimensionless)
+        return float(factor)
 
 
 @xr.register_dataset_accessor("joseki")  # type: ignore[no-untyped-call]
@@ -201,7 +203,9 @@ class JosekiAccessor:  # pragma: no cover
         }
 
     @property
-    def volume_mixing_fraction_at_sea_level(self) -> t.Dict[str, pint.Quantity]:  # type: ignore[type-arg]
+    def volume_mixing_fraction_at_sea_level(
+        self,
+    ) -> t.Dict[str, pint.Quantity]:  # type: ignore[type-arg]
         """Compute volume mixing fraction at sea level.
 
         Returns
