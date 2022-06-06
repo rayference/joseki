@@ -31,8 +31,7 @@ def _scaling_factor(
     initial_amount: pint.Quantity,  # type: ignore[type-arg]
     target_amount: pint.Quantity,  # type: ignore[type-arg]
 ) -> float:
-    """
-    Compute scaling factor given initial and target amounts.
+    """Compute scaling factor given initial and target amounts.
 
     Parameters
     ----------
@@ -219,12 +218,7 @@ class JosekiAccessor:  # pragma: no cover
     def scaling_factors(
         self, target: t.MutableMapping[str, pint.Quantity]  # type: ignore[type-arg]
     ) -> t.MutableMapping[str, float]:
-        """
-        Compute scaling factor(s) to reach specific target amount(s).
-
-        Seealso
-        -------
-        :meth:`rescale`
+        """Compute scaling factor(s) to reach specific target amount(s).
 
         Parameters
         ----------
@@ -255,6 +249,10 @@ class JosekiAccessor:  # pragma: no cover
 
         The scaling factor is then evaluated as the ratio of the target amount
         with the original amount, for each molecule.
+
+        See Also
+        --------
+        rescale: rescale atmospheric profile.
         """
         compute_initial_amount = {
             "[length]^-2": self.column_number_density,
