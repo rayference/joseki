@@ -1,6 +1,8 @@
-"""Module to read atmospheric profiles distributed with Reference Forward Model.
+"""Module to read atmospheric profiles distributed with the RFM.
 
-Reference Forward Model (RFM) website: http://eodg.atm.ox.ac.uk/RFM/.
+The Reference Forward Model (RFM) :cite:`Dudhia2017ReferenceForwardModel`
+ships a collection of atmospheric profile data sets that can be accessed
+at `<http://eodg.atm.ox.ac.uk/RFM/atm>`_ (last visited on 2022-06-16).
 """
 import enum
 import importlib.resources as pkg_resources
