@@ -39,7 +39,9 @@ Features
 * *AFGL Atmospheric Constituent Profiles (0-120 km)* data sets in
   `csv <https://en.wikipedia.org/wiki/Comma-separated_values>`_ and
   `netCDF <https://www.unidata.ucar.edu/software/netcdf/>`_ formats.
-* Atmospheric profiles from `RFM <http://eodg.atm.ox.ac.uk/RFM/>`_
+* Atmospheric profiles from the
+  `Reference Forward Model <http://eodg.atm.ox.ac.uk/RFM/>`_
+  :cite:`Dudhia2017ReferenceForwardModel`
 * Atmospheric profile interpolation on altitude.
 * Projection of the nodes-based profile on the corresponding centers-based altitude mesh.
 * Command-line interface.
