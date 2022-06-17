@@ -41,7 +41,6 @@ Features
   `netCDF <https://www.unidata.ucar.edu/software/netcdf/>`_ formats.
 * Atmospheric profiles from the
   `Reference Forward Model <http://eodg.atm.ox.ac.uk/RFM/>`_
-  :cite:`Dudhia2017ReferenceForwardModel`
 * Atmospheric profile interpolation on altitude.
 * Projection of the nodes-based profile on the corresponding centers-based altitude mesh.
 * Command-line interface.
