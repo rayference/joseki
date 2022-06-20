@@ -1,6 +1,9 @@
 Joseki
 ======
 
+*Reference atmospheric thermophysical properties for radiative transfer
+applications in Earth's atmosphere.*
+
 |PyPI| |Python Version| |License|
 
 |Read the Docs| |Tests| |Codecov|
@@ -32,6 +35,9 @@ Joseki
    :target: https://github.com/psf/black
    :alt: Black
 
+This package gathers together data sets of thermophysical properties of the
+Earth's atmosphere relevant for radiative transfer applications, and provides
+utilities to compute common caracteristic quantities.
 
 Features
 --------
