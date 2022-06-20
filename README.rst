@@ -37,7 +37,8 @@ applications in Earth's atmosphere.*
 
 This package gathers together data sets of thermophysical properties of the
 Earth's atmosphere relevant for radiative transfer applications, and provides
-utilities to compute common caracteristic quantities.
+utilities to compute common caracteristic quantities as well as to perform
+different operations, such as interpolation and rescaling, on a data set.
 
 Features
 --------
