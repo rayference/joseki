@@ -16,14 +16,6 @@ from joseki.core import make
 from joseki.core import represent_profile_in_cells
 
 
-IDENTIFIER_CHOICES = [
-    Identifier.AFGL_1986_TROPICAL,
-    Identifier.RFM_WIN,
-    "afgl_1986-tropical",
-    "rfm-win",
-]
-
-
 @pytest.fixture
 def test_data_set() -> xr.Dataset:
     """Test data set fixture."""
@@ -126,3 +118,18 @@ def test_convert_to_identifier_unknown() -> None:
     """Unknown identifier raises ValueError."""
     with pytest.raises(ValueError):
         convert_to_identifier("unknown_identifier")
+
+
+def test_make_ussa_1976() -> None:
+    """Returns dataset."""
+    ds = make(identifier="ussa_1976")
+    assert isinstance(ds, xr.Dataset)
+
+
+def test_make_ussa_1976_z(tmpdir: t.Any) -> None:
+    """Returns dataset."""
+    z = np.linspace(0.0, 100)
+    path = pathlib.Path(tmpdir, "z.txt")
+    np.savetxt(path, z)  # type: ignore[no-untyped-call]
+    ds = make(identifier="ussa_1976", altitudes=path, altitude_units="km")
+    assert isinstance(ds, xr.Dataset)
