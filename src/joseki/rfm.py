@@ -15,6 +15,7 @@ import requests
 import xarray as xr
 from scipy.constants import physical_constants
 
+from ._version import _version
 from .data import rfm
 from .units import ureg
 from .util import make_data_set
@@ -344,7 +345,7 @@ def read(
         x=x,
         z=z,
         m=molecules,
-        func_name="joseki.rfm.read",
+        func_name=f"joseki, version {_version}",
         operation="data set creation",
         title=f"RFM {DESCRIPTION[identifier.value]} atmospheric profile",
         source=SOURCE,

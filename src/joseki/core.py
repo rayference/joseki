@@ -9,6 +9,7 @@ import xarray as xr
 from scipy import interpolate
 
 from . import ussa_1976
+from ._version import _version
 from .afgl_1986 import Identifier as AFGL1986Identifier
 from .afgl_1986 import read as afgl_1986_read
 from .rfm import Identifier as RFMIdentifier
@@ -128,7 +129,7 @@ def interp(
         x=x_new,
         z=z_new,
         m=list(ds.m.values),
-        func_name="joseki.core.interp",
+        func_name=f"joseki, version {_version}",
         operation="data set interpolation",
         **ds.attrs,
     )
@@ -210,7 +211,7 @@ def represent_profile_in_cells(
     )
     interpolated.attrs.update(
         history=interpolated.history + f"\n{datetime_utcnow_stripped()} "
-        "- data set coords update - joseki.core.represent_profile_in_cells"
+        f"- data set coords update - joseki, version {_version}"
     )
 
     return interpolated
