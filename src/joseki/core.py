@@ -8,6 +8,7 @@ import pint
 import xarray as xr
 from scipy import interpolate
 
+from . import ussa_1976
 from .afgl_1986 import Identifier as AFGL1986Identifier
 from .afgl_1986 import read as afgl_1986_read
 from .rfm import Identifier as RFMIdentifier
@@ -42,6 +43,7 @@ class Identifier(enum.Enum):
     RFM_SAW = "rfm-saw"
     RFM_STD = "rfm-std"
     RFM_TRO = "rfm-tro"
+    USSA_1976 = "ussa_1976"
 
 
 def convert_to_identifier(identifier: str) -> Identifier:
@@ -270,13 +272,35 @@ def make(
     """
     if isinstance(identifier, str):
         identifier = convert_to_identifier(identifier=identifier)
-    group_name, identifier_name = identifier.value.split("-")
-    if group_name == "afgl_1986":
-        ds = afgl_1986_read(identifier=AFGL1986Identifier(identifier_name), **kwargs)
-    if group_name == "rfm":
-        ds = rfm_read(identifier=RFMIdentifier(identifier_name), **kwargs)
 
-    if altitudes is not None:
+    names = identifier.value.split("-")
+    if len(names) == 2:
+        group_name, identifier_name = identifier.value.split("-")
+    if len(names) == 1:
+        group_name = names[0]
+
+    if group_name == "afgl_1986":
+        ds = afgl_1986_read(
+            identifier=AFGL1986Identifier(identifier_name),
+            **kwargs,
+        )
+    if group_name == "rfm":
+        ds = rfm_read(
+            identifier=RFMIdentifier(identifier_name),
+            **kwargs,
+        )
+    if group_name == "ussa_1976":
+        if altitudes is not None:
+            z = np.loadtxt(  # type: ignore[no-untyped-call]
+                fname=altitudes,
+                dtype=float,
+                comments="#",
+            ) * ureg(altitude_units)
+        else:
+            z = None
+        ds = ussa_1976.make(z=z, **kwargs)
+
+    if altitudes is not None and group_name != "ussa_1976":
         z_new_values = np.loadtxt(  # type: ignore[no-untyped-call]
             fname=altitudes,
             dtype=float,
