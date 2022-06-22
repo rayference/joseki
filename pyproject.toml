@@ -31,7 +31,7 @@ ussa1976 = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 Pygments = ">=2.7.1"
-bandit = "==1.7.2"
+bandit = "==1.7.4"
 black = ">=21.12b0"
 coverage = {extras = ["toml"], version = ">=6.2"}
 darglint = ">=1.5.5"
