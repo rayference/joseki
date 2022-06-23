@@ -1,7 +1,4 @@
 """Test cases for the core module."""
-import pathlib
-import typing as t
-
 import numpy as np
 import pytest
 import xarray as xr
@@ -66,13 +63,11 @@ def test_make_represent_in_cells() -> None:
     assert "z_bounds" in ds.data_vars
 
 
-def test_make_altitudes(tmpdir: t.Any) -> None:
+def test_make_altitudes() -> None:
     """Assigns data set' altitude values from file."""
-    z_values = np.linspace(0, 120, 121)
-    path = pathlib.Path(tmpdir, "z.txt")
-    np.savetxt(path, z_values)  # type: ignore[no-untyped-call]
-    ds = make(identifier="afgl_1986-tropical", altitudes=path)
-    assert np.allclose(ds.z.values, z_values)
+    z = np.linspace(0, 120, 121) * ureg.km
+    ds = make(identifier="afgl_1986-tropical", z=z)
+    assert np.allclose(ds.z.values, z.m_as(ds.z.attrs["units"]))
 
 
 @pytest.mark.parametrize(
@@ -126,10 +121,8 @@ def test_make_ussa_1976() -> None:
     assert isinstance(ds, xr.Dataset)
 
 
-def test_make_ussa_1976_z(tmpdir: t.Any) -> None:
+def test_make_ussa_1976_z() -> None:
     """Returns dataset."""
-    z = np.linspace(0.0, 100)
-    path = pathlib.Path(tmpdir, "z.txt")
-    np.savetxt(path, z)  # type: ignore[no-untyped-call]
-    ds = make(identifier="ussa_1976", altitudes=path, altitude_units="km")
+    z = np.linspace(0.0, 100) * ureg.km
+    ds = make(identifier="ussa_1976", z=z)
     assert isinstance(ds, xr.Dataset)

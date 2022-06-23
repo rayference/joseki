@@ -3,9 +3,11 @@ import pathlib
 import typing as t
 
 import click
+import pandas as pd
 
 from .core import Identifier
 from .core import make
+from .units import ureg
 
 IDENTIFIER_CHOICES = [identifier.value for identifier in Identifier]
 
@@ -46,7 +48,7 @@ INTERPOLATION_METHOD_CHOICES = [
     "-a",
     help=(
         "Path to level altitudes data file. The data file is read with "
-        ":meth:`numpy.loadtxt`."
+        ":meth:`pandas.read_csv`. The data file must be a column named 'z'"
     ),
     default=None,
     show_default=True,
@@ -126,16 +128,25 @@ def main(
     x_interp_method: str,
 ) -> None:
     """Joseki command-line interface."""
+    # read altitude grid
+    if altitudes is not None:
+        df = pd.read_csv(pathlib.Path(altitudes))
+        z = df["z"].values * ureg(altitude_units)
+    else:
+        z = None
+
+    # make data set
     ds = make(
         identifier=Identifier(identifier),
-        altitudes=altitudes if altitudes is None else pathlib.Path(altitudes),
-        altitude_units=altitude_units,
+        z=z,
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
         n_interp_method=n_interp_method,
         x_interp_method=x_interp_method,
         represent_in_cells=represent_in_cells,
     )
+
+    # write data set
     ds.to_netcdf(file_name)
 
 

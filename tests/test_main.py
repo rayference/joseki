@@ -3,6 +3,7 @@ import pathlib
 import typing as t
 
 import numpy as np
+import pandas as pd
 import pytest
 import xarray as xr
 from click.testing import CliRunner
@@ -39,9 +40,9 @@ def test_main_open_data_set(runner: CliRunner, tmpdir: t.Any) -> None:
 @pytest.fixture
 def altitudes_path(tmpdir: t.Any) -> pathlib.Path:
     """Fixture for altitudes file path."""
-    z_values = np.linspace(0, 120, 121)
-    path = pathlib.Path(tmpdir, "z.txt")
-    np.savetxt(path, z_values)  # type: ignore[no-untyped-call]
+    df = pd.DataFrame(np.linspace(0, 120, 121), columns=["z"])
+    path = pathlib.Path(tmpdir, "z.csv")
+    df.to_csv(path)
     return path
 
 
