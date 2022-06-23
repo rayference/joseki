@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
+from ._version import _version
 from .data import afgl_1986
 from .units import ureg
 from .util import make_data_set
@@ -197,6 +198,6 @@ def read(identifier: Identifier, additional_molecules: bool = True) -> xr.Datase
         df=df,
         identifier=identifier,
         additional_molecules=additional_molecules,
-        func_name="joseki.afgl_1986.read",
+        func_name=f"joseki, version {_version}",
         operation="data set creation",
     )

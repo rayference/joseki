@@ -6,6 +6,8 @@ import pint
 import ussa1976
 import xarray as xr
 
+from ._version import _version
+
 
 def make(z: t.Optional[pint.Quantity] = None) -> xr.Dataset:  # type: ignore[type-arg]
     """Make atmospheric profile.
@@ -80,7 +82,7 @@ def make(z: t.Optional[pint.Quantity] = None) -> xr.Dataset:  # type: ignore[typ
     # update data set history
     utcnow = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     history = ds.attrs["history"]
-    new_history = f"{utcnow} - data set formatting - joseki"
+    new_history = f"{utcnow} - data set formatting - joseki, version {_version}"
     ds.attrs.update({"history": f"{history}\n{new_history}"})
 
     return ds

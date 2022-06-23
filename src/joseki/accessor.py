@@ -7,6 +7,7 @@ import numpy as np
 import pint
 import xarray as xr
 
+from ._version import _version
 from .units import to_quantity
 from .units import ureg
 
@@ -308,7 +309,7 @@ class JosekiAccessor:  # pragma: no cover
         for m in factors.keys():
             ds.attrs["history"] += (
                 f"\n{now} - rescaled {m}'s volume mixing ratio using a scaling "
-                f"factor of {round(factors[m], 3)}"
+                f"factor of {round(factors[m], 3)} - joseki, version {_version}"
             )
 
         ds.attrs.update(dict(rescaled="True"))
