@@ -154,7 +154,7 @@ def make_data_set(
                 "m",
                 m,
                 dict(
-                    standard_name="molecule",
+                    standard_name="gas_molecule",
                     long_name="molecule",
                 ),
             ),

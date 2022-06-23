@@ -48,7 +48,7 @@ def make(z: t.Optional[pint.Quantity] = None) -> xr.Dataset:  # type: ignore[typ
     ds["m"].attrs.update(
         {
             "long_name": "molecule",
-            "standard_name": "molecule",
+            "standard_name": "gas_molecule",
         }
     )
 
