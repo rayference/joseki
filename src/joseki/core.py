@@ -1,6 +1,5 @@
 """Core module."""
 import enum
-import pathlib
 import typing as t
 
 import numpy as np
@@ -219,8 +218,7 @@ def represent_profile_in_cells(
 
 def make(
     identifier: t.Union[str, Identifier],
-    altitudes: t.Optional[pathlib.Path] = None,
-    altitude_units: str = "km",
+    z: t.Optional[pint.Quantity] = None,  # type: ignore[type-arg]
     represent_in_cells: bool = False,
     p_interp_method: str = "linear",
     t_interp_method: str = "linear",
@@ -241,12 +239,9 @@ def make(
     identifier: Identifier
         Atmospheric profile identifier.
 
-    altitudes: pathlib.Path
-        Altitudes data file.
+    z: quantity, optional
+        Altitudes.
         If ``None``, the original atmospheric profile altitudes are used.
-
-    altitude_units: str
-        Altitude units.
 
     represent_in_cells: bool
         If ``True``, compute the cells representation of the atmospheric profile.
@@ -290,31 +285,20 @@ def make(
             identifier=RFMIdentifier(identifier_name),
             **kwargs,
         )
-    if group_name == "ussa_1976":
-        if altitudes is not None:
-            z = np.loadtxt(  # type: ignore[no-untyped-call]
-                fname=altitudes,
-                dtype=float,
-                comments="#",
-            ) * ureg(altitude_units)
-        else:
-            z = None
-        ds = ussa_1976.make(z=z, **kwargs)
 
-    if altitudes is not None and group_name != "ussa_1976":
-        z_new_values = np.loadtxt(  # type: ignore[no-untyped-call]
-            fname=altitudes,
-            dtype=float,
-            comments="#",
-        )
-        ds = interp(  # type: ignore
-            ds=ds,
-            z_new=ureg.Quantity(z_new_values, altitude_units),
-            p_interp_method=p_interp_method,
-            t_interp_method=t_interp_method,
-            n_interp_method=n_interp_method,
-            x_interp_method=x_interp_method,
-        )
+    if group_name == "ussa_1976":
+        ds = ussa_1976.make(z=z, **kwargs)  # ussa_1976 does not need interpolation
+
+    else:  # profiles other than ussa_1976 need to be interpolated on z grid
+        if z is not None:
+            ds = interp(  # type: ignore
+                ds=ds,
+                z_new=z,
+                p_interp_method=p_interp_method,
+                t_interp_method=t_interp_method,
+                n_interp_method=n_interp_method,
+                x_interp_method=x_interp_method,
+            )
 
     if represent_in_cells:
         ds = represent_profile_in_cells(
