@@ -360,22 +360,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "dparse"
-version = "0.6.2"
-description = "A parser for Python dependency files"
-category = "dev"
-optional = false
-python-versions = ">=3.5"
-
-[package.dependencies]
-packaging = "*"
-toml = "*"
-
-[package.extras]
-conda = ["pyyaml"]
-pipenv = ["pipenv"]
-
-[[package]]
 name = "entrypoints"
 version = "0.4"
 description = "Discover and load entry points from installed packages."
@@ -1657,25 +1641,6 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
-name = "safety"
-version = "2.3.3"
-description = "Checks installed dependencies for known vulnerabilities and licenses."
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-Click = ">=8.0.2"
-dparse = ">=0.6.2"
-packaging = ">=21.0"
-requests = "*"
-"ruamel.yaml" = ">=0.17.21"
-
-[package.extras]
-github = ["pygithub (>=1.43.3)", "jinja2 (>=3.1.0)"]
-gitlab = ["python-gitlab (>=1.3.0)"]
-
-[[package]]
 name = "scipy"
 version = "1.9.3"
 description = "Fundamental algorithms for scientific computing in Python"
@@ -2171,7 +2136,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.10"
-content-hash = "5f540e747b346565938c8194613c2b9271e51868382c7ea3d98165b3694c4898"
+content-hash = "e4fc6aacd2eccebded88eb90d95882d475bf736cd31071bd64e9614c8bc1cf9f"
 
 [metadata.files]
 alabaster = [
@@ -2214,7 +2179,6 @@ defusedxml = [
 ]
 distlib = []
 docutils = []
-dparse = []
 entrypoints = []
 exceptiongroup = []
 executing = []
@@ -2336,7 +2300,6 @@ requests = []
 restructuredtext-lint = []
 "ruamel.yaml" = []
 "ruamel.yaml.clib" = []
-safety = []
 scipy = []
 send2trash = []
 setuptools-scm = []
