@@ -1,6 +1,5 @@
 """Nox sessions."""
 import shutil
-import sys
 from pathlib import Path
 from textwrap import dedent
 
@@ -12,7 +11,6 @@ package = "joseki"
 python_versions = ["3.9", "3.8"]
 nox.options.sessions = (
     "pre-commit",
-    "mypy",
     "tests",
     "typeguard",
     "xdoctest",
@@ -93,17 +91,6 @@ def precommit(session: Session) -> None:
     session.run("pre-commit", *args)
     if args and args[0] == "install":
         activate_virtualenv_in_precommit_hooks(session)
-
-
-@nox.session(python=python_versions)
-def mypy(session: Session) -> None:
-    """Type-check using mypy."""
-    args = session.posargs or ["src", "tests", "docs/conf.py"]
-    session.install(".")
-    session.install("mypy", "pytest")
-    session.run("mypy", *args)
-    if not session.posargs:
-        session.run("mypy", f"--python-executable={sys.executable}", "noxfile.py")
 
 
 @nox.session(python=python_versions)
