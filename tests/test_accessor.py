@@ -65,7 +65,7 @@ def test_number_density_at_sea_level(test_dataset: xr.Dataset) -> None:
     """Number density at sea level of CO2 in us_standard matches dataset values."""
     carbon_dioxide_amount = test_dataset.joseki.number_density_at_sea_level["CO2"]
     n = to_quantity(test_dataset.n.isel(z=0))
-    x_co2 = to_quantity(test_dataset.x.sel(m="CO2").isel(z=0))
+    x_co2 = to_quantity(test_dataset.x_CO2.isel(z=0))
     assert np.isclose(
         carbon_dioxide_amount,
         x_co2 * n,
@@ -125,17 +125,17 @@ def test_scaling_factors(test_dataset: xr.Dataset) -> None:
 
 def test_rescale(test_dataset: xr.Dataset) -> None:
     """Scaling factors are applied."""
-    factors = dict(
-        H2O=0.8,
-        CO2=1.9,
-    )
+    factors = {
+        "H2O": 0.8,
+        "CO2": 1.9,
+    }
     initial = test_dataset.copy(deep=True)
     test_dataset.joseki.rescale(factors)
     assert all(
         [
             np.allclose(
-                test_dataset.x.sel(m=m),
-                factors[m] * initial.x.sel(m=m),
+                test_dataset[f"x_{m}"],
+                factors[m] * initial[f"x_{m}"],
             )
             for m in factors
         ]
@@ -144,6 +144,5 @@ def test_rescale(test_dataset: xr.Dataset) -> None:
 
 def test_rescale_invalid(test_dataset: xr.Dataset) -> None:
     """A UserWarning is raised if invalid scaling factors are passed."""
-    factors = dict(O2=2)
     with pytest.raises(ValueError):
-        test_dataset.joseki.rescale(factors)
+        test_dataset.joseki.rescale(factors={"O2": 2.0})

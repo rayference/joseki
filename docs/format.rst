@@ -36,12 +36,9 @@ in the table and was derived:
    * - ``air_number_density``
      - ``air number density``
      - ``m^-3``
-   * - ``volume_mixing_ratio``
-     - ``volume mixing ratio``
+   * - ``volume_fraction``
+     - ``volume fraction``
      - ``dimensionless``
-   * - ``molecule``
-     - ``molecule``
-     -
    * - ``layer_center_altitude``
      - ``layer center altitude``
      - ``km``
@@ -49,7 +46,7 @@ in the table and was derived:
 Structure
 ---------
 
-The data set includes four data variables:
+The data set includes 3+ data variables:
 
 .. list-table:: Data variables
    :widths: 35 35 5 15
@@ -71,12 +68,13 @@ The data set includes four data variables:
      - ``air number density``
      - ``n``
      - ``m^-3``
-   * - ``volume_mixing_ratio``
-     - ``volume mixing ratio``
-     - ``x``
+   * - ``volume_fraction``
+     - ``volume fraction``
+     - ``x_<m>``
      - ``dimensionless``
 
-and two coordinates variables (``altitude`` and ``layer_center_altitude``
+where ``<m>`` is the chemical formula of the given molecule, and two
+coordinates variables (``altitude`` and ``layer_center_altitude``
 exclude each other):
 
 .. list-table:: Coordinate variables
@@ -100,6 +98,5 @@ exclude each other):
      - ``m``
      -
 
-All data variables depend on the altitude (either ``altitude`` or
-``layer_center_altitude``) except the volume mixing ratio variable
-that depends on both the altitude and the molecule.
+All data variables depend solely on the altitude (either ``altitude`` or
+``layer_center_altitude``).

@@ -169,7 +169,9 @@ def to_xarray(
     if additional_molecules:
         return ds
     else:
-        return ds.isel(m=range(1, 8))
+        for m in molecules[7:]:
+            ds = ds.drop_vars(f"x_{m}")
+        return ds
 
 
 def read(identifier: Identifier, additional_molecules: bool = True) -> xr.Dataset:
