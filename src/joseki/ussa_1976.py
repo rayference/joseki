@@ -1,5 +1,4 @@
 """U.S. Standard Atmosphere 1976 module."""
-import datetime
 import typing as t
 
 import pint
@@ -7,6 +6,8 @@ import ussa1976
 import xarray as xr
 
 from ._version import _version
+from .units import to_quantity
+from .util import make_data_set
 
 
 def make(z: t.Optional[pint.Quantity] = None) -> xr.Dataset:  # type: ignore[type-arg]
@@ -55,34 +56,30 @@ def make(z: t.Optional[pint.Quantity] = None) -> xr.Dataset:  # type: ignore[typ
     # compute volume mixing ratio
     with xr.set_options(keep_attrs=True):  # type: ignore[no-untyped-call]
         x = ds.n / ds.n_tot
-
-    x.attrs.update(
-        {
-            "long_name": "volume mixing ratio",
-            "standard_name": "volume_mixing_ratio",
-            "units": "dimensionless",
-        }
-    )
+        x.attrs.update({"units": "1"})
 
     # remove variable 'n'
-    ds = ds.drop_vars("n")
+    ds = ds.drop_vars("n")  # pragma: no cover
 
-    # rename variable 'n_tot' -> 'n' and update attributes
+    # rename variable 'n_tot' -> 'n'
     ds = ds.rename_vars({"n_tot": "n"})
-    ds["n"].attrs.update(
-        {
-            "long_name": "air number density",
-            "standard_name": "air_number_density",
-        }
+
+    ds: xr.Dataset = make_data_set(  # type: ignore
+        p=to_quantity(ds.p),
+        t=to_quantity(ds.t),
+        n=to_quantity(ds.n),
+        x=to_quantity(x),
+        z=to_quantity(ds.z),
+        m=ds.m.values.tolist(),
+        convention="CF-1.8",
+        title="U.S. Standard Atmosphere 1976",
+        history=ds.attrs["history"],
+        func_name=f"joseki, version {_version}",
+        operation="data set formatting",
+        source=ds.attrs["source"],
+        references=ds.attrs["references"],
+        url="https://ntrs.nasa.gov/citations/19770009539",
+        url_date="2022-12-05",
     )
-
-    # assign volume mixing ratio variable
-    ds = ds.assign({"x": x})
-
-    # update data set history
-    utcnow = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-    history = ds.attrs["history"]
-    new_history = f"{utcnow} - data set formatting - joseki, version {_version}"
-    ds.attrs.update({"history": f"{history}\n{new_history}"})
 
     return ds

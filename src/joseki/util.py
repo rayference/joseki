@@ -101,9 +101,22 @@ def make_data_set(
     if url_date is not None:
         attrs.update(dict(url_date=url_date))
 
+    x_vars = {
+        f"x_{_m}": (
+            "z",
+            x[i].m_as(ureg.dimensionless),
+            dict(
+                standard_name="volume_fraction",
+                long_name="volume fraction",
+                units="",
+            ),
+        )
+        for i, _m in enumerate(m)
+    }
+
     return xr.Dataset(
-        data_vars=dict(
-            p=(
+        data_vars={
+            "p": (
                 "z",
                 p.m_as(ureg.pascal),
                 dict(
@@ -112,7 +125,7 @@ def make_data_set(
                     units="Pa",
                 ),
             ),
-            t=(
+            "t": (
                 "z",
                 t.m_as(ureg.kelvin),
                 dict(
@@ -121,7 +134,7 @@ def make_data_set(
                     units="K",
                 ),
             ),
-            n=(
+            "n": (
                 "z",
                 n.m_as(ureg.m**-3),
                 dict(
@@ -130,18 +143,10 @@ def make_data_set(
                     units="m^-3",
                 ),
             ),
-            x=(
-                ("m", "z"),
-                x.m_as(ureg.dimensionless),
-                dict(
-                    standard_name="volume_mixing_ratio",
-                    long_name="volume mixing ratio",
-                    units="",
-                ),
-            ),
-        ),
-        coords=dict(
-            z=(
+            **x_vars,
+        },
+        coords={
+            "z": (
                 "z",
                 z.m_as(ureg.kilometer),
                 dict(
@@ -149,16 +154,8 @@ def make_data_set(
                     long_name="altitude",
                     units="km",
                 ),
-            ),
-            m=(
-                "m",
-                m,
-                dict(
-                    standard_name="gas_molecule",
-                    long_name="molecule",
-                ),
-            ),
-        ),
+            )
+        },
         attrs=attrs,  # type: ignore
     )
 

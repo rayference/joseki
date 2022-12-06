@@ -67,12 +67,36 @@ def _scaling_factor(
         return float(factor)
 
 
+def volume_fraction_sum(ds: xr.Dataset) -> pint.Quantity:
+    """Compute the sum of volume mixing fractions.
+
+    Parameters
+    ----------
+    ds: dataset
+        Dataset.
+
+    Returns
+    -------
+    pint.Quantity
+        The sum of volume mixing fractions.
+    """
+    return (
+        sum([ds[c] for c in ds.data_vars if c.startswith("x_")]).values
+        * ureg.dimensionless
+    )
+
+
 @xr.register_dataset_accessor("joseki")  # type: ignore[no-untyped-call]
 class JosekiAccessor:  # pragma: no cover
     """Joseki accessor."""
 
     def __init__(self, xarray_obj):  # type: ignore[no-untyped-def]
         self._obj = xarray_obj
+
+    @property
+    def molecules(self) -> t.List[str]:
+        """Return list of molecules."""
+        return [c[2:] for c in self._obj.data_vars if c.startswith("x_")]
 
     @property
     def column_number_density(
@@ -120,8 +144,8 @@ class JosekiAccessor:  # pragma: no cover
             n = to_quantity(ds.n)
 
             _column_number_density = {}
-            for m in ds.m.values:
-                xm = to_quantity(ds.x.sel(m=m))
+            for m in self.molecules:
+                xm = to_quantity(ds[f"x_{m}"])
                 _column_number_density[m] = (
                     (xm * n * dz).sum().to_base_units()
                 )  # integrate using the centered rectangle rule
@@ -131,11 +155,13 @@ class JosekiAccessor:  # pragma: no cover
         except AttributeError:  # z_bounds attribute does not exist
 
             _column_number_density = {}
-            for m in ds.m.values:
-                integral = (ds.x.sel(m=m) * ds.n).integrate(
+            for m in self.molecules:
+                integral = (ds[f"x_{m}"] * ds.n).integrate(
                     coord="z"
                 )  # integrate  using the trapeziodal rule
-                units = " ".join([ds[var].attrs["units"] for var in ["x", "n", "z"]])
+                units = " ".join(
+                    [ds[var].attrs["units"] for var in [f"x_{m}", "n", "z"]]
+                )
                 _column_number_density[m] = (
                     integral.values * ureg.Unit(units)
                 ).to_base_units()
@@ -167,7 +193,7 @@ class JosekiAccessor:  # pragma: no cover
         _column_number_density = self.column_number_density
         return {
             m: (molecular_mass(m) * _column_number_density[m]).to("kg/m^2")
-            for m in self._obj.m.values
+            for m in self.molecules
         }
 
     @property
@@ -183,7 +209,7 @@ class JosekiAccessor:  # pragma: no cover
         """
         ds = self._obj
         n = to_quantity(ds.n.isel(z=0))
-        return {m: (to_quantity(ds.x.sel(m=m).isel(z=0)) * n) for m in ds.m.values}
+        return {m: (to_quantity(ds[f"x_{m}"].isel(z=0)) * n) for m in self.molecules}
 
     @property
     def mass_density_at_sea_level(
@@ -199,7 +225,7 @@ class JosekiAccessor:  # pragma: no cover
         _number_density_at_sea_level = self.number_density_at_sea_level
         return {
             m: (molecular_mass(m) * _number_density_at_sea_level[m]).to("kg/m^3")
-            for m in self._obj.m.values
+            for m in self.molecules
         }
 
     @property
@@ -214,7 +240,7 @@ class JosekiAccessor:  # pragma: no cover
             A mapping of molecule and volume mixing fraction at sea level.
         """
         ds = self._obj
-        return {m: to_quantity(ds.x.sel(m=m).isel(z=0)) for m in ds.m.values}
+        return {m: to_quantity(ds[f"x_{m}"].isel(z=0)) for m in self.molecules}
 
     def scaling_factors(
         self, target: t.MutableMapping[str, pint.Quantity]  # type: ignore[type-arg]
@@ -287,29 +313,32 @@ class JosekiAccessor:  # pragma: no cover
         ------
         ValueError
             When the rescaling factors are invalid, i.e. they lead to a profile
-            where the volume mixing ratios sum is larger than 1.
+            where the volume fraction sum is larger than 1.
         """
         ds = self._obj
-        f = xr.DataArray(
-            [factors[m] if m in factors else 1.0 for m in ds.m.values],
-            coords={"m": ds.m},
-            dims="m",
-        )
-        x_new = ds.x * f
 
-        if np.any(x_new.sum(dim="m") > 1.0):
+        # update volume fraction in a copy of the dataset
+        ds_copy = ds.copy(deep=True)
+        for m in self.molecules:
+            if m in factors:
+                ds_copy[f"x_{m}"] = ds[f"x_{m}"] * factors[m]
+
+        # check that the volume fraction sum is not larger than 1
+        vfs = volume_fraction_sum(ds_copy)
+        if np.any(vfs.m > 1):
             raise ValueError(
-                "The volume mixing ratio sum is larger than one at at least"
-                " one altitude."
+                "The rescaling factors lead to a profile where the volume "
+                "fraction sum is larger than 1."
             )
-
-        ds["x"].values = x_new
+        else:
+            # update dataset
+            ds.update(ds_copy)
 
         now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         for m in factors.keys():
             ds.attrs["history"] += (
                 f"\n{now} - rescaled {m}'s volume mixing ratio using a scaling "
-                f"factor of {round(factors[m], 3)} - joseki, version {_version}"
+                f"factor of {factors[m]:.3f} - joseki, version {_version}"
             )
 
         ds.attrs.update(dict(rescaled="True"))

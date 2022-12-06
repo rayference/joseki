@@ -111,14 +111,20 @@ def interp(
     n_new = ureg.Quantity(fn(z_new_values), ds.n.attrs["units"])
 
     # Interpolate volume mixing ratio
-    x_new = (
-        ds.x.interp(
-            z=z_new_values,
-            method=x_interp_method,
-            kwargs=dict(bounds_error=True),
-        ).values
-        * ureg.dimensionless
-    )
+    molecules = ds.joseki.molecules
+    x_values = np.full((len(molecules), z_new.size), np.nan)
+    for i, m in enumerate(molecules):
+        fxm = interpolate.interp1d(
+            ds.z.values,
+            ds[f"x_{m}"].values,
+            kind=x_interp_method,
+            bounds_error=True,
+        )
+        x_values[i] = ureg.Quantity(
+            fxm(z_new_values),
+            ds[f"x_{m}"].attrs["units"],
+        ).m_as("dimensionless")
+    x_new = x_values * ureg.dimensionless
 
     # Reform data set
     interpolated = make_data_set(  # type: ignore
@@ -127,7 +133,7 @@ def interp(
         n=n_new,
         x=x_new,
         z=z_new,
-        m=list(ds.m.values),
+        m=molecules,
         func_name=f"joseki, version {_version}",
         operation="data set interpolation",
         **ds.attrs,

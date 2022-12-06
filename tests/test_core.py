@@ -84,7 +84,7 @@ def test_make_altitudes() -> None:
 def test_make_additional_molecules_false(identifier: Identifier) -> None:
     """Additional molecules not included when additional_molecules=False."""
     ds = make(identifier=identifier, additional_molecules=False)
-    assert ds.m.size == 7
+    assert len(ds.joseki.molecules) == 7
 
 
 @pytest.mark.parametrize(
@@ -101,7 +101,7 @@ def test_make_additional_molecules_false(identifier: Identifier) -> None:
 def test_make_additional_molecules_true(identifier: Identifier) -> None:
     """Additional molecules are included when additional_molecules=True."""
     ds = make(identifier=identifier, additional_molecules=True)
-    assert ds.m.size == 28
+    assert len(ds.joseki.molecules) == 28
 
 
 def test_convert_to_identifier() -> None:
