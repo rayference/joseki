@@ -1,4 +1,8 @@
-"""U.S. Standard Atmosphere 1976 module."""
+"""Module to compute the U.S. Standard Atmosphere 1976.
+
+The U.S. Standard Atmosphere 1976 is a Earth atmosphere thermophysical model 
+described in the technical report :cite:`NASA1976USStandardAtmosphere`.
+"""
 import typing as t
 
 import pint

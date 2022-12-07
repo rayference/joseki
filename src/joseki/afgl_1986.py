@@ -1,4 +1,8 @@
-"""Module to read AFGL 1986 data files."""
+"""Module to read AFGL 1986 data files.
+
+These data files correspond to tables 1a-f and 2a-d from the technical report
+:cite:`Anderson1986AtmosphericConstituentProfiles`.
+"""
 import enum
 import importlib.resources as pkg_resources
 
