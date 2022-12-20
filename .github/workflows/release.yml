@@ -2,78 +2,36 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
-      - master
+    tags:
+      - "*"
 
 jobs:
-  release:
-    name: Release
+  release-pypi:
+    name: Release to PyPI
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v3.0.2
-        with:
-          fetch-depth: 2
+      - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4.0.0
+      - uses: pdm-project/setup-pdm@main
+        name: Setup PDM
         with:
-          python-version: "3.9"
+          python-version: "3.10"
+          architecture: x64
+          prerelease: true
+          enable-pep582: false
 
-      - name: Upgrade pip
+      - name: Build wheels
         run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
-          pip --version
-
-      - name: Install Poetry
+          pdm build
+          
+      - name: Test build
         run: |
-          pip install --constraint=.github/workflows/constraints.txt poetry
-          poetry --version
+          python3 -m venv fresh_env
+          . fresh_env/bin/activate
+          pip install dist/*.whl
+          fresh_env/bin/python -c "import joseki; print(joseki.__version__)"
 
-      - name: Check if there is a parent commit
-        id: check-parent-commit
+      - name: Upload to PyPI
         run: |
-          echo "::set-output name=sha::$(git rev-parse --verify --quiet HEAD^)"
-
-      - name: Detect and tag new version
-        id: check-version
-        if: steps.check-parent-commit.outputs.sha
-        uses: salsify/action-detect-and-tag-new-version@v2.0.1
-        with:
-          version-command: |
-            bash -o pipefail -c "poetry version | awk '{ print \$2 }'"
-
-      - name: Bump version for developmental release
-        if: "! steps.check-version.outputs.tag"
-        run: |
-          poetry version patch &&
-          version=$(poetry version | awk '{ print $2 }') &&
-          poetry version $version.dev.$(date +%s)
-
-      - name: Build package
-        run: |
-          poetry build --ansi
-
-      - name: Publish package on PyPI
-        if: steps.check-version.outputs.tag
-        uses: pypa/gh-action-pypi-publish@v1.5.0
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
-
-      - name: Publish package on TestPyPI
-        if: "! steps.check-version.outputs.tag"
-        uses: pypa/gh-action-pypi-publish@v1.5.0
-        with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
-
-      - name: Publish the release notes
-        uses: release-drafter/release-drafter@v5.20.0
-        with:
-          publish: ${{ steps.check-version.outputs.tag != '' }}
-          tag: ${{ steps.check-version.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pdm publish --no-build -r pypi --username __token__ --password ${{ secrets.PYPI_TOKEN }}

@@ -5,11 +5,11 @@ import typing as t
 import click
 import pandas as pd
 
-from .core import Identifier
 from .core import make
 from .units import ureg
+from .profiles.factory import factory
 
-IDENTIFIER_CHOICES = [identifier.value for identifier in Identifier]
+IDENTIFIER_CHOICES = list(factory.registry.keys())
 
 INTERPOLATION_METHOD_CHOICES = [
     "linear",
@@ -137,7 +137,7 @@ def main(
 
     # make data set
     ds = make(
-        identifier=Identifier(identifier),
+        identifier=identifier,
         z=z,
         p_interp_method=p_interp_method,
         t_interp_method=t_interp_method,
