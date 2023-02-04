@@ -17,7 +17,9 @@ def runner() -> CliRunner:
     return CliRunner()
 
 
-@pytest.mark.parametrize("identifier", ["afgl_1986-midlatitude_summer", "rfm-day"])
+@pytest.mark.parametrize(
+    "identifier", ["afgl_1986-midlatitude_summer", "mipas-midlatitude_day"]
+)
 def test_main_succeeds(runner: CliRunner, tmpdir: t.Any, identifier: str) -> None:
     """Exits with a status code of zero."""
     result = runner.invoke(
@@ -34,7 +36,7 @@ def test_main_open_data_set(runner: CliRunner, tmpdir: t.Any) -> None:
         __main__.main,
         ["--identifier=afgl_1986-tropical", f"--file-name={path}"],
     )
-    assert isinstance(xr.open_dataset(path), xr.Dataset)  # type: ignore
+    assert isinstance(xr.open_dataset(path), xr.Dataset)
 
 
 @pytest.fixture

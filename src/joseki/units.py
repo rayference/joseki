@@ -4,34 +4,30 @@ import xarray as xr
 
 ureg = pint.UnitRegistry()
 
-# define ppmv unit
-ureg.define("ppmv = 1e-6 * m^3 / m^3")
+# define ppm unit
+ureg.define("parts_per_million = 1e-6 = ppm = ppmv")
 
 # define dobson unit
 ureg.define("dobson_unit = 2.687e20 * meter^-2 = du = dobson = dobson_units")
 
 
-def to_quantity(da: xr.DataArray) -> pint.Quantity:  # type: ignore [type-arg]
-    """Convert a :class:`~xarray.DataArray` to a :class:`~pint.Quantity`.
+def to_quantity(da: xr.DataArray) -> pint.Quantity:
+    """Convert a `xarray.DataArray` to a `pint.Quantity`.
 
-    The array's ``attrs`` metadata mapping must contain a ``units`` field.
+    
+    Notes:
+        The array's `attrs` metadata mapping must contain a `units` field.
+        This function can also be used on coordinate variables.
 
-    .. note:: This function can also be used on coordinate variables.
+    Args:
+        da: xarray.DataArray instance which will be converted.
 
-    Parameters
-    ----------
-    da: :class:`~xarray.DataArray`
-        :class:`~xarray.DataArray` instance which will be converted.
+    Raises:
+        ValueError: If the :class:`~xarray.DataArray`'s ``attrs`` does not 
+            contain a ``units`` key.
 
-    Returns
-    -------
-    :class:`~pint.Quantity`:
+    Returns:
         The corresponding :class:`~pint.Quantity`.
-
-    Raises
-    ------
-    ValueError:
-        If the :class:`~xarray.DataArray`'s ``attrs`` does not contain a ``units`` key.
     """
     try:
         units = da.attrs["units"]

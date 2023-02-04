@@ -83,10 +83,10 @@ def test_mass_density_at_sea_level(test_dataset: xr.Dataset) -> None:
     )
 
 
-def test_volume_mixing_fraction_at_sea_level(test_dataset: xr.Dataset) -> None:
+def test_volume_fraction_at_sea_level(test_dataset: xr.Dataset) -> None:
     """CO2 volume mixing fraction at sea level in us_standard is 0.000333."""
     assert (
-        test_dataset.joseki.volume_mixing_fraction_at_sea_level["CO2"]
+        test_dataset.joseki.volume_fraction_at_sea_level["CO2"]
         == 0.000330 * ureg.dimensionless
     )
 
