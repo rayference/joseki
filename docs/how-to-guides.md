@@ -80,54 +80,56 @@ data set produced by `joseki`:
 
 * the column number density of each molecule in the data set.
 
-  Example:
+  ??? example "Example"
 
-  ```python
-  ds = joseki.make(identifier="afgl_1986-us_standard")
-  ds.joseki.column_number_density["O3"].to("dobson_unit")
+      ```python
+      ds = joseki.make(identifier="afgl_1986-us_standard")
+      ds.joseki.column_number_density["O3"].to("dobson_unit")
   ```
 
 * the column mass density of each molecule in the data set
 
-  Example:
+  ??? example "Example"
 
-  ```python
-   ds.joseki.column_mass_density["H2O"]
-   ```
+      ```python
+         ds.joseki.column_mass_density["H2O"]
+         ```
 
 * the number density at sea level of each molecule in the data set
 
-  Example:
+  ??? example "Example"
 
-   ```
-   ds.joseki.number_density_at_sea_level["CO2"]
-   ```
+      ```
+      ds.joseki.number_density_at_sea_level["CO2"]
+      ```
 
 * the mass density at sea level of each molecule in the data set
 
-  Example:
+  ??? example "Example"
 
-  ```python
-   ds.joseki.mass_density_at_sea_level["CH4"]
-   ```
+      ```python
+         ds.joseki.mass_density_at_sea_level["CH4"]
+         ```
 
 For further details on these methods, refer to the :ref:`API reference<api_reference>`.
 
 ### Rescaling
 
 You can modify the amount of a given set of molecules in your thermophysical
-properties data set by applying a rescale transformation:
+properties data set by applying a rescale transformation.
 
-```python
-ds = joseki.make(identifier="afgl_1986-us_standard")
-ds.joseki.rescale(
-   factors={
-      "H2O": 0.5,
-      "CO2": 1.5,
-      "CH4": 1.1,
-   }
-)
-```
+!!! example "Example"
+
+    ```python
+    ds = joseki.make(identifier="afgl_1986-us_standard")
+    ds.joseki.rescale(
+       factors={
+          "H2O": 0.5,
+          "CO2": 1.5,
+          "CH4": 1.1,
+       }
+    )
+    ```
 
 In the example above, the amount of water vapor is halfed whereas the amount of
 carbon dioxide and methane is increased by 150% and 110%, respectively.
@@ -137,14 +139,16 @@ indicate what scaling factors were applied to what molecules.
 If the scaling factors are such that the volume fractions sum is larger than
 1.0 at any altitude, an error is raised.
 
-```python
-ds = joseki.make(identifier="afgl_1986-us_standard")
-ds.joseki.rescale(
-   factors={
-      "O2": 2.0,  # invalid
-   }
-)
-```
+!!! example "Example"
+
+    ```python
+    ds = joseki.make(identifier="afgl_1986-us_standard")
+    ds.joseki.rescale(
+       factors={
+          "O2": 2.0,  # invalid
+       }
+    )
+    ```
 
 When executed, the above code will raise a ``ValueError`` because the scaling
 factor is invalid.
