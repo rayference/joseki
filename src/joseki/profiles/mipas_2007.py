@@ -302,7 +302,7 @@ def to_dataset(
         return ds
 
 
-@factory.register("mipas-midlatitude_day")
+@factory.register("mipas_2007-midlatitude_day")
 @define
 class MIPASMidlatitudeDay(Profile):
     """MIPAS midlatitude day reference atmosphere."""
@@ -321,7 +321,7 @@ class MIPASMidlatitudeDay(Profile):
         )
 
 
-@factory.register("mipas-midlatitude_night")
+@factory.register("mipas_2007-midlatitude_night")
 @define
 class MIPASMidlatitudeNight(Profile):
     """MIPAS Midlatitude night reference atmosphere."""
@@ -340,7 +340,7 @@ class MIPASMidlatitudeNight(Profile):
         )
 
 
-@factory.register("mipas-polar_summer")
+@factory.register("mipas_2007-polar_summer")
 @define
 class MIPASPolarSummer(Profile):
     """MIPAS Polar summer reference atmosphere."""
@@ -359,7 +359,7 @@ class MIPASPolarSummer(Profile):
         )
 
 
-@factory.register("mipas-polar_winter")
+@factory.register("mipas_2007-polar_winter")
 @define
 class MIPASPolarWinter(Profile):
     """MIPAS Polar winter reference atmosphere."""
@@ -378,7 +378,7 @@ class MIPASPolarWinter(Profile):
         )
 
 
-@factory.register("mipas-tropical")
+@factory.register("mipas_2007-tropical")
 @define
 class MIPASTropical(Profile):
     """MIPAS Tropical reference atmosphere."""

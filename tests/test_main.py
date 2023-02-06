@@ -18,7 +18,7 @@ def runner() -> CliRunner:
 
 
 @pytest.mark.parametrize(
-    "identifier", ["afgl_1986-midlatitude_summer", "mipas-midlatitude_day"]
+    "identifier", ["afgl_1986-midlatitude_summer", "mipas_2007-midlatitude_day"]
 )
 def test_main_succeeds(runner: CliRunner, tmpdir: t.Any, identifier: str) -> None:
     """Exits with a status code of zero."""
