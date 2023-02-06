@@ -201,8 +201,8 @@ factor is invalid.
 
 !!! note "Note"
 
-   For plotting, you will need to install the
-   `https://matplotlib.org <matplotlib library>`_.
+    For plotting, you will need to install the
+    `https://matplotlib.org <matplotlib library>`_.
 
 You can easily make a plot of any of the four variables of a dataset, i.e.,
 air pressure (``p``), air temperature (``t``), air number density (``n``) or
