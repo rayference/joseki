@@ -2,7 +2,6 @@
 import datetime
 import typing as t
 
-import molmass
 import numpy as np
 import pint
 import xarray as xr
@@ -11,6 +10,47 @@ from .__version__ import __version__
 from .profiles.schema import schema
 from .units import to_quantity, ureg
 
+
+MM = {
+    "SF6": 146.055,
+    "HF": 20.006,
+    "H2O": 18.015,
+    "NO2": 46.006,
+    "HI": 127.912,
+    "N2": 28.013,
+    "HNO4": 79.012,
+    "N2O": 44.013,
+    "H2O2": 34.015,
+    "SO2": 64.064,
+    "NH3": 17.031,
+    "O3": 47.998,
+    "CH3Cl": 50.487,
+    "HCN": 27.025,
+    "HNO3": 63.013,
+    "O2": 31.999,
+    "COF2": 66.007,
+    "CCl2F2": 120.913,
+    "CH4": 16.043,
+    "OH": 17.007,
+    "NO": 30.006,
+    "C2H6": 30.069,
+    "CHClF2": 86.468,
+    "CO2": 44.010,
+    "HOCl": 52.460,
+    "HBr": 80.911,
+    "HCl": 36.461,
+    "C2H2": 26.037,
+    "CCl4": 153.822,
+    "ClO": 51.452,
+    "CCl3F": 137.368,
+    "N2O5": 108.010,
+    "CO": 28.010,
+    "PH3": 33.998,
+    "ClONO2": 97.458,
+    "OCS": 60.075,
+    "CF4": 88.004,
+    "H2CO": 30.026,
+}
 
 def molecular_mass(m: str) -> pint.Quantity:
     """Return the average molecular mass of a molecule.
@@ -21,7 +61,7 @@ def molecular_mass(m: str) -> pint.Quantity:
     Returns:
         Average molecular mass.
     """
-    return ureg.Quantity(molmass.Formula(m).mass, "dalton")
+    return MM[m] * ureg("dalton")
 
 
 def _scaling_factor(
