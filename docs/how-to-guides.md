@@ -78,40 +78,36 @@ The resulting data set now includes only 7 molecules, instead of 28.
 You can compute various derived quantities from a thermophysical properties
 data set produced by `joseki`:
 
-* the column number density of each molecule in the data set.
+  
+??? example "the column number density of each molecule in the data set."
 
-  ??? example "Example"
+    ```python
+    ds = joseki.make(identifier="afgl_1986-us_standard")
+    ds.joseki.column_number_density["O3"].to("dobson_unit")
+    ```
 
-      ```python
-      ds = joseki.make(identifier="afgl_1986-us_standard")
-      ds.joseki.column_number_density["O3"].to("dobson_unit")
-  ```
 
-* the column mass density of each molecule in the data set
+  
+??? example "the column mass density of each molecule in the data set"
 
-  ??? example "Example"
+    ```python
+    ds.joseki.column_mass_density["H2O"]
+    ```
 
-      ```python
-         ds.joseki.column_mass_density["H2O"]
-         ```
 
-* the number density at sea level of each molecule in the data set
+??? example "the number density at sea level of each molecule in the data set"
 
-  ??? example "Example"
+    ```python
+    ds.joseki.number_density_at_sea_level["CO2"]
+    ``` 
 
-      ```
-      ds.joseki.number_density_at_sea_level["CO2"]
-      ```
+??? example "the mass density at sea level of each molecule in the data set"
 
-* the mass density at sea level of each molecule in the data set
+    ```python
+    ds.joseki.mass_density_at_sea_level["CH4"]
+    ```
 
-  ??? example "Example"
-
-      ```python
-         ds.joseki.mass_density_at_sea_level["CH4"]
-         ```
-
-For further details on these methods, refer to the :ref:`API reference<api_reference>`.
+For further details on these methods, refer to the [API reference](reference.md).
 
 ### Rescaling
 
@@ -208,71 +204,79 @@ factor is invalid.
     For plotting, you will need to install the
     [matplotlib library](https://matplotlib.org).
 
-You can easily make a plot of any of the four variables of a dataset, i.e.,
+You can easily make a plot of any of the variables of a dataset, i.e.,
 air pressure (``p``), air temperature (``t``), air number density (``n``) or
-volume mixing ratio (``x``):
+volume fraction (``x_*``):
 
-``` python
-import matplotlib.pyplot as plt
+??? example "Pressure plot"
 
-ds = joseki.make(
-   identifier="afgl_1986-us_standard",
-   additional_molecules=False
-)
+    ``` python
+    import matplotlib.pyplot as plt 
 
-ds.p.plot(
-   figsize=(4, 8),
-   ls="dotted",
-   marker=".",
-   y="z",
-   xscale="log",
-)
-plt.show()
-```
-
-![image](fig/user_guide/plotting-p.png)
-
-```python
-ds.t.plot(
-   figsize=(4, 8),
-   ls="dotted",
-   marker=".",
-   y="z",
-   xscale="linear",
-)
-plt.show()
-```
-
-![image](fig/user_guide/plotting-t.png)
-
-```python
-ds.n.plot(
-   figsize=(4, 8),
-   ls="dotted",
-   marker=".",
-   y="z",
-   xscale="log",
-)
-plt.show()
-```
-
-![image](fig/user_guide/plotting-n.png)
-
-
-```python
-plt.figure(figsize=(8, 8))
-
-for m in ds.joseki.molecules:
-    ds[f"x_{m}"].plot(
-        ls="dotted",
-        marker=".",
-        y="z",
-        xscale="log",
+    ds = joseki.make(
+       identifier="afgl_1986-us_standard",
+       additional_molecules=False
     )
 
-plt.xlabel("volume fraction [dimensionless]")
-plt.legend(ds.joseki.molecules)
-plt.show()
-```
+    ds.p.plot(
+       figsize=(4, 8),
+       ls="dotted",
+       marker=".",
+       y="z",
+       xscale="log",
+    )
+    plt.show()
+    ```
 
-![image](fig/user_guide/plotting-x.png)
+    ![image](fig/user_guide/plotting-p.png)
+
+??? example "Temperature plot"
+
+    ```python
+    ds.t.plot(
+       figsize=(4, 8),
+       ls="dotted",
+       marker=".",
+       y="z",
+       xscale="linear",
+    )
+    plt.show()
+    ```
+
+    ![image](fig/user_guide/plotting-t.png)
+
+??? example "Number density plot"
+
+    ```python
+    ds.n.plot(
+       figsize=(4, 8),
+       ls="dotted",
+       marker=".",
+       y="z",
+       xscale="log",
+    )
+    plt.show()
+    ```
+
+    ![image](fig/user_guide/plotting-n.png)
+
+
+??? example "Volume fraction plot"
+
+    ```python
+    plt.figure(figsize=(8, 8)) 
+
+    for m in ds.joseki.molecules:
+       ds[f"x_{m}"].plot(
+          ls="dotted",
+          marker=".",
+          y="z",
+          xscale="log",
+       )
+
+    plt.xlabel("volume fraction [dimensionless]")
+    plt.legend(ds.joseki.molecules)
+    plt.show()
+    ```
+
+    ![image](fig/user_guide/plotting-x.png)
