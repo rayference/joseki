@@ -36,3 +36,7 @@ You can install *Joseki* via `pip` from [`PyPI`](https://pypi.org/):
 ```shell
 pip install joseki
 ```
+
+## Documentation
+
+Visit https://nollety.github.io/joseki/.
