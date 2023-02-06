@@ -652,12 +652,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "molmass"
-version = "2022.12.9"
-requires_python = ">=3.8"
-summary = "Molecular mass calculations"
-
-[[package]]
 name = "nbclassic"
 version = "0.5.1"
 requires_python = ">=3.7"
@@ -1205,7 +1199,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:cebc836e5c3eb019ed9d64081bf3ed03f61d08a79ded4cb139861370cf3d890e"
+content_hash = "sha256:cd4b5df7da243c14290c9bebac8896ee438518e55cb9ba583063810a8a8235a2"
 
 [metadata.files]
 "anyio 3.6.2" = [
@@ -1930,10 +1924,6 @@ content_hash = "sha256:cebc836e5c3eb019ed9d64081bf3ed03f61d08a79ded4cb139861370c
 "mkdocstrings-python 0.8.3" = [
     {url = "https://files.pythonhosted.org/packages/2c/30/47c1db07d5a6ecbf9a8ea251e1cfb91ec5f8bc4ab1ead417dcc1932ab616/mkdocstrings-python-0.8.3.tar.gz", hash = "sha256:9ae473f6dc599339b09eee17e4d2b05d6ac0ec29860f3fc9b7512d940fc61adf"},
     {url = "https://files.pythonhosted.org/packages/76/ea/7aba526196a8c6f7bb2748dcdb815e073e730303939768c089b5b357deae/mkdocstrings_python-0.8.3-py3-none-any.whl", hash = "sha256:4e6e1cd6f37a785de0946ced6eb846eb2f5d891ac1cc2c7b832943d3529087a7"},
-]
-"molmass 2022.12.9" = [
-    {url = "https://files.pythonhosted.org/packages/b8/29/47bb5e6285420697342541056f87c87b6b9a5e7f0b028e85b447799cbd24/molmass-2022.12.9.tar.gz", hash = "sha256:cee9373b745faf13cd6f48f705a8472fdcf1fb0dbd85a171b7f8906c1c5c301e"},
-    {url = "https://files.pythonhosted.org/packages/f0/8e/85a1c487faebe6634c06e63cf0d47defb2a5dc3244a015248def98b90c9c/molmass-2022.12.9-py3-none-any.whl", hash = "sha256:d880ed76f8e54fc5da200f280574b8c44a0c386e853db2430ef2539f13011045"},
 ]
 "nbclassic 0.5.1" = [
     {url = "https://files.pythonhosted.org/packages/ba/a1/d6e92354cb3f198bd113f8d9945d3b55b22b9405fa9a145582b0d37f8fba/nbclassic-0.5.1.tar.gz", hash = "sha256:8e8ffce7582bb7a4baf11fa86a3d88b184e8e7df78eed4ead69f15aa4fc0e323"},

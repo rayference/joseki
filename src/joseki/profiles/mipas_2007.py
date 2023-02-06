@@ -162,7 +162,6 @@ def parse_content(lines: t.List[str]) -> t.Dict[str, pint.Quantity]:
     quantities: t.Dict[str, pint.Quantity] = {}
 
     def _add_to_quantities(quantity: pint.Quantity, name: str) -> None:
-        print(name, quantity)
         if name not in ["z", "p", "t", "n"]:
             name = f"x_{name}"
         
