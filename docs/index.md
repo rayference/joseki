@@ -21,6 +21,8 @@ your use case by looking at the different pages.
     
     ```
         docs/
+            bibliography.bib            # BibTeX file
+            bibliography.md             # Bibliography 
             changelog.md                # Changelog
             explanation.md              # Understanding-oriented documentation
             how-to-guides.md            # Task-oriented documentation

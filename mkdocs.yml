@@ -26,7 +26,7 @@ theme:
 
 plugins:
   - bibtex:
-      bib_file: "docs/references.bib"
+      bib_file: "docs/bibliography.bib"
   - mkdocstrings
   - search
 
