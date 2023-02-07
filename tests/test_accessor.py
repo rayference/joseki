@@ -1,6 +1,8 @@
 """Test cases for the accessor module."""
 import numpy as np
+import pint
 import pytest
+from numpy.testing import assert_approx_equal
 
 import joseki
 from joseki.accessor import _scaling_factor
@@ -9,118 +11,102 @@ from joseki.units import ureg
 
 
 @pytest.mark.parametrize(
-    "identifier", ["afgl_1986-us_standard"]
+    "identifier, represent_in_cells, expected",
+    [
+        ("afgl_1986-us_standard", True, 14.27 * ureg.kg / ureg.m**2),
+        ("afgl_1986-us_standard", False, 14.38 * ureg.kg / ureg.m**2),
+        ("mipas_2007-midlatitude_day", True, 19.33 * ureg.kg / ureg.m**2),
+        ("mipas_2007-midlatitude_day", False, 19.51 * ureg.kg / ureg.m**2),
+    ]
 )
-def test_column_mass_density(identifier: str) -> None:
-    """Column mass density of water vapor in us_standard is 14.27 kg/m^2."""
-    ds = joseki.make(identifier)
-    water_vapor_amount = ds.joseki.column_mass_density["H2O"]
-    assert np.isclose(
-        water_vapor_amount,
-        14.27 * ureg.kg / ureg.m**2,
-        rtol=1e-2,
-    )
+def test_column_mass_density_in_cells(
+    identifier: str,
+    represent_in_cells: bool,
+    expected: pint.Quantity
+):
+    """Column mass density of water vapor is close to expected values."""
+    ds = joseki.make(identifier, represent_in_cells=represent_in_cells)
+    water_vapor_amount = ds.joseki.column_mass_density["H2O"].to("kg/m^2")
+    assert_approx_equal(water_vapor_amount.m, expected.m, significant=3)
 
 
 @pytest.mark.parametrize(
-    "identifier", ["afgl_1986-us_standard"]
+    "identifier, represent_in_cells, expected",
+    [
+        ("afgl_1986-us_standard", True, 348.3 * ureg.dobson_unit),
+        ("afgl_1986-us_standard", False, 345.7 * ureg.dobson_unit),
+        ("mipas_2007-midlatitude_day", True, 303.4 * ureg.dobson_unit),
+        ("mipas_2007-midlatitude_day", False, 301.7 * ureg.dobson_unit)
+    ]
 )
-def test_column_mass_density_in_cells(identifier: str) -> None:
-    """Column mass density of water vapor in us_standard is 14.27 kg/m^2."""
-    ds = joseki.make(identifier, represent_in_cells=True)
-    water_vapor_amount = ds.joseki.column_mass_density["H2O"]
-    assert np.isclose(
-        water_vapor_amount,
-        14.27 * ureg.kg / ureg.m**2,
-        rtol=1e-2,
-    )
-
-
-@pytest.mark.parametrize(
-    "identifier", ["afgl_1986-us_standard"]
-)
-def test_column_number_density(identifier: str) -> None:
-    """Column number density of ozone in us_standard is 348 dobson units."""
-    ds = joseki.make(identifier)
-    ozone_amount = ds.joseki.column_number_density["O3"]
-    assert np.isclose(
-        ozone_amount,
-        348 * ureg.dobson_unit,
-        rtol=1e-2,
-    )
-
-
-@pytest.mark.parametrize(
-    "identifier", ["afgl_1986-us_standard"]
-)
-def test_column_number_density_in_cells(identifier: str) -> None:
-    """Column number density of ozone in us_standard is 348 dobson units."""
-    ds = joseki.make(identifier, represent_in_cells=True)
-    ozone_amount = ds.joseki.column_number_density["O3"]
-    assert np.isclose(
-        ozone_amount,
-        348 * ureg.dobson_unit,
-        rtol=1e-2,
-    )
+def test_column_number_density(
+    identifier: str,
+    represent_in_cells: bool,
+    expected: pint.Quantity
+):
+    """Column number density of ozone matches expected value."""
+    ds = joseki.make(identifier, represent_in_cells=represent_in_cells)
+    ozone_amount = ds.joseki.column_number_density["O3"].to("dobson_unit")
+    assert_approx_equal(ozone_amount.m, expected.m, significant=3)
 
 
 @pytest.mark.parametrize(
     "identifier", ["afgl_1986-midlatitude_summer", "mipas_2007-midlatitude_day"]
 )
-def test_number_density_at_sea_level(identifier: str) -> None:
+def test_number_density_at_sea_level(identifier: str):
     """Number density at sea level of CO2 in matches dataset values."""
     ds = joseki.make(identifier)
     carbon_dioxide_amount = ds.joseki.number_density_at_sea_level["CO2"]
     n = to_quantity(ds.n.isel(z=0))
     x_co2 = to_quantity(ds.x_CO2.isel(z=0))
-    assert np.isclose(
-        carbon_dioxide_amount,
-        x_co2 * n,
-        rtol=1e-2,
-    )
+    expected = (x_co2 * n).to("m^-3")
+    value = carbon_dioxide_amount.to("m^-3")
+    assert_approx_equal(value.m, expected.m)
 
 
 @pytest.mark.parametrize(
-    "identifier", ["afgl_1986-us_standard"]
+    "identifier, expected",
+    [
+        ("afgl_1986-us_standard", 0.00590723 * ureg.kg / ureg.m**3),
+        ("mipas_2007-midlatitude_day", 0.00901076 * ureg.kg / ureg.m**3)
+    ]
 )
-def test_mass_density_at_sea_level(identifier: str) -> None:
-    """Mass density at sea level of H2O in us_standard is 0.00590733 kg / m^3."""
+def test_mass_density_at_sea_level(identifier: str, expected: pint.Quantity):
+    """Mass density at sea level of H2O matches expected value."""
     ds = joseki.make(identifier)
-    water_vapor_amount = ds.joseki.mass_density_at_sea_level["H2O"]
-    assert np.isclose(
-        water_vapor_amount,
-        0.00590733 * ureg.kg / ureg.m**3,
-        rtol=1e-2,
-    )
+    water_vapor_amount = ds.joseki.mass_density_at_sea_level["H2O"].to("kg/m^3")
+    assert_approx_equal(water_vapor_amount.m, expected.m, significant=6)
 
 
 @pytest.mark.parametrize(
-    "identifier", ["afgl_1986-us_standard"]
+    "identifier, expected",
+    [
+        ("afgl_1986-us_standard", 0.000330 * ureg.dimensionless),
+        ("mipas_2007-midlatitude_day", 0.0003685 * ureg.dimensionless)
+    ]
 )
-def test_volume_fraction_at_sea_level(identifier: str) -> None:
-    """CO2 volume mixing fraction at sea level in us_standard is 0.000333."""
+def test_volume_fraction_at_sea_level(identifier: str, expected):
+    """CO2 volume mixing fraction at sea level matches expected value."""
     ds = joseki.make(identifier)
-    assert (
-        ds.joseki.volume_fraction_at_sea_level["CO2"]
-        == 0.000330 * ureg.dimensionless
-    )
+    value = ds.joseki.volume_fraction_at_sea_level["CO2"].to(ureg.dimensionless)
+    assert_approx_equal(value.m, expected.m)
 
 
-def test_scaling_factor() -> None:
+def test_scaling_factor():
     """Returns 2.0 when target amount is twice larger than initial amount."""
     initial = 5 * ureg.m
     target = 10 * ureg.m
     assert _scaling_factor(initial_amount=initial, target_amount=target) == 2.0
 
 
-def test_scaling_factor_zero() -> None:
+def test_scaling_factor_zero():
     """Returns 0.0 when target amount and initial amount are both zero."""
     initial = 0.0 * ureg.m
     target = 0.0 * ureg.m
     assert _scaling_factor(initial_amount=initial, target_amount=target) == 0.0
 
 
-def test_scaling_factor_raises() -> None:
+def test_scaling_factor_raises():
     """Raises when the initial amount is zero but not the target amount."""
     initial = 0 * ureg.m
     target = 10 * ureg.m
@@ -131,7 +117,7 @@ def test_scaling_factor_raises() -> None:
 @pytest.mark.parametrize(
     "identifier", ["afgl_1986-us_standard", "mipas_2007-midlatitude_day"]
 )
-def test_scaling_factors(identifier: str) -> None:
+def test_scaling_factors(identifier: str):
     """Scaling factors keys match target amounts keys."""
     ds = joseki.make(identifier)
     target = {
@@ -145,7 +131,7 @@ def test_scaling_factors(identifier: str) -> None:
 @pytest.mark.parametrize(
     "identifier", ["afgl_1986-us_standard"]
 )
-def test_rescale(identifier: str) -> None:
+def test_rescale(identifier: str):
     """Scaling factors are applied."""
     ds = joseki.make(identifier)
     factors = {
@@ -168,7 +154,7 @@ def test_rescale(identifier: str) -> None:
 @pytest.mark.parametrize(
     "identifier", ["afgl_1986-us_standard", "mipas_2007-midlatitude_day"]
 )
-def test_rescale_invalid(identifier: str) -> None:
+def test_rescale_invalid(identifier: str):
     """A UserWarning is raised if invalid scaling factors are passed."""
     ds = joseki.make(identifier)
     with pytest.raises(ValueError):
