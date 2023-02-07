@@ -139,11 +139,11 @@ def test_rescale(identifier: str):
         "CO2": 1.9,
     }
     initial = ds.copy(deep=True)
-    ds.joseki.rescale(factors)
+    rescaled = ds.joseki.rescale(factors)
     assert all(
         [
             np.allclose(
-                ds[f"x_{m}"],
+                rescaled[f"x_{m}"],
                 factors[m] * initial[f"x_{m}"],
             )
             for m in factors
@@ -158,4 +158,7 @@ def test_rescale_invalid(identifier: str):
     """A UserWarning is raised if invalid scaling factors are passed."""
     ds = joseki.make(identifier)
     with pytest.raises(ValueError):
-        ds.joseki.rescale(factors={"O2": 2.0})
+        ds.joseki.rescale(
+            factors={"O2": 2.0},
+            check_volume_fraction_sum=True,
+        )

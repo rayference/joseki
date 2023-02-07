@@ -12,7 +12,6 @@ from joseki.profiles.mipas_2007 import read_file_content
 from joseki.profiles.mipas_2007 import translate_cfc, to_chemical_formula
 from joseki.profiles.mipas_2007 import to_dataset
 from joseki.units import ureg
-from joseki.profiles.schema import schema
 from joseki.profiles.mipas_2007 import (
     MIPASMidlatitudeNight,
     MIPASMidlatitudeDay,
@@ -179,7 +178,7 @@ def test_to_dataset_z() -> None:
         identifier=Identifier.TROPICAL,
         z=np.linspace(0, 10, 11) * ureg.km,
     )
-    assert ds.joseki.validate()
+    assert ds.joseki.is_valid
 
 @pytest.mark.parametrize("profile", [
     MIPASMidlatitudeNight(),
@@ -191,4 +190,4 @@ def test_to_dataset_z() -> None:
 def test_profile_to_dataset(profile) -> None:
     """Returns a dataset."""
     ds = profile.to_dataset()
-    assert ds.joseki.validate()
+    assert ds.joseki.is_valid

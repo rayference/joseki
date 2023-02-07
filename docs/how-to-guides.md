@@ -78,22 +78,18 @@ The resulting data set now includes only 7 molecules, instead of 28.
 You can compute various derived quantities from a thermophysical properties
 data set produced by `joseki`:
 
-  
 ??? example "the column number density of each molecule in the data set."
 
     ```python
     ds = joseki.make(identifier="afgl_1986-us_standard")
     ds.joseki.column_number_density["O3"].to("dobson_unit")
     ```
-
-
   
 ??? example "the column mass density of each molecule in the data set"
 
     ```python
     ds.joseki.column_mass_density["H2O"]
     ```
-
 
 ??? example "the number density at sea level of each molecule in the data set"
 
@@ -118,7 +114,7 @@ properties data set by applying a rescale transformation.
 
     ```python
     ds = joseki.make(identifier="afgl_1986-us_standard")
-    ds.joseki.rescale(
+    rescaled = ds.joseki.rescale(
        factors={
           "H2O": 0.5,
           "CO2": 1.5,
@@ -129,72 +125,9 @@ properties data set by applying a rescale transformation.
 
 In the example above, the amount of water vapor is halfed whereas the amount of
 carbon dioxide and methane is increased by 150% and 110%, respectively.
-When a rescale transformation has been applied to a data set, its ``rescaled``
-attribute is set to ``True`` and its ``history`` attribute is updated to
-indicate what scaling factors were applied to what molecules.
-If the scaling factors are such that the volume fractions sum is larger than
-1.0 at any altitude, an error is raised.
-
-!!! example "Example"
-
-    ```python
-    ds = joseki.make(identifier="afgl_1986-us_standard")
-    ds.joseki.rescale(
-       factors={
-          "O2": 2.0,  # invalid
-       }
-    )
-    ```
-
-When executed, the above code will raise a ``ValueError`` because the scaling
-factor is invalid.
-
-!!! danger "Warning"
-
-    For some profiles of the `afgl_1986-*` series, namely
-    `afgl_1986-tropical`, `afgl_1986-midlatitude_summer` and
-    `afgl_1986-subarctic_summer`,  a `ValueError` is raised
-    while rescaling although the scaling factors are valid.
-    For example, the code below:
-
-    ```python
-
-    ds = joseki.make(identifier="afgl_1986-tropical")
-    ds.joseki.rescale(
-       factors={
-          "H2O": 0.5,
-       }
-    )
-    ```
-
-    will raise a `ValueError` with a message indicating that the volume
-    mixing ratio sum is larger than one, although all that we did is
-    decrease the amount the water vapor by half.
-
-    The reason is, that the volume mixing ratio sum **was** larger than one
-    before the rescaling transformation, and the transformation was not
-    significant enough to change that.
-    The original paper :cite:`Anderson1986AtmosphericConstituentProfiles` does
-    not make any comment about the sum of volume fractions being larger than
-    one for the mentioned profiles.
-
-    The suggested way to circumvent this issue is to decrease the amount of a
-    molecule that is not relevant to your application, e.g. `N2` so that
-    the volume fractions sum is less than one, and apply your original
-    rescaling transformation:
-
-    ```python
-    ds = joseki.make(identifier="afgl_1986-tropical")
-    ds.joseki.rescale(
-       factors={
-           "N2": 0.99,
-           "H2O": 0.5,
-       }
-    )
-    ```
-
-    where the value of the scaling factor for `N2` may have to be adjusted
-    depending on your rescaling transformation.
+When a rescale transformation has been applied to a data set, ``history`` 
+attribute is updated to indicate what scaling factors were applied to what 
+molecules.
 
 
 ### Plotting

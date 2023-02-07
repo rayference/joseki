@@ -2,7 +2,6 @@
 import datetime
 import typing as t
 
-import numpy as np
 import pint
 import xarray as xr
 
@@ -93,21 +92,6 @@ def _scaling_factor(
     else:
         factor = (target_amount / initial_amount).m_as(ureg.dimensionless)
         return float(factor)
-
-
-def volume_fraction_sum(ds: xr.Dataset) -> pint.Quantity:
-    """Compute the sum of volume mixing fractions.
-
-    Args:
-        ds: Dataset.
-
-    Returns:
-        The sum of volume fractions.
-    """
-    return (
-        sum([ds[c] for c in ds.data_vars if c.startswith("x_")]).values
-        * ureg.dimensionless
-    )
 
 
 @xr.register_dataset_accessor("joseki")
@@ -331,35 +315,41 @@ class JosekiAccessor:  # pragma: no cover
             )
         return factors
 
-    def rescale(self, factors: t.MutableMapping[str, float]) -> None:
+    def rescale(
+        self,
+        factors: t.MutableMapping[str, float],
+        check_volume_fraction_sum: bool = False
+    ) -> xr.Dataset:
         """Rescale molecules concentration in atmospheric profile.
 
         Args:
             factors: A mapping of molecule and scaling factor.
-
+            check_volume_fraction_sum: if True, check that volume fraction sums
+                are never larger than one.
         Raises:
-            ValueError: When the rescaling factors are invalid, i.e. they lead 
-                to a profile where the volume fraction sum is larger than 1.
+            ValueError: if check_volume_fraction_sum is `True` and the 
+                dataset is not valid.
+
+        Returns:
+            Rescaled dataset (new object).
         """
         ds = self._obj
 
-        # update volume fraction in a copy of the dataset
-        ds_copy = ds.copy(deep=True)
-        for m in self.molecules:
-            if m in factors:
-                ds_copy[f"x_{m}"] = ds[f"x_{m}"] * factors[m]
+        # update volume fraction
+        x_new = {}
+        for m in factors:
+            with xr.set_options(keep_attrs=True):
+                x_new[f"x_{m}"] = ds[f"x_{m}"] * factors[m]
+            
+        ds = ds.assign(x_new)
 
-        # check that the volume fraction sum is not larger than 1
-        vfs = volume_fraction_sum(ds_copy)
-        if np.any(vfs.m > 1):
-            raise ValueError(
-                "The rescaling factors lead to a profile where the volume "
-                "fraction sum is larger than 1."
-            )
-        else:
-            # update dataset
-            ds.update(ds_copy)
-
+        # validate rescaled dataset
+        try:
+            ds.joseki.validate(check_volume_fraction_sum=check_volume_fraction_sum)
+        except ValueError as e:
+            raise ValueError("Cannot rescale") from e
+        
+        # update history attribute
         now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         for m in factors.keys():
             ds.attrs["history"] += (
@@ -367,9 +357,24 @@ class JosekiAccessor:  # pragma: no cover
                 f"factor of {factors[m]:.3f} - joseki, version {__version__}"
             )
 
-        ds.attrs.update(dict(rescaled="True"))
+        return ds
 
-    def validate(self) -> bool:
+    def validate(
+        self,
+        check_volume_fraction_sum: bool = False,
+        ret_true_if_valid: bool = False,
+    ) -> bool:
         """Validate atmosphere thermophysical profile data set schema.
+
+        Returns:
+            `True` if the dataset complies with the schema, else `False`.
         """
-        return schema.validate(ds=self._obj, ret_true_if_valid=True)
+        return schema.validate(
+            ds=self._obj,
+            check_volume_fraction_sum=check_volume_fraction_sum,
+            ret_true_if_valid=ret_true_if_valid,
+        )
+
+    @property
+    def is_valid(self):
+        return self.validate(ret_true_if_valid=True)

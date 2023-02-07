@@ -14,6 +14,7 @@ import xarray as xr
 import pint
 
 from ..__version__ import __version__
+from ..units import ureg
 from .util import utcnow
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,20 @@ logger = logging.getLogger(__name__)
 def history() -> str:
     return f"{utcnow()} data set formatting by joseki version {__version__}."
 
+
+def volume_fraction_sum(ds: xr.Dataset) -> pint.Quantity:
+    """Compute the sum of volume mixing fractions.
+
+    Args:
+        ds: Dataset.
+
+    Returns:
+        The sum of volume fractions.
+    """
+    return (
+        sum([ds[c] for c in ds.data_vars if c.startswith("x_")]).values
+        * ureg.dimensionless
+    )
 
 @define(frozen=True)
 class Schema:
@@ -51,19 +66,24 @@ class Schema:
     def validate(
         self,
         ds: xr.Dataset,
+        check_volume_fraction_sum: bool = False,
         ret_true_if_valid: bool = False,
     ) -> t.Optional[bool]:
         """Validate dataset.
 
         Args:
             ds: Dataset to validate.
+            check_volume_fraction_sum: if True, check that volume fraction sums
+                are never larger than one.
+            ret_true_if_valid: make this method return True if the dataset is
+                valid.
 
         Raises:
             ValueError: If the dataset does not match the schema.
         
         Returns:
-            None or bool: If `ret_true_if_valid` is True, returns True if the dataset is valid,
-                otherwise returns None.
+            None or bool: If `ret_true_if_valid` is True, returns True if the 
+                dataset is valid, otherwise returns None.
         """
         logger.debug("Validating dataset")
 
@@ -162,6 +182,17 @@ class Schema:
                         f"{m}_volume_fraction, got "
                         f"{ds[var].attrs['standard_name']}"
                     )
+
+        if check_volume_fraction_sum:
+            logger.debug(
+                "Checking that volume fraction sums are never larger than one"
+            )
+            vfs = volume_fraction_sum(ds)
+            if np.any(vfs.m > 1):
+                raise ValueError(
+                    "The rescaling factors lead to a profile where the volume "
+                    "fraction sum is larger than 1."
+                )
 
         logger.info("Dataset is valid")
 

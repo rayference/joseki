@@ -7,7 +7,6 @@ from joseki.units import ureg
 from joseki.profiles.afgl_1986 import parse
 from joseki.profiles.afgl_1986 import Identifier
 from joseki.profiles.afgl_1986 import to_dataset
-from joseki.profiles.schema import schema
 
 @pytest.mark.parametrize("identifier", [n for n in Identifier])
 def test_parse_returns_dataframe(identifier: Identifier) -> None:
@@ -21,4 +20,4 @@ def test_to_dataset_z() -> None:
         identifier=Identifier.TROPICAL,
         z=np.linspace(0, 100, 100) * ureg.km,
     )
-    assert ds.joseki.validate()
+    assert ds.joseki.is_valid
