@@ -2,7 +2,7 @@
 
 The profiles are generated from data files stored in ``joseki/data/afgl_1986``.
 These data files correspond to tables 1a-f and 2a-d of the technical report
-:cite:`Anderson1986AtmosphericConstituentProfiles`.
+[@Anderson1986AtmosphericConstituentProfiles].
 """
 import enum
 import importlib.resources as pkg_resources
@@ -82,11 +82,11 @@ def parse(identifier: Identifier) -> pd.DataFrame:
         These raw data files correspond to tables 1 and 2 from the
         technical report *AFGL Atmospheric Constituent Profiles (0-120 km)*,
         Anderson et al., 1986
-        :cite:`Anderson1986AtmosphericConstituentProfiles`.
+        [@Anderson1986AtmosphericConstituentProfiles].
         Each atmospheric profile has 5 tables, i.e. 5 raw data files, associated
         to it.
         Only the first of these tables is specific to each atmospheric profile.
-        All 5 raw data files are read into :class:`~pandas.DataFrame` objects and
+        All 5 raw data files are read into `pandas.DataFrame` objects and
         then concatenated after dropping the duplicate columns.
     """
     files = DATA_FILES[identifier]
@@ -106,13 +106,13 @@ def dataframe_to_dataset(
     identifier: Identifier,
     additional_molecules: bool = True,
 ) -> xr.Dataset:
-    """Convert :meth:`parse`'s output to a :class:`~xarray.Dataset`.
+    """Convert the output of the `parse` method to a `xarray.Dataset`.
 
     Args:
         df: Atmospheric profile data.
         identifier: Atmospheric profile identifier.
         additional_molecules: If ``True``, include molecules 8-28 as numbered 
-            in :cite:`Anderson1986AtmosphericConstituentProfiles`.
+            in [@Anderson1986AtmosphericConstituentProfiles].
             Else, discard molecules 8-28.
 
     Returns:
@@ -125,7 +125,7 @@ def dataframe_to_dataset(
         associated metadata (standard name, long name and units).
         Raw data units are documented in the technical report *AFGL Atmospheric
         Constituent Profiles (0-120 km)*, Anderson et al., 1986
-        :cite:`Anderson1986AtmosphericConstituentProfiles`.
+        [@Anderson1986AtmosphericConstituentProfiles].
         Data set attributes are added.
     """
     # list molecules
@@ -184,17 +184,21 @@ def get_dataset(
     """Read data files for a given atmospheric profile.
 
     Args:
-        identifier: Atmospheric profile identifier. See :class:`.Identifier` 
+        identifier: Atmospheric profile identifier.
+            See 
+            [`Identifier`](reference.md#src.joseki.profiles.afgl_1986.Identifier) 
             for possible values.
         additional_molecules: If ``True``, include molecules 8-28 as numbered in
-            :cite:`Anderson1986AtmosphericConstituentProfiles`.
+            [@Anderson1986AtmosphericConstituentProfiles].
             Else, discard molecules 8-28.
 
     Returns:
         Atmospheric profile data set.
 
     Notes:
-        Chain calls to :meth:`parse` and :meth:`to_xarray`.
+        Chain calls to 
+        [`parse`](reference.md#src.joseki.profiles.afgl_1986.parse) and
+        [`dataframe_to_dataset`](reference.md#src.joseki.profiles.afgl_1986.dataframe_to_dataset).
 
     """
     df = parse(identifier=identifier)
@@ -216,7 +220,9 @@ def to_dataset(
 
     Args:
         identifier: AFGL 1986 atmosphere thermophysical profile identifier.
-            See :class:`.Identifier` for possible values.
+            See 
+            [`Identifier`](reference.md#src.joseki.profiles.afgl_1986.Identifier) 
+            for possible values.
         z: New level altitudes.
             If ``None``, return the original data set.
             Else, interpolate the data set to the new level altitudes.
@@ -225,7 +231,8 @@ def to_dataset(
             Interpolation method for each data variable.
             Default is ``None``.
         kwargs: str
-            Additional arguments passed to :meth:`get_dataset`.
+            Additional arguments passed to 
+            [`get_dataset`](reference.md#src.joseki.profiles.afgl_1986.get_dataset).
 
     Returns:
         Atmosphere thermophysical profile data set.

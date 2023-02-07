@@ -48,7 +48,7 @@ INTERPOLATION_METHOD_CHOICES = [
     "-a",
     help=(
         "Path to level altitudes data file. The data file is read with "
-        ":meth:`pandas.read_csv`. The data file must be a column named 'z'"
+        "pandas.read_csv. The data file must be a column named 'z'."
     ),
     default=None,
     show_default=True,

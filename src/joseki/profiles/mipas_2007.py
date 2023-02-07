@@ -3,15 +3,16 @@
 Remedios, John J. et al. (2007) define a set of 5 "standard atmospheres"
 representing the atmosphere at different latitudes and seasons or times of
 day:
-- midlatitude day
-- midlatitude night
-- polar winter
-- polar summer
-- tropical
+
+* midlatitude day
+* midlatitude night
+* polar winter
+* polar summer
+* tropical
 
 MIPAS standard atmospheres were intended to provide an updated set of pro-
 files for characteristic atmospheric states such as
-:cite:`Anderson1986AtmosphericConstituentProfiles`.
+[@Anderson1986AtmosphericConstituentProfiles].
 """
 import enum
 import importlib.resources as pkg_resources
@@ -213,7 +214,9 @@ def read_file_content(identifier: Identifier) -> str:
 
     Args:
         identifier: Atmospheric profile identifier.
-            See :class:`.Identifier` for possible values.
+            See 
+            [`Identifier`](reference.md#src.joseki.profiles.mipas_2007.Identifier) 
+            for possible values.
 
     Returns:
         file content, URL, URL date.
@@ -231,7 +234,9 @@ def get_dataset(identifier: Identifier) -> xr.Dataset:
 
     Args:
         identifier: Atmospheric profile identifier.
-            See :class:`.Identifier` for possible values.
+            See 
+            [`Identifier`](reference.md#src.joseki.profiles.mipas_2007.Identifier) 
+            for possible values.
 
     Returns:
         Atmospheric profile.

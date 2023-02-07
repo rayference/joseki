@@ -23,11 +23,11 @@ def to_quantity(da: xr.DataArray) -> pint.Quantity:
         da: xarray.DataArray instance which will be converted.
 
     Raises:
-        ValueError: If the :class:`~xarray.DataArray`'s ``attrs`` does not 
-            contain a ``units`` key.
+        ValueError: If the `xarray.DataArray`'s ``attrs` field does not 
+            contain a `units` key.
 
     Returns:
-        The corresponding :class:`~pint.Quantity`.
+        The corresponding quantity.
     """
     try:
         units = da.attrs["units"]

@@ -1,1 +1,3 @@
-"""AFGL (1986) raw data tables :cite:`Anderson1986AtmosphericConstituentProfiles`."""
+"""
+AFGL (1986) raw data tables [@Anderson1986AtmosphericConstituentProfiles].
+"""

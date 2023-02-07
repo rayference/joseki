@@ -1,4 +1,3 @@
 """
-MIPAS reference atmospheres raw data
-:cite:`Remedios2007MIPASReferenceAtmosphere`.
+MIPAS reference atmospheres raw data [@Remedios2007MIPASReferenceAtmosphere].
 """

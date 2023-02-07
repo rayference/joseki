@@ -116,9 +116,9 @@ def represent_profile_in_cells(
         values. The layer's center altitude is defined as the arithmetic 
         average of these two values. The pressure, temperature, number density 
         and volume fraction fields are interpolated at these layer' center 
-        altitude values. In the new atmospheric profile, the 'z' coordinate 
+        altitude values. In the new atmospheric profile, the `z` coordinate 
         is updated with layer' center altitude values and a data variable 
-        'z_bounds' indicating the altitude bounds of each layer, is added.
+        `z_bounds` indicating the altitude bounds of each layer, is added.
         A copy of the data set is returned, the original data set is not 
         modified.
     """

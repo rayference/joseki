@@ -25,11 +25,15 @@ theme:
         name: Switch to system preference
 
 plugins:
+  - bibtex:
+      bib_file: "docs/references.bib"
   - mkdocstrings
+  - search
 
 markdown_extensions:
   - admonition
   - def_list
+  - footnotes
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.details
@@ -61,3 +65,4 @@ nav:
   - reference.md
   - explanation.md
   - changelog.md
+  - bibliography.md
