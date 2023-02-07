@@ -2,15 +2,19 @@
 
 ## Quickstart
 
-Make an atmospheric profile using the function :meth:`joseki.make`.
+Make an atmospheric profile using *Joseki*'s 
+[make](reference.md#src.joseki.core.make) method.
 Use its `identifier` parameter to specify the atmospheric profile.
-For example, make the *AFGL (1986) US Standard* profile with:
+ 
+!!! example "Example"
 
-```python
-import joseki
+    Make the *AFGL (1986) US Standard* profile with:
 
-ds = joseki.make(identifier="afgl_1986-us_standard")
-```
+    ```python
+    import joseki
+
+    ds = joseki.make(identifier="afgl_1986-us_standard")
+    ```
 
 
 Display the available identifiers with:
@@ -21,13 +25,15 @@ from joseki.profiles import factory
 list(factory.registry.keys())
 ```
 
-If you want, you can save the data set to the disk as a NetCDF file:
+Use the [`to_dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.to_netcdf.html)
+method to save the data set to the disk as a NetCDF file:
 
 ```python
 ds.to_netcdf("my_data_set.nc")
 ```
 
-Open the data set again using `xarray.open_dataset`:
+Open the data set again using 
+[`xarray.open_dataset`](https://docs.xarray.dev/en/stable/generated/xarray.open_dataset.html):
 
 ```python
 import xarray as xr
@@ -76,28 +82,28 @@ The resulting data set now includes only 7 molecules, instead of 28.
 ## Derived quantities
 
 You can compute various derived quantities from a thermophysical properties
-data set produced by `joseki`:
+data set produced by `joseki`, as illustrated by the examples below.
 
-??? example "the column number density of each molecule in the data set."
+??? example "Column number density"
 
     ```python
     ds = joseki.make(identifier="afgl_1986-us_standard")
     ds.joseki.column_number_density["O3"].to("dobson_unit")
     ```
   
-??? example "the column mass density of each molecule in the data set"
+??? example "Column mass density"
 
     ```python
     ds.joseki.column_mass_density["H2O"]
     ```
 
-??? example "the number density at sea level of each molecule in the data set"
+??? example "Number density at sea level"
 
     ```python
     ds.joseki.number_density_at_sea_level["CO2"]
     ``` 
 
-??? example "the mass density at sea level of each molecule in the data set"
+??? example "Mass density at sea level"
 
     ```python
     ds.joseki.mass_density_at_sea_level["CH4"]
@@ -108,7 +114,9 @@ For further details on these methods, refer to the [API reference](reference.md)
 ### Rescaling
 
 You can modify the amount of a given set of molecules in your thermophysical
-properties data set by applying a rescale transformation.
+properties data set by applying a 
+[rescale](reference.md#src.joseki.accessor.JosekiAccessor.rescale) 
+transformation.
 
 !!! example "Example"
 
@@ -125,7 +133,7 @@ properties data set by applying a rescale transformation.
 
 In the example above, the amount of water vapor is halfed whereas the amount of
 carbon dioxide and methane is increased by 150% and 110%, respectively.
-When a rescale transformation has been applied to a data set, ``history`` 
+When a rescale transformation has been applied to a data set, its ``history`` 
 attribute is updated to indicate what scaling factors were applied to what 
 molecules.
 
