@@ -2,7 +2,7 @@
 
 The profiles are generated from data files stored in ``joseki/data/afgl_1986``.
 These data files correspond to tables 1a-f and 2a-d of the technical report
-[@Anderson1986AtmosphericConstituentProfiles].
+[Anderson+1986](bibliography.md#Anderson+1986).
 """
 import enum
 import importlib.resources as pkg_resources
@@ -80,9 +80,8 @@ def parse(identifier: Identifier) -> pd.DataFrame:
     Notes:
         Read the relevant raw data files corresponding to the atmospheric profile.
         These raw data files correspond to tables 1 and 2 from the
-        technical report *AFGL Atmospheric Constituent Profiles (0-120 km)*,
-        Anderson et al., 1986
-        [@Anderson1986AtmosphericConstituentProfiles].
+        technical report [*AFGL Atmospheric Constituent Profiles (0-120 km)*,
+        Anderson et al., 1986](bibliography.md#Anderson+1986).
         Each atmospheric profile has 5 tables, i.e. 5 raw data files, associated
         to it.
         Only the first of these tables is specific to each atmospheric profile.
@@ -112,7 +111,7 @@ def dataframe_to_dataset(
         df: Atmospheric profile data.
         identifier: Atmospheric profile identifier.
         additional_molecules: If ``True``, include molecules 8-28 as numbered 
-            in [@Anderson1986AtmosphericConstituentProfiles].
+            in [Anderson+1986](bibliography.md#Anderson+1986).
             Else, discard molecules 8-28.
 
     Returns:
@@ -125,7 +124,7 @@ def dataframe_to_dataset(
         associated metadata (standard name, long name and units).
         Raw data units are documented in the technical report *AFGL Atmospheric
         Constituent Profiles (0-120 km)*, Anderson et al., 1986
-        [@Anderson1986AtmosphericConstituentProfiles].
+        [Anderson+1986](bibliography.md#Anderson+1986).
         Data set attributes are added.
     """
     # list molecules
@@ -189,7 +188,7 @@ def get_dataset(
             [`Identifier`](reference.md#src.joseki.profiles.afgl_1986.Identifier) 
             for possible values.
         additional_molecules: If ``True``, include molecules 8-28 as numbered in
-            [@Anderson1986AtmosphericConstituentProfiles].
+            [Anderson+1986](bibliography.md#Anderson+1986).
             Else, discard molecules 8-28.
 
     Returns:

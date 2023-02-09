@@ -1,8 +1,8 @@
 """MIPAS atmosphere thermophysical profiles.
 
-Remedios, John J. et al. (2007) define a set of 5 "standard atmospheres"
-representing the atmosphere at different latitudes and seasons or times of
-day:
+[Remedios et al. (2007)](bibliography.md#Remedios+2007) define a set of 5 
+"standard atmospheres" representing the atmosphere at different latitudes and 
+seasons or times of day:
 
 * midlatitude day
 * midlatitude night
@@ -10,9 +10,10 @@ day:
 * polar summer
 * tropical
 
+
 MIPAS standard atmospheres were intended to provide an updated set of pro-
-files for characteristic atmospheric states such as
-[@Anderson1986AtmosphericConstituentProfiles].
+files for characteristic atmospheric states such as the
+[AFGL Atmospheric constituent profiles](bibliography.md#Anderson+1986).
 """
 import enum
 import importlib.resources as pkg_resources

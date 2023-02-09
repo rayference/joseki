@@ -1,7 +1,7 @@
 """Module to compute the U.S. Standard Atmosphere 1976.
 
 The U.S. Standard Atmosphere 1976 is a Earth atmosphere thermophysical model 
-described in the technical report [@NASA1976USStandardAtmosphere].
+described in the technical report [NOAA+1976](bibliography.md#NOAA+1976).
 """
 import typing as t
 
@@ -28,7 +28,7 @@ class USSA1976(Profile):
     Class to compute the U.S. Standard Atmosphere 1976.
 
     The U.S. Standard Atmosphere 1976 is a Earth atmosphere thermophysical model
-    described in the technical report [@NASA1976USStandardAtmosphere].
+    described in the technical report [NOAA+1976](bibliography.md#NOAA+1976).
     """
 
     def to_dataset(
@@ -83,7 +83,7 @@ class USSA1976(Profile):
         attrs = {
             "Conventions": "CF-1.10",
             "title": "U.S. Standard Atmosphere 1976",
-            "institution": "NASA",
+            "institution": "NOAA",
             "source": ds.attrs["source"],
             "history": ds.attrs["history"] + "\n" + history(),
             "references": ds.attrs["references"],
