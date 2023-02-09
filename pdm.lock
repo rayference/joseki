@@ -491,15 +491,6 @@ requires_python = ">=3.7"
 summary = "A fast implementation of the Cassowary constraint solver"
 
 [[package]]
-name = "latexcodec"
-version = "2.0.1"
-requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-summary = "A lexer and codec to work with LaTeX code in Python."
-dependencies = [
-    "six>=1.4.1",
-]
-
-[[package]]
 name = "markdown"
 version = "3.3.7"
 requires_python = ">=3.6"
@@ -578,19 +569,6 @@ summary = "Automatically link across pages in MkDocs."
 dependencies = [
     "Markdown>=3.3",
     "mkdocs>=1.1",
-]
-
-[[package]]
-name = "mkdocs-bibtex"
-version = "2.8.12"
-requires_python = ">=3.6"
-summary = "An MkDocs plugin that enables managing citations with BibTex"
-dependencies = [
-    "mkdocs>=1",
-    "pybtex>=0.22",
-    "pypandoc>=1.5",
-    "requests>=2.8.1",
-    "validators>=0.19.0",
 ]
 
 [[package]]
@@ -886,17 +864,6 @@ version = "0.2.2"
 summary = "Safely evaluate AST nodes without side effects"
 
 [[package]]
-name = "pybtex"
-version = "0.24.0"
-requires_python = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*"
-summary = "A BibTeX-compatible bibliography processor in Python"
-dependencies = [
-    "PyYAML>=3.01",
-    "latexcodec>=1.0.4",
-    "six",
-]
-
-[[package]]
 name = "pycparser"
 version = "2.21"
 requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
@@ -916,12 +883,6 @@ summary = "Extension pack for Python Markdown."
 dependencies = [
     "markdown>=3.2",
 ]
-
-[[package]]
-name = "pypandoc"
-version = "1.10"
-requires_python = ">=3.6"
-summary = "Thin wrapper for pandoc."
 
 [[package]]
 name = "pyparsing"
@@ -1144,15 +1105,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "validators"
-version = "0.20.0"
-requires_python = ">=3.4"
-summary = "Python Data Validation for Humans™."
-dependencies = [
-    "decorator>=3.4.0",
-]
-
-[[package]]
 name = "watchdog"
 version = "2.2.1"
 requires_python = ">=3.6"
@@ -1199,7 +1151,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:cd4b5df7da243c14290c9bebac8896ee438518e55cb9ba583063810a8a8235a2"
+content_hash = "sha256:2e615ec8303ee70e8b378d957cc66012543a3d3c53d358b8d42906ef72ecc701"
 
 [metadata.files]
 "anyio 3.6.2" = [
@@ -1783,10 +1735,6 @@ content_hash = "sha256:cd4b5df7da243c14290c9bebac8896ee438518e55cb9ba583063810a8
     {url = "https://files.pythonhosted.org/packages/f6/e8/194a4b4eee0990a648711bfb769a7110d10fd8d8b370a0464cb3d1060381/kiwisolver-1.4.4-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:70e7c2e7b750585569564e2e5ca9845acfaa5da56ac46df68414f29fea97be9f"},
     {url = "https://files.pythonhosted.org/packages/f8/f4/724d454e95c7e9be6a05f1da3fb85251b5dbb8c3b7d06bdc61d56b16035a/kiwisolver-1.4.4-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:36dafec3d6d6088d34e2de6b85f9d8e2324eb734162fba59d2ba9ed7a2043d5b"},
 ]
-"latexcodec 2.0.1" = [
-    {url = "https://files.pythonhosted.org/packages/0a/76/9552dfc6b74c2d6c3f199e927d41998dc1e561b7cbe4af7e7247388e17e8/latexcodec-2.0.1-py2.py3-none-any.whl", hash = "sha256:c277a193638dc7683c4c30f6684e3db728a06efb0dc9cf346db8bd0aa6c5d271"},
-    {url = "https://files.pythonhosted.org/packages/84/2f/fd47712130b303ff179c819cc5c63aa39586fc8d430bc299c0f5f56ec42c/latexcodec-2.0.1.tar.gz", hash = "sha256:2aa2551c373261cefe2ad3a8953a6d6533e68238d180eb4bb91d7964adb3fe9a"},
-]
 "markdown 3.3.7" = [
     {url = "https://files.pythonhosted.org/packages/d6/58/79df20de6e67a83f0d0bbfe6c19bb82adf68cdf362885257eb01099f930a/Markdown-3.3.7.tar.gz", hash = "sha256:cbb516f16218e643d8e0a95b309f77eb118cb138d39a4f27851e6a63581db874"},
     {url = "https://files.pythonhosted.org/packages/f3/df/ca72f352e15b6f8ce32b74af029f1189abffb906f7c137501ffe69c98a65/Markdown-3.3.7-py3-none-any.whl", hash = "sha256:f5da449a6e1c989a4cea2631aa8ee67caa5a2ef855d551c88f9e309f4634c621"},
@@ -1905,9 +1853,6 @@ content_hash = "sha256:cd4b5df7da243c14290c9bebac8896ee438518e55cb9ba583063810a8
 "mkdocs-autorefs 0.4.1" = [
     {url = "https://files.pythonhosted.org/packages/3b/3f/9531888bc92bafb1bffddca5d9240a7bae9a479d465528883b61808ef9d6/mkdocs-autorefs-0.4.1.tar.gz", hash = "sha256:70748a7bd025f9ecd6d6feeba8ba63f8e891a1af55f48e366d6d6e78493aba84"},
     {url = "https://files.pythonhosted.org/packages/fb/5c/6594400290df38f99bf8d9ef249387b56f4ad962667836266f6fe7da8597/mkdocs_autorefs-0.4.1-py3-none-any.whl", hash = "sha256:a2248a9501b29dc0cc8ba4c09f4f47ff121945f6ce33d760f145d6f89d313f5b"},
-]
-"mkdocs-bibtex 2.8.12" = [
-    {url = "https://files.pythonhosted.org/packages/c6/ad/ce6416f14c968a7f5a35e3aa47efa7b1c10b7224eac4c7ab69ce9210db9f/mkdocs-bibtex-2.8.12.tar.gz", hash = "sha256:921cd25cbe2e3266e36f6bb6770f74057b138bd9ca88d4651ed8bbac9bfc5b14"},
 ]
 "mkdocs-material 9.0.10" = [
     {url = "https://files.pythonhosted.org/packages/3a/1e/d30d030d75f174bf3c03c771e2e73409ccfb8ec7d3ea13dde84aa56201fd/mkdocs_material-9.0.10-py3-none-any.whl", hash = "sha256:0848611d6dff21d5b4cacaf490606d075cd03b49f3c49809c8aa2e45b1f5216c"},
@@ -2188,10 +2133,6 @@ content_hash = "sha256:cd4b5df7da243c14290c9bebac8896ee438518e55cb9ba583063810a8
     {url = "https://files.pythonhosted.org/packages/2b/27/77f9d5684e6bce929f5cfe18d6cfbe5133013c06cb2fbf5933670e60761d/pure_eval-0.2.2-py3-none-any.whl", hash = "sha256:01eaab343580944bc56080ebe0a674b39ec44a945e6d09ba7db3cb8cec289350"},
     {url = "https://files.pythonhosted.org/packages/97/5a/0bc937c25d3ce4e0a74335222aee05455d6afa2888032185f8ab50cdf6fd/pure_eval-0.2.2.tar.gz", hash = "sha256:2b45320af6dfaa1750f543d714b6d1c520a1688dec6fd24d339063ce0aaa9ac3"},
 ]
-"pybtex 0.24.0" = [
-    {url = "https://files.pythonhosted.org/packages/46/9b/fd39836a6397fb363446d83075a7b9c2cc562f4c449292e039ed36084376/pybtex-0.24.0.tar.gz", hash = "sha256:818eae35b61733e5c007c3fcd2cfb75ed1bc8b4173c1f70b56cc4c0802d34755"},
-    {url = "https://files.pythonhosted.org/packages/ad/5f/40d8e90f985a05133a8895fc454c6127ecec3de8b095dd35bba91382f803/pybtex-0.24.0-py2.py3-none-any.whl", hash = "sha256:e1e0c8c69998452fea90e9179aa2a98ab103f3eed894405b7264e517cc2fcc0f"},
-]
 "pycparser 2.21" = [
     {url = "https://files.pythonhosted.org/packages/5e/0b/95d387f5f4433cb0f53ff7ad859bd2c6051051cebbb564f139a999ab46de/pycparser-2.21.tar.gz", hash = "sha256:e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"},
     {url = "https://files.pythonhosted.org/packages/62/d5/5f610ebe421e85889f2e55e33b7f9a6795bd982198517d912eb1c76e1a53/pycparser-2.21-py2.py3-none-any.whl", hash = "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9"},
@@ -2203,10 +2144,6 @@ content_hash = "sha256:cd4b5df7da243c14290c9bebac8896ee438518e55cb9ba583063810a8
 "pymdown-extensions 9.9.2" = [
     {url = "https://files.pythonhosted.org/packages/b7/70/0926b40d01fd2d708798994135f50ce02459499c36a25423b55901f7a7c5/pymdown_extensions-9.9.2-py3-none-any.whl", hash = "sha256:c3d804eb4a42b85bafb5f36436342a5ad38df03878bb24db8855a4aa8b08b765"},
     {url = "https://files.pythonhosted.org/packages/d9/6c/acf082ba18d1c91f75d38ba8fbc2dc97d782ce119739467e4529647809ed/pymdown_extensions-9.9.2.tar.gz", hash = "sha256:ebb33069bafcb64d5f5988043331d4ea4929325dc678a6bcf247ddfcf96499f8"},
-]
-"pypandoc 1.10" = [
-    {url = "https://files.pythonhosted.org/packages/12/0c/5c7f36bbc94bb6994071471a63f4e6f235bc02f4e959293bc23a9df54acb/pypandoc-1.10-py3-none-any.whl", hash = "sha256:ff9658cda18865a822695349a7c707756ecc454b59b71f920b554579ec54aaa7"},
-    {url = "https://files.pythonhosted.org/packages/4f/45/37456a039700644b8075f5de8e0913bbfba9f0d7b8f5892c449ffb0a17d8/pypandoc-1.10.tar.gz", hash = "sha256:101164d154f0b9957372cdbf285396153b74144fda47f531fb556de244efc86e"},
 ]
 "pyparsing 3.0.9" = [
     {url = "https://files.pythonhosted.org/packages/6c/10/a7d0fa5baea8fe7b50f448ab742f26f52b80bfca85ac2be9d35cdd9a3246/pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
@@ -2591,9 +2528,6 @@ content_hash = "sha256:cd4b5df7da243c14290c9bebac8896ee438518e55cb9ba583063810a8
 "ussa1976 0.3.4" = [
     {url = "https://files.pythonhosted.org/packages/2c/83/6c3883fe969a7966cad1af0285ae6e4d292512e5ae894cc068b19e13c5ba/ussa1976-0.3.4.tar.gz", hash = "sha256:28eec80a65db5ab84ec79ea1732352bbb137408260f940374fa313c7440faa37"},
     {url = "https://files.pythonhosted.org/packages/f9/77/3ac8a9bbef6c3be222c71bbe9587ff85adfa3fb85d83edba89c10823ae03/ussa1976-0.3.4-py3-none-any.whl", hash = "sha256:6722932c48234f02b4e1b0745f2dd3832954b14e7a2c6ece1211b50cb9e10bf6"},
-]
-"validators 0.20.0" = [
-    {url = "https://files.pythonhosted.org/packages/95/14/ed0af6865d378cfc3c504aed0d278a890cbefb2f1934bf2dbe92ecf9d6b1/validators-0.20.0.tar.gz", hash = "sha256:24148ce4e64100a2d5e267233e23e7afeb55316b47d30faae7eb6e7292bc226a"},
 ]
 "watchdog 2.2.1" = [
     {url = "https://files.pythonhosted.org/packages/0f/85/11cdd82414dc73db4fbd485431e1301ba780b6fd35a152ed791ff499205e/watchdog-2.2.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:83a7cead445008e880dbde833cb9e5cc7b9a0958edb697a96b936621975f15b9"},

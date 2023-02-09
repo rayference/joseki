@@ -47,7 +47,6 @@ docs = [
     "mkdocs>=1.4.2",
     "mkdocstrings[python]>=0.20.0",
     "mkdocs-material>=9.0.10",
-    "mkdocs-bibtex>=2.8.12",
 ]
 test = [
     "pytest>=7.2.1",

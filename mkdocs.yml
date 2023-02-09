@@ -25,10 +25,7 @@ theme:
         name: Switch to system preference
 
 plugins:
-  - bibtex:
-      bib_file: "docs/bibliography.bib"
   - mkdocstrings
-  - search
 
 markdown_extensions:
   - admonition
