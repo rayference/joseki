@@ -135,7 +135,7 @@ def main(
     else:
         z = None
 
-    # make data set
+    # make dataset
     ds = make(
         identifier=identifier,
         z=z,
@@ -146,7 +146,7 @@ def main(
         represent_in_cells=represent_in_cells,
     )
 
-    # write data set
+    # write dataset
     ds.to_netcdf(file_name)
 
 

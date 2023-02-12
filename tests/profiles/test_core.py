@@ -10,7 +10,7 @@ from joseki.core import represent_profile_in_cells
 
 @pytest.fixture
 def test_data_set() -> xr.Dataset:
-    """Test data set fixture."""
+    """Test dataset fixture."""
     return make(identifier="afgl_1986-tropical")
 
 

@@ -10,10 +10,10 @@ applications in Earth's atmosphere.
 [![Coverage](https://codecov.io/gh/nollety/joseki/branch/main/graph/badge.svg)](https://codecov.io/gh/nollety/joseki)
 
 
-This package gathers together data sets of thermophysical properties of the
+This package gathers together datasets of thermophysical properties of the
 Earth's atmosphere relevant for radiative transfer applications, and provides
 utilities to compute common caracteristic quantities as well as to perform
-different operations, such as interpolation and rescaling, on a data set.
+different operations, such as interpolation and rescaling, on a dataset.
 
 ## Features
 

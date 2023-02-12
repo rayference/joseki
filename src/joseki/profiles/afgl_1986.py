@@ -75,7 +75,7 @@ def parse(identifier: Identifier) -> pd.DataFrame:
         identifier: Atmospheric profile identifier.
 
     Returns:
-        Atmospheric profile data set.
+        Atmospheric profile dataset.
 
     Notes:
         Read the relevant raw data files corresponding to the atmospheric profile.
@@ -115,7 +115,7 @@ def dataframe_to_dataset(
             Else, discard molecules 8-28.
 
     Returns:
-        Atmospheric profile data set.
+        Atmospheric profile dataset.
 
     Notes:
         Use the ``z`` column of the output pandas.DataFrame of read_raw_data
@@ -125,7 +125,7 @@ def dataframe_to_dataset(
         Raw data units are documented in the technical report *AFGL Atmospheric
         Constituent Profiles (0-120 km)*, Anderson et al., 1986
         [Anderson+1986](bibliography.md#Anderson+1986).
-        Data set attributes are added.
+        dataset attributes are added.
     """
     # list molecules
     # molecules labels correspond to column with upper case first letter in
@@ -192,7 +192,7 @@ def get_dataset(
             Else, discard molecules 8-28.
 
     Returns:
-        Atmospheric profile data set.
+        Atmospheric profile dataset.
 
     Notes:
         Chain calls to 
@@ -223,8 +223,8 @@ def to_dataset(
             [`Identifier`](reference.md#src.joseki.profiles.afgl_1986.Identifier) 
             for possible values.
         z: New level altitudes.
-            If ``None``, return the original data set.
-            Else, interpolate the data set to the new level altitudes.
+            If ``None``, return the original dataset
+            Else, interpolate the dataset to the new level altitudes.
             Default is ``None``.
         interp_method: dict, optional
             Interpolation method for each data variable.
@@ -234,7 +234,7 @@ def to_dataset(
             [`get_dataset`](reference.md#src.joseki.profiles.afgl_1986.get_dataset).
 
     Returns:
-        Atmosphere thermophysical profile data set.
+        Atmosphere thermophysical profile dataset.
     """
     # Get additional_molecules from kwargs
     additional_molecules = kwargs.get("additional_molecules", True)
@@ -276,7 +276,7 @@ class AFGL1986Tropical(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 tropical atmosphere thermophysical profile data set."
+            "creating AFGL 1986 tropical atmosphere thermophysical profile dataset."
         )
         return to_dataset(
             identifier=Identifier.TROPICAL,
@@ -298,7 +298,7 @@ class AFGL1986MidlatitudeSummer(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 midlatitude summer atmosphere thermophysical profile data set."
+            "creating AFGL 1986 midlatitude summer atmosphere thermophysical profile dataset
         )
         return to_dataset(
             identifier=Identifier.MIDLATITUDE_SUMMER,
@@ -320,7 +320,7 @@ class AFGL1986MidlatitudeWinter(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 midlatitude winter atmosphere thermophysical profile data set."
+            "creating AFGL 1986 midlatitude winter atmosphere thermophysical profile dataset."
         )
         return to_dataset(
             identifier=Identifier.MIDLATITUDE_WINTER,
@@ -342,7 +342,7 @@ class AFGL1986SubarcticSummer(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 subarctic summer atmosphere thermophysical profile data set."
+            "creating AFGL 1986 subarctic summer atmosphere thermophysical profile dataset."
         )
         return to_dataset(
             identifier=Identifier.SUBARCTIC_SUMMER,
@@ -364,7 +364,7 @@ class AFGL1986SubarcticWinter(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 subarctic winter atmosphere thermophysical profile data set."
+            "creating AFGL 1986 subarctic winter atmosphere thermophysical profile dataset."
         )
         return to_dataset(
             identifier=Identifier.SUBARCTIC_WINTER,
@@ -386,7 +386,7 @@ class AFGL1986USStandard(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 US Standard atmosphere thermophysical profile data set."
+            "creating AFGL 1986 US Standard atmosphere thermophysical profile dataset."
         )
         return to_dataset(
             identifier=Identifier.US_STANDARD,

@@ -26,13 +26,13 @@ list(factory.registry.keys())
 ```
 
 Use the [`to_dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.to_netcdf.html)
-method to save the data set to the disk as a NetCDF file:
+method to save the dataset to the disk as a NetCDF file:
 
 ```python
 ds.to_netcdf("my_data_set.nc")
 ```
 
-Open the data set again using 
+Open the dataset again using 
 [`xarray.open_dataset`](https://docs.xarray.dev/en/stable/generated/xarray.open_dataset.html):
 
 ```python
@@ -41,7 +41,7 @@ import xarray as xr
 ds = xr.open_dataset("my_data_set.nc")
 ```
 
-The data sets format is described [here](explanation.md#data-set-format).
+The datasets format is described [here](explanation.md#data-set-format).
 
 ## Cells representation
 
@@ -56,7 +56,7 @@ ds = joseki.make(
 )
 ```
 
-The resulting data set has a coordinate variable `z` that corresponds to
+The resulting dataset has a coordinate variable `z` that corresponds to
 the altitude cells center and a data variable `z_bounds` that indicate the
 altitude bounds of each altitude cell, i.e. atmospheric layer.
 
@@ -77,12 +77,12 @@ ds = joseki.make(
 )
 ```
 
-The resulting data set now includes only 7 molecules, instead of 28.
+The resulting dataset now includes only 7 molecules, instead of 28.
 
 ## Derived quantities
 
 You can compute various derived quantities from a thermophysical properties
-data set produced by `joseki`, as illustrated by the examples below.
+dataset produced by `joseki`, as illustrated by the examples below.
 
 ??? example "Column number density"
 
@@ -114,7 +114,7 @@ For further details on these methods, refer to the [API reference](reference.md)
 ### Rescaling
 
 You can modify the amount of a given set of molecules in your thermophysical
-properties data set by applying a 
+properties dataset by applying a 
 [rescale](reference.md#src.joseki.accessor.JosekiAccessor.rescale) 
 transformation.
 
@@ -133,7 +133,7 @@ transformation.
 
 In the example above, the amount of water vapor is halfed whereas the amount of
 carbon dioxide and methane is increased by 150% and 110%, respectively.
-When a rescale transformation has been applied to a data set, its ``history`` 
+When a rescale transformation has been applied to a dataset, its ``history`` 
 attribute is updated to indicate what scaling factors were applied to what 
 molecules.
 

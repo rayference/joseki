@@ -52,9 +52,9 @@ $\rho_{\mathrm{M}}(0) = m_{\mathrm{M}} \, n_{\mathrm{M}}(0)$.
 Mass density at sea level has dimensions of `mass * length^-3`.
 
 
-## Data set format
+## Dataset schema
 
-Joseki produces atmospheric profile data sets in the
+Joseki produces atmospheric profile datasets in the
 [NetCDF format](https://www.unidata.ucar.edu/software/netcdf/) using the
 [xarray library](http://xarray.pydata.org/en/stable/) which provides a
 comprehensive, robust and convenient interface to read, write, manipulate and
@@ -63,14 +63,14 @@ visualise NetCDF data.
 ### Metadata conventions
 
 The NetCDF format allows to store metadata alongside data.
-Joseki's data sets metadata follow the
+Joseki's datasets metadata follow the
 [conventions for Climate and Forecast (v1.8)](http://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html).
 
 ### Standard names
 
 The Climate and Forecast (CF) conventions define standard names to describe
 variables.
-Joseki's data sets comply with
+Joseki's datasets comply with
 [CF Standard Name Table Version 77, 19 January 2021](http://cfconventions.org/Data/cf-standard-names/77/build/cf-standard-name-table.html),
 except for the following variables for which a standard name did not exist
 in the table and was derived:
@@ -83,7 +83,7 @@ in the table and was derived:
 
 ### Structure
 
-The data set includes 4+ data variables:
+A dataset includes 4+ data variables:
 
 | Standard name        | Long name            | Symbol  |      Units      |
 | :------------------- | :------------------- | :-----: | :-------------: |
@@ -93,7 +93,7 @@ The data set includes 4+ data variables:
 | `volume_fraction`    | `volume fraction`    | `x_<m>` | `dimensionless` |
 
 where `<m>` is the chemical formula of the given molecule, and one of the two
-following coordinates variables
+following coordinates variables:
 
 | Standard name           | Long name               | Symbol | Units |
 | :---------------------- | :---------------------- | :----: | :---: |

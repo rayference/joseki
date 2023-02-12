@@ -80,12 +80,12 @@ def interp(
     author = f"joseki, version {__version__}"
     attrs.update(
         {
-            "history": f"{utcnow()} - data set interpolation by {author}.",
+            "history": f"{utcnow()} - dataset interpolation by {author}.",
         }
     )
 
-    # Convert to data set
-    logger.debug("convert interpolated data to data set")
+    # Convert to dataset
+    logger.debug("convert interpolated data to dataset")
     interpolated = schema.convert(
         data_vars=data_vars,
         coords=coords,
@@ -119,7 +119,7 @@ def represent_profile_in_cells(
         altitude values. In the new atmospheric profile, the `z` coordinate 
         is updated with layer' center altitude values and a data variable 
         `z_bounds` indicating the altitude bounds of each layer, is added.
-        A copy of the data set is returned, the original data set is not 
+        A copy of the dataset is returned, the original dataset is not 
         modified.
     """
     # if the profile is already represented in cells, do nothing

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def history() -> str:
-    return f"{utcnow()} data set formatting by joseki version {__version__}."
+    return f"{utcnow()} dataset formatting by joseki version {__version__}."
 
 
 def volume_fraction_sum(ds: xr.Dataset) -> pint.Quantity:

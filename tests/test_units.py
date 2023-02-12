@@ -9,7 +9,7 @@ from joseki.units import to_quantity
 
 @pytest.fixture
 def dataset() -> xr.Dataset:
-    """Fixture for working with a dummy data set."""
+    """Fixture for working with a dummy dataset."""
     return xr.Dataset(
         data_vars={
             "x": ("t", np.random.random(50), {"units": "m"}),

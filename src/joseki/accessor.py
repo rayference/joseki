@@ -364,7 +364,7 @@ class JosekiAccessor:  # pragma: no cover
         check_volume_fraction_sum: bool = False,
         ret_true_if_valid: bool = False,
     ) -> bool:
-        """Validate atmosphere thermophysical profile data set schema.
+        """Validate atmosphere thermophysical profile dataset schema.
 
         Returns:
             `True` if the dataset complies with the schema, else `False`.

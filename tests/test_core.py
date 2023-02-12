@@ -13,7 +13,7 @@ def test_make() -> None:
 
 
 def test_make_represent_in_cells() -> None:
-    """Returned data set has dimensions zbv and z and data variable z_bounds."""
+    """Returned dataset has dimensions zbv and z and data variable z_bounds."""
     ds = make(
         identifier="afgl_1986-tropical",
         represent_in_cells=True,
@@ -24,7 +24,7 @@ def test_make_represent_in_cells() -> None:
 
 
 def test_make_altitudes() -> None:
-    """Assigns data set' altitude values from file."""
+    """Assigns dataset' altitude values from file."""
     z = np.linspace(0, 120, 121) * ureg.km
     ds = make(identifier="afgl_1986-tropical", z=z)
     assert np.allclose(ds.z.values, z.m_as(ds.z.attrs["units"]))
