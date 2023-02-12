@@ -298,7 +298,7 @@ class AFGL1986MidlatitudeSummer(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 midlatitude summer atmosphere thermophysical profile dataset
+            "creating AFGL 1986 midlatitude summer atmosphere thermophysical profile dataset."
         )
         return to_dataset(
             identifier=Identifier.MIDLATITUDE_SUMMER,
