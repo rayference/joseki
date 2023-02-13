@@ -16,7 +16,7 @@ files for characteristic atmospheric states such as the
 [AFGL Atmospheric constituent profiles](bibliography.md#Anderson+1986).
 """
 import enum
-import importlib.resources as pkg_resources
+import importlib.resources
 import logging
 import typing as t
 
@@ -222,12 +222,10 @@ def read_file_content(identifier: Identifier) -> str:
     Returns:
         file content, URL, URL date.
     """
+    package = "joseki.data.mipas_2007"
     file = f"{identifier.value}.atm"
     logger.debug(f"Reading file {file}")
-    with pkg_resources.path(mipas_2007, file) as path:
-        with open(path, "r") as f:
-            content = f.read()
-    return content
+    return importlib.resources.files(package).joinpath(file).read_text()
 
 
 def get_dataset(identifier: Identifier) -> xr.Dataset:

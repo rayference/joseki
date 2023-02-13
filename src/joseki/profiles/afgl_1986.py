@@ -5,7 +5,7 @@ These data files correspond to tables 1a-f and 2a-d of the technical report
 [Anderson+1986](bibliography.md#Anderson+1986).
 """
 import enum
-import importlib.resources as pkg_resources
+import importlib.resources
 import logging
 import typing as t
 
@@ -88,11 +88,12 @@ def parse(identifier: Identifier) -> pd.DataFrame:
         All 5 raw data files are read into `pandas.DataFrame` objects and
         then concatenated after dropping the duplicate columns.
     """
+    package = "joseki.data.afgl_1986"
     files = DATA_FILES[identifier]
     dataframes = []
     for file in files:
-        with pkg_resources.path(afgl_1986, file) as path:
-            dataframes.append(pd.read_csv(path))
+        csvfile = importlib.resources.files(package).joinpath(file)
+        dataframes.append(pd.read_csv(csvfile))
     dataframes[1] = dataframes[1].drop(["H2O", "O3", "N2O", "CO", "CH4"], axis=1)
     for i in range(1, 5):
         dataframes[i] = dataframes[i].drop("z", axis=1)
