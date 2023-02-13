@@ -5,7 +5,7 @@ These data files correspond to tables 1a-f and 2a-d of the technical report
 [Anderson+1986](bibliography.md#Anderson+1986).
 """
 import enum
-import importlib.resources
+import importlib_resources
 import logging
 import typing as t
 
@@ -14,7 +14,6 @@ import pint
 import xarray as xr
 from attrs import define
 
-from ..data import afgl_1986
 from ..units import ureg
 from .core import Profile, interp, DEFAULT_METHOD
 from .factory import factory
@@ -92,8 +91,9 @@ def parse(identifier: Identifier) -> pd.DataFrame:
     files = DATA_FILES[identifier]
     dataframes = []
     for file in files:
-        csvfile = importlib.resources.files(package).joinpath(file)
-        dataframes.append(pd.read_csv(csvfile))
+        csvfile = importlib_resources.files(package).joinpath(file)
+        df = pd.read_csv(csvfile)
+        dataframes.append(df)
     dataframes[1] = dataframes[1].drop(["H2O", "O3", "N2O", "CO", "CH4"], axis=1)
     for i in range(1, 5):
         dataframes[i] = dataframes[i].drop("z", axis=1)
@@ -299,7 +299,8 @@ class AFGL1986MidlatitudeSummer(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 midlatitude summer atmosphere thermophysical profile dataset."
+            "creating AFGL 1986 midlatitude summer atmosphere thermophysical "
+            "profile dataset."
         )
         return to_dataset(
             identifier=Identifier.MIDLATITUDE_SUMMER,
@@ -321,7 +322,8 @@ class AFGL1986MidlatitudeWinter(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 midlatitude winter atmosphere thermophysical profile dataset."
+            "creating AFGL 1986 midlatitude winter atmosphere thermophysical "
+            "profile dataset."
         )
         return to_dataset(
             identifier=Identifier.MIDLATITUDE_WINTER,
@@ -343,7 +345,8 @@ class AFGL1986SubarcticSummer(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 subarctic summer atmosphere thermophysical profile dataset."
+            "creating AFGL 1986 subarctic summer atmosphere thermophysical "
+            "profile dataset."
         )
         return to_dataset(
             identifier=Identifier.SUBARCTIC_SUMMER,
@@ -365,7 +368,8 @@ class AFGL1986SubarcticWinter(Profile):
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
-            "creating AFGL 1986 subarctic winter atmosphere thermophysical profile dataset."
+            "creating AFGL 1986 subarctic winter atmosphere thermophysical "
+            "profile dataset."
         )
         return to_dataset(
             identifier=Identifier.SUBARCTIC_WINTER,
