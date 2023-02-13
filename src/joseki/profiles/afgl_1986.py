@@ -213,6 +213,7 @@ def to_dataset(
     identifier: Identifier,
     z: t.Optional[pint.Quantity] = None,
     interp_method: t.Mapping[str, str] = None,
+    conserve_column: bool = False,
     **kwargs: t.Any,
 ) -> xr.Dataset:
     """
@@ -227,11 +228,11 @@ def to_dataset(
             If ``None``, return the original dataset
             Else, interpolate the dataset to the new level altitudes.
             Default is ``None``.
-        interp_method: dict, optional
-            Interpolation method for each data variable.
-            Default is ``None``.
-        kwargs: str
-            Additional arguments passed to 
+        interp_method: Interpolation method for each data variable. Default is 
+            ``None``.
+        conserve_column: If `True`, ensure that column densities are conserved
+            during interpolation.
+        kwargs: Additional arguments passed to 
             [`get_dataset`](reference.md#src.joseki.profiles.afgl_1986.get_dataset).
 
     Returns:
@@ -259,7 +260,12 @@ def to_dataset(
     # Interpolate if necessary
     if z is not None:
         method = interp_method if interp_method is not None else DEFAULT_METHOD
-        ds = interp(ds=ds, z_new=z, method=method)
+        ds = interp(
+            ds=ds,
+            z_new=z,
+            method=method,
+            conserve_column=conserve_column,
+        )
         return ds
     else:
         return ds
@@ -274,6 +280,7 @@ class AFGL1986Tropical(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
@@ -283,6 +290,7 @@ class AFGL1986Tropical(Profile):
             identifier=Identifier.TROPICAL,
             z=z,
             interp_method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -296,6 +304,7 @@ class AFGL1986MidlatitudeSummer(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
@@ -306,6 +315,7 @@ class AFGL1986MidlatitudeSummer(Profile):
             identifier=Identifier.MIDLATITUDE_SUMMER,
             z=z,
             interp_method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -319,6 +329,7 @@ class AFGL1986MidlatitudeWinter(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
@@ -329,6 +340,7 @@ class AFGL1986MidlatitudeWinter(Profile):
             identifier=Identifier.MIDLATITUDE_WINTER,
             z=z,
             interp_method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -342,6 +354,7 @@ class AFGL1986SubarcticSummer(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
@@ -352,6 +365,7 @@ class AFGL1986SubarcticSummer(Profile):
             identifier=Identifier.SUBARCTIC_SUMMER,
             z=z,
             interp_method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -365,6 +379,7 @@ class AFGL1986SubarcticWinter(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
@@ -375,6 +390,7 @@ class AFGL1986SubarcticWinter(Profile):
             identifier=Identifier.SUBARCTIC_WINTER,
             z=z,
             interp_method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -388,6 +404,7 @@ class AFGL1986USStandard(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         logger.debug(
@@ -397,5 +414,6 @@ class AFGL1986USStandard(Profile):
             identifier=Identifier.US_STANDARD,
             z=z,
             interp_method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
