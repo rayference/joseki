@@ -11,6 +11,16 @@ from joseki.units import ureg
 
 
 @pytest.mark.parametrize(
+    "identifier",
+    ["ussa_1976", "afgl_1986-us_standard", "mipas_2007-midlatitude_day"]
+)
+def test_column_mass_density_in_cells(identifier: str):
+    """Returns a dictionary."""
+    ds = joseki.make(identifier)
+    assert isinstance(ds.joseki.column_mass_density, dict)
+
+
+@pytest.mark.parametrize(
     "identifier, represent_in_cells, expected",
     [
         ("afgl_1986-us_standard", True, 14.27 * ureg.kg / ureg.m**2),
@@ -19,7 +29,7 @@ from joseki.units import ureg
         ("mipas_2007-midlatitude_day", False, 19.51 * ureg.kg / ureg.m**2),
     ]
 )
-def test_column_mass_density_in_cells(
+def test_water_vapour_column_mass_density_in_cells(
     identifier: str,
     represent_in_cells: bool,
     expected: pint.Quantity
