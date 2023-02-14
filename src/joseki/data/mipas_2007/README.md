@@ -32,7 +32,5 @@ The downloaded data files headers mention:
 
 However, J. J. Remedios et al. (2007) pages 9981-9982 indicate that:
 
-```
-Current data versions are V3.1 for the MIPAS standard atmospheres
+> Current data versions are V3.1 for the MIPAS standard atmospheres
 (available for download at http://www.atm.ox.ac.uk/RFM/rfm/downloads.html).
-```
