@@ -318,11 +318,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-set-format" class="md-nav__link">
-    Data set format
+  <a href="#dataset-schema" class="md-nav__link">
+    Dataset schema
   </a>
   
-    <nav class="md-nav" aria-label="Data set format">
+    <nav class="md-nav" aria-label="Dataset schema">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -455,11 +455,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-set-format" class="md-nav__link">
-    Data set format
+  <a href="#dataset-schema" class="md-nav__link">
+    Dataset schema
   </a>
   
-    <nav class="md-nav" aria-label="Data set format">
+    <nav class="md-nav" aria-label="Dataset schema">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -540,20 +540,20 @@ Number density at sea level has dimensions of <code>length^-3</code>.</p>
 <p>Similarly, mass density at sea level is
 <span class="arithmatex">\(\rho_{\mathrm{M}}(0) = m_{\mathrm{M}} \, n_{\mathrm{M}}(0)\)</span>.
 Mass density at sea level has dimensions of <code>mass * length^-3</code>.</p>
-<h2 id="data-set-format">Data set format<a class="headerlink" href="#data-set-format" title="Permanent link">&para;</a></h2>
-<p>Joseki produces atmospheric profile data sets in the
+<h2 id="dataset-schema">Dataset schema<a class="headerlink" href="#dataset-schema" title="Permanent link">&para;</a></h2>
+<p>Joseki produces atmospheric profile datasets in the
 <a href="https://www.unidata.ucar.edu/software/netcdf/">NetCDF format</a> using the
 <a href="http://xarray.pydata.org/en/stable/">xarray library</a> which provides a
 comprehensive, robust and convenient interface to read, write, manipulate and
 visualise NetCDF data.</p>
 <h3 id="metadata-conventions">Metadata conventions<a class="headerlink" href="#metadata-conventions" title="Permanent link">&para;</a></h3>
 <p>The NetCDF format allows to store metadata alongside data.
-Joseki's data sets metadata follow the
+Joseki's datasets metadata follow the
 <a href="http://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html">conventions for Climate and Forecast (v1.8)</a>.</p>
 <h3 id="standard-names">Standard names<a class="headerlink" href="#standard-names" title="Permanent link">&para;</a></h3>
 <p>The Climate and Forecast (CF) conventions define standard names to describe
 variables.
-Joseki's data sets comply with
+Joseki's datasets comply with
 <a href="http://cfconventions.org/Data/cf-standard-names/77/build/cf-standard-name-table.html">CF Standard Name Table Version 77, 19 January 2021</a>,
 except for the following variables for which a standard name did not exist
 in the table and was derived:</p>
@@ -579,7 +579,7 @@ in the table and was derived:</p>
 </tbody>
 </table>
 <h3 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h3>
-<p>The data set includes 4+ data variables:</p>
+<p>A dataset includes 4+ data variables:</p>
 <table>
 <thead>
 <tr>
@@ -617,7 +617,7 @@ in the table and was derived:</p>
 </tbody>
 </table>
 <p>where <code>&lt;m&gt;</code> is the chemical formula of the given molecule, and one of the two
-following coordinates variables</p>
+following coordinates variables:</p>
 <table>
 <thead>
 <tr>

@@ -1,0 +1,914 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Contributor Guide" href="contributing.html" /><link rel="prev" title="Bibliography" href="bibliography.html" />
+
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+        <title>Reference - Joseki documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Joseki  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Joseki  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">Data set format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="codeofconduct.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/nollety/joseki/releases">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="reference">
+<span id="api-reference"></span><h1>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">#</a></h1>
+<section id="module-joseki.accessor">
+<span id="accessor"></span><h2><code class="docutils literal notranslate"><span class="pre">accessor</span></code><a class="headerlink" href="#module-joseki.accessor" title="Permalink to this heading">#</a></h2>
+<p>Accessor module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">joseki.accessor.</span></span><span class="sig-name descname"><span class="pre">JosekiAccessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xarray_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.accessor.JosekiAccessor" title="Permalink to this definition">#</a></dt>
+<dd><p>Joseki accessor.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor.column_mass_density">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">column_mass_density</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><span class="pre">Quantity</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#joseki.accessor.JosekiAccessor.column_mass_density" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute column mass density.</p>
+<p>The column mass density is given by:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\sigma_{\mathrm{M}} = N_{\mathrm{M}} \, m_{\mathrm{M}}\]</div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(N_{\mathrm{M}}\)</span> is the column number density of molecule M,</p></li>
+<li><p><span class="math notranslate nohighlight">\(m_{\mathrm{M}}\)</span> is the molecular mass of molecule M.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A mapping of molecule and column mass density.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor.column_number_density">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">column_number_density</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><span class="pre">Quantity</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#joseki.accessor.JosekiAccessor.column_number_density" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute column number density.</p>
+<p>The column number density is given by:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[N_{\mathrm{M}} = \int n_{\mathrm{M}}(z) \, \mathrm{d} z\]</div>
+</div>
+<p>with</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[n_{\mathrm{M}}(z) = x_{\mathrm{M}}(z) \, n(z)\]</div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(z\)</span> is the altitude,</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_{\mathrm{M}}(z)\)</span> is the volume mixing ratio of molecule M
+at altitude <span class="math notranslate nohighlight">\(z\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n(z)\)</span> is the air number density at altitude <span class="math notranslate nohighlight">\(z\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n_{\mathrm{M}}(z)\)</span> is the number density of molecule M at
+altitude <span class="math notranslate nohighlight">\(z\)</span>.</p></li>
+</ul>
+<p>If the dataset has a <code class="docutils literal notranslate"><span class="pre">z_bounds</span></code> coordinate, the integral is computed
+using the centered rectangle method, where the <code class="docutils literal notranslate"><span class="pre">z</span></code> coordinate
+corresponds to the rectangle centers.</p>
+<p>If the dataset does not have a <code class="docutils literal notranslate"><span class="pre">z_bounds</span></code> coordinate, the integration
+is performed using the trapezoidal rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A mapping of molecule and column number density.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor.mass_density_at_sea_level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mass_density_at_sea_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><span class="pre">Quantity</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#joseki.accessor.JosekiAccessor.mass_density_at_sea_level" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute mass density at sea level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A mapping of molecule and mass density at sea level.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor.molecules">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">molecules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#joseki.accessor.JosekiAccessor.molecules" title="Permalink to this definition">#</a></dt>
+<dd><p>Return list of molecules.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor.number_density_at_sea_level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">number_density_at_sea_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><span class="pre">Quantity</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#joseki.accessor.JosekiAccessor.number_density_at_sea_level" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute number density at sea level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A mapping of molecule and number density at sea level.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor.rescale">
+<span class="sig-name descname"><span class="pre">rescale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.accessor.JosekiAccessor.rescale" title="Permalink to this definition">#</a></dt>
+<dd><p>Rescale molecules concentration in atmospheric profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>factors</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>) – A mapping of molecule and scaling factor.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the rescaling factors are invalid, i.e. they lead to a profile
+    where the volume fraction sum is larger than 1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor.scaling_factors">
+<span class="sig-name descname"><span class="pre">scaling_factors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.accessor.JosekiAccessor.scaling_factors" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute scaling factor(s) to reach specific target amount(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>MutableMapping</em><em>[</em><em>str</em><em>, </em><a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><em>Quantity</em></a><em>]</em>) – Mapping of molecule and target amount.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If a target amount has dimensions that are not supported.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mapping of molecule and scaling factors.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For each molecule in the <code class="docutils literal notranslate"><span class="pre">target</span></code> mapping, the target amount is
+interpreted, depending on its dimensions (indicated in square brackets),
+as:</p>
+<ul class="simple">
+<li><p>a column number density [<code class="docutils literal notranslate"><span class="pre">length^-2</span></code>],</p></li>
+<li><p>a column mass density [<code class="docutils literal notranslate"><span class="pre">mass</span> <span class="pre">*</span> <span class="pre">length^-2</span></code>],</p></li>
+<li><p>a number densitx at sea level [<code class="docutils literal notranslate"><span class="pre">length^-3</span></code>],</p></li>
+<li><p>a mass density at sea level [<code class="docutils literal notranslate"><span class="pre">mass</span> <span class="pre">*</span> <span class="pre">length^-3</span></code>],</p></li>
+<li><p>a volume mixing fraction at sea level [<code class="docutils literal notranslate"><span class="pre">dimensionless</span></code>]</p></li>
+</ul>
+<p>The scaling factor is then evaluated as the ratio of the target amount
+with the original amount, for each molecule.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#joseki.accessor.JosekiAccessor.rescale" title="joseki.accessor.JosekiAccessor.rescale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rescale</span></code></a></dt><dd><p>rescale atmospheric profile.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="joseki.accessor.JosekiAccessor.volume_mixing_fraction_at_sea_level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">volume_mixing_fraction_at_sea_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><span class="pre">Quantity</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#joseki.accessor.JosekiAccessor.volume_mixing_fraction_at_sea_level" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute volume mixing fraction at sea level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A mapping of molecule and volume mixing fraction at sea level.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.accessor.molecular_mass">
+<span class="sig-prename descclassname"><span class="pre">joseki.accessor.</span></span><span class="sig-name descname"><span class="pre">molecular_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.accessor.molecular_mass" title="Permalink to this definition">#</a></dt>
+<dd><p>Return the average molecular mass of a molecule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>m</strong> (<em>str</em>) – Molecule formula.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Average molecular mass.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>quantity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.accessor.volume_fraction_sum">
+<span class="sig-prename descclassname"><span class="pre">joseki.accessor.</span></span><span class="sig-name descname"><span class="pre">volume_fraction_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.accessor.volume_fraction_sum" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute the sum of volume mixing fractions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ds</strong> (<em>dataset</em>) – Dataset.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sum of volume mixing fractions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)">pint.Quantity</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-joseki.afgl_1986">
+<span id="afgl-1986"></span><h2><code class="docutils literal notranslate"><span class="pre">afgl_1986</span></code><a class="headerlink" href="#module-joseki.afgl_1986" title="Permalink to this heading">#</a></h2>
+<p>Module to read AFGL 1986 data files.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="joseki.afgl_1986.Identifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">joseki.afgl_1986.</span></span><span class="sig-name descname"><span class="pre">Identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.afgl_1986.Identifier" title="Permalink to this definition">#</a></dt>
+<dd><p>AFGL 1986 atmospheric profile identifier enumeration.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.afgl_1986.parse">
+<span class="sig-prename descclassname"><span class="pre">joseki.afgl_1986.</span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.afgl_1986.parse" title="Permalink to this definition">#</a></dt>
+<dd><p>Parse table data files for a given atmospheric profile.</p>
+<p>Read the relevant raw data files corresponding to the atmospheric profile.
+These raw data files correspond to tables 1 and 2 from the
+technical report <em>AFGL Atmospheric Constituent Profiles (0-120 km)</em>,
+Anderson et al., 1986
+<span id="id1">[<a class="reference internal" href="bibliography.html#id2" title="G.P. Anderson, J.H Chetwynd, S.A. Clough, E.P. Shettle, and F.X. Kneizys. Afgl atmospheric constituent profiles (0-120) km. Technical Report AFGL-TR-86-0110, Air Force Geophysics Laboratory, 1986. URL: https://ui.adsabs.harvard.edu/abs/1986afgl.rept.....A/abstract.">ACC+86</a>]</span>.
+Each atmospheric profile has 5 tables, i.e. 5 raw data files, associated
+to it.
+Only the first of these tables is specific to each atmospheric profile.
+All 5 raw data files are read into <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> objects and
+then concatenated after dropping the duplicate columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<a class="reference internal" href="#joseki.afgl_1986.Identifier" title="joseki.afgl_1986.Identifier"><em>Identifier</em></a>) – Atmospheric profile identifier.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric profile data set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.afgl_1986.read">
+<span class="sig-prename descclassname"><span class="pre">joseki.afgl_1986.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_molecules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.afgl_1986.read" title="Permalink to this definition">#</a></dt>
+<dd><p>Read data files for a given atmospheric profile.</p>
+<p>Chain calls to <a class="reference internal" href="#joseki.afgl_1986.parse" title="joseki.afgl_1986.parse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse()</span></code></a> and <a class="reference internal" href="#joseki.afgl_1986.to_xarray" title="joseki.afgl_1986.to_xarray"><code class="xref py py-meth docutils literal notranslate"><span class="pre">to_xarray()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<a class="reference internal" href="#joseki.afgl_1986.Identifier" title="joseki.afgl_1986.Identifier"><em>Identifier</em></a>) – Atmospheric profile identifier.
+See <a class="reference internal" href="#joseki.afgl_1986.Identifier" title="joseki.afgl_1986.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Identifier</span></code></a> for possible values.</p></li>
+<li><p><strong>additional_molecules</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, include molecules 8-28 as numbered in
+<span id="id2">[<a class="reference internal" href="bibliography.html#id2" title="G.P. Anderson, J.H Chetwynd, S.A. Clough, E.P. Shettle, and F.X. Kneizys. Afgl atmospheric constituent profiles (0-120) km. Technical Report AFGL-TR-86-0110, Air Force Geophysics Laboratory, 1986. URL: https://ui.adsabs.harvard.edu/abs/1986afgl.rept.....A/abstract.">ACC+86</a>]</span>.
+Else, discard molecules 8-28.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric profile data set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.afgl_1986.to_xarray">
+<span class="sig-prename descclassname"><span class="pre">joseki.afgl_1986.</span></span><span class="sig-name descname"><span class="pre">to_xarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_molecules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.afgl_1986.to_xarray" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert <a class="reference internal" href="#joseki.afgl_1986.parse" title="joseki.afgl_1986.parse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse()</span></code></a>’s output to a <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a>.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">z</span></code> column of the output pandas.DataFrame of read_raw_data
+as data coordinate and all other columns as data variables.
+All data variables and coordinates of the returned xarray.Dataset are
+associated metadata (standard name, long name and units).
+Raw data units are documented in the technical report <em>AFGL Atmospheric
+Constituent Profiles (0-120 km)</em>, Anderson et al., 1986
+<span id="id3">[<a class="reference internal" href="bibliography.html#id2" title="G.P. Anderson, J.H Chetwynd, S.A. Clough, E.P. Shettle, and F.X. Kneizys. Afgl atmospheric constituent profiles (0-120) km. Technical Report AFGL-TR-86-0110, Air Force Geophysics Laboratory, 1986. URL: https://ui.adsabs.harvard.edu/abs/1986afgl.rept.....A/abstract.">ACC+86</a>]</span>.
+Data set attributes are added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>) – Atmospheric profile data.</p></li>
+<li><p><strong>identifier</strong> (<a class="reference internal" href="#joseki.afgl_1986.Identifier" title="joseki.afgl_1986.Identifier"><em>Identifier</em></a>) – Atmospheric profile identifier.</p></li>
+<li><p><strong>additional_molecules</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, include molecules 8-28 as numbered in
+<span id="id4">[<a class="reference internal" href="bibliography.html#id2" title="G.P. Anderson, J.H Chetwynd, S.A. Clough, E.P. Shettle, and F.X. Kneizys. Afgl atmospheric constituent profiles (0-120) km. Technical Report AFGL-TR-86-0110, Air Force Geophysics Laboratory, 1986. URL: https://ui.adsabs.harvard.edu/abs/1986afgl.rept.....A/abstract.">ACC+86</a>]</span>.
+Else, discard molecules 8-28.</p></li>
+<li><p><strong>kwargs</strong> (<em>str</em>) – Additional arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">util.make_data_set()</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric profile data set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-joseki.core">
+<span id="core"></span><h2><code class="docutils literal notranslate"><span class="pre">core</span></code><a class="headerlink" href="#module-joseki.core" title="Permalink to this heading">#</a></h2>
+<p>Core module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="joseki.core.Identifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">joseki.core.</span></span><span class="sig-name descname"><span class="pre">Identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.core.Identifier" title="Permalink to this definition">#</a></dt>
+<dd><p>Atmospheric profile data set identifier.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.core.convert_to_identifier">
+<span class="sig-prename descclassname"><span class="pre">joseki.core.</span></span><span class="sig-name descname"><span class="pre">convert_to_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.core.convert_to_identifier" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert identifier’s value to Identifier object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#joseki.core.Identifier" title="joseki.core.Identifier"><em>Identifier</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.core.interp">
+<span class="sig-prename descclassname"><span class="pre">joseki.core.</span></span><span class="sig-name descname"><span class="pre">interp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.core.interp" title="Permalink to this definition">#</a></dt>
+<dd><p>Interpolate atmospheric profile on new altitudes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a>) – Atmospheric profile to interpolate.</p></li>
+<li><p><strong>z_new</strong> (<a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code></a>) – Altitudes values at which to interpolate the atmospheric profile.</p></li>
+<li><p><strong>p_interp_method</strong> (<em>str</em>) – Pressure interpolation method.</p></li>
+<li><p><strong>t_interp_method</strong> (<em>str</em>) – Temperature interpolation method.</p></li>
+<li><p><strong>n_interp_method</strong> (<em>str</em>) – Number density interpolation method.</p></li>
+<li><p><strong>x_interp_method</strong> (<em>str</em>) – Volume mixing ratio interpolation method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Interpolated atmospheric profile.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.core.make">
+<span class="sig-prename descclassname"><span class="pre">joseki.core.</span></span><span class="sig-name descname"><span class="pre">make</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">represent_in_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.core.make" title="Permalink to this definition">#</a></dt>
+<dd><p>Make atmospheric profile data set.</p>
+<p>This method creates an atmospheric profile data set corresponding to the
+specified identifier.
+It allows to interpolate the atmospheric profile on a different
+level altitude mesh as well as to set the layer center altitude as the data
+set’s main coordinate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<a class="reference internal" href="#joseki.core.Identifier" title="joseki.core.Identifier"><em>Identifier</em></a>) – Atmospheric profile identifier.</p></li>
+<li><p><strong>z</strong> (<em>quantity</em><em>, </em><em>optional</em>) – Altitudes.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the original atmospheric profile altitudes are used.</p></li>
+<li><p><strong>represent_in_cells</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, compute the cells representation of the atmospheric profile.</p></li>
+<li><p><strong>p_interp_method</strong> (<em>str</em>) – Pressure interpolation method.</p></li>
+<li><p><strong>t_interp_method</strong> (<em>str</em>) – Temperature interpolation method.</p></li>
+<li><p><strong>n_interp_method</strong> (<em>str</em>) – Number density interpolation method.</p></li>
+<li><p><strong>x_interp_method</strong> (<em>str</em>) – Volume mixing ratios interpolation method</p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>) – Parameters passed to lower-level readers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric profile.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.core.represent_profile_in_cells">
+<span class="sig-prename descclassname"><span class="pre">joseki.core.</span></span><span class="sig-name descname"><span class="pre">represent_profile_in_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_interp_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.core.represent_profile_in_cells" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute the cells representation of the atmospheric profile.</p>
+<p>Atmosphere cells (or layers) are defined by two consecutive altitude values.
+The layer’s center altitude is defined as the average of these two values.
+The pressure, temperature, number density and mixing ratio fields are
+interpolated at these layer’ center altitude values.
+In the new atmospheric profile, the ‘zn’ coordinate is removed, a layer’
+center altitude coordinate ‘z’ is added and a data variable ‘z_bounds’
+indicating the altitude bounds of each layer, is added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a>) – Initial atmospheric profile.</p></li>
+<li><p><strong>p_interp_method</strong> (<em>str</em>) – Pressure interpolation method.</p></li>
+<li><p><strong>t_interp_method</strong> (<em>str</em>) – Temperature interpolation method.</p></li>
+<li><p><strong>n_interp_method</strong> (<em>str</em>) – Number density interpolation method.</p></li>
+<li><p><strong>x_interp_method</strong> (<em>str</em>) – Volume mixing ratio interpolation method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Cells representation of the atmospheric profile.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-joseki.__main__">
+<span id="joseki"></span><h2><code class="docutils literal notranslate"><span class="pre">joseki</span></code><a class="headerlink" href="#module-joseki.__main__" title="Permalink to this heading">#</a></h2>
+<p>Command-line interface.</p>
+</section>
+<section id="module-joseki.rfm">
+<span id="rfm"></span><h2><code class="docutils literal notranslate"><span class="pre">rfm</span></code><a class="headerlink" href="#module-joseki.rfm" title="Permalink to this heading">#</a></h2>
+<p>Module to read atmospheric profiles distributed with the RFM.</p>
+<p>The Reference Forward Model (RFM) <span id="id5">[<a class="reference internal" href="bibliography.html#id3" title="Anu Dudhia. The reference forward model (rfm). Journal of Quantitative Spectroscopy and Radiative Transfer, 186:243-253, 2017. Satellite Remote Sensing and Spectroscopy: Joint ACE-Odin Meeting, October 2015. URL: https://www.sciencedirect.com/science/article/pii/S0022407316301029, doi:https://doi.org/10.1016/j.jqsrt.2016.06.018.">Dud17</a>]</span>
+ships a collection of atmospheric profile data sets that can be accessed
+at <a class="reference external" href="http://eodg.atm.ox.ac.uk/RFM/atm">http://eodg.atm.ox.ac.uk/RFM/atm</a> (last visited on 2022-06-16).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="joseki.rfm.Identifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">joseki.rfm.</span></span><span class="sig-name descname"><span class="pre">Identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.rfm.Identifier" title="Permalink to this definition">#</a></dt>
+<dd><p>RFM atmospheric profile identifier enumeration.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.rfm.read">
+<span class="sig-prename descclassname"><span class="pre">joseki.rfm.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_molecules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.rfm.read" title="Permalink to this definition">#</a></dt>
+<dd><p>Read RFM atmospheric data files.</p>
+<p>Try to read the data from <a class="reference external" href="http://eodg.atm.ox.ac.uk/RFM/atm/">http://eodg.atm.ox.ac.uk/RFM/atm/</a>
+If that fails, reads archived data files in <code class="docutils literal notranslate"><span class="pre">src/joseki/data/rfm/</span></code>.
+The archived raw data files were downloaded from
+<a class="reference external" href="http://eodg.atm.ox.ac.uk/RFM/atm/">http://eodg.atm.ox.ac.uk/RFM/atm/</a> on June 6th, 2021.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<a class="reference internal" href="#joseki.rfm.Identifier" title="joseki.rfm.Identifier"><em>Identifier</em></a>) – Atmospheric profile identifier.
+See <a class="reference internal" href="#joseki.rfm.Identifier" title="joseki.rfm.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Identifier</span></code></a> for possible values.</p></li>
+<li><p><strong>additional_molecules</strong> (<em>bool</em>) – Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include the additional molecules to the atmospheric
+profile.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric profile.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.rfm.read_additional_molecules">
+<span class="sig-prename descclassname"><span class="pre">joseki.rfm.</span></span><span class="sig-name descname"><span class="pre">read_additional_molecules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.rfm.read_additional_molecules" title="Permalink to this definition">#</a></dt>
+<dd><p>Read additional molecules data file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<a class="reference internal" href="#joseki.rfm.Identifier" title="joseki.rfm.Identifier"><em>Identifier</em></a>) – Atmospheric profile identifier.
+See <a class="reference internal" href="#joseki.rfm.Identifier" title="joseki.rfm.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Identifier</span></code></a> for possible values.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the profile does not have additional molecules.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Additional molecules parsed content, URL information.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple of dict of str and <a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code></a> and dict of str and str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.rfm.read_file_content">
+<span class="sig-prename descclassname"><span class="pre">joseki.rfm.</span></span><span class="sig-name descname"><span class="pre">read_file_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.rfm.read_file_content" title="Permalink to this definition">#</a></dt>
+<dd><p>Read atmospheric profile data file content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<a class="reference internal" href="#joseki.rfm.Identifier" title="joseki.rfm.Identifier"><em>Identifier</em></a>) – Atmospheric profile identifier.
+See <a class="reference internal" href="#joseki.rfm.Identifier" title="joseki.rfm.Identifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Identifier</span></code></a> for possible values.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>file content, URL, URL date.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-joseki.util">
+<span id="util"></span><h2><code class="docutils literal notranslate"><span class="pre">util</span></code><a class="headerlink" href="#module-joseki.util" title="Permalink to this heading">#</a></h2>
+<p>Utility module.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.util.datetime_utcnow_stripped">
+<span class="sig-prename descclassname"><span class="pre">joseki.util.</span></span><span class="sig-name descname"><span class="pre">datetime_utcnow_stripped</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#joseki.util.datetime_utcnow_stripped" title="Permalink to this definition">#</a></dt>
+<dd><p>Return current UTC with seconds and microseconds stripped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>datetime</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.util.make_data_set">
+<span class="sig-prename descclassname"><span class="pre">joseki.util.</span></span><span class="sig-name descname"><span class="pre">make_data_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convention</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CF-1.8'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">references</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.util.make_data_set" title="Permalink to this definition">#</a></dt>
+<dd><p>Make an atmospheric profile data set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code></a>) – Pressure values.</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code></a>) – Temperature values.</p></li>
+<li><p><strong>n</strong> (<a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code></a>) – Number density values.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code></a>) – Volume mixing ratios values.</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://pint.readthedocs.io/en/stable/api/base.html#pint.Quantity" title="(in pint v0.20.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code></a>) – Altitude values.</p></li>
+<li><p><strong>m</strong> (<em>list</em><em> of </em><em>str</em>) – Molecules.</p></li>
+<li><p><strong>convention</strong> (<em>str</em>) – Metadata convention.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – A succinct description of what is in the dataset.</p></li>
+<li><p><strong>history</strong> (<em>str</em><em>, </em><em>optional</em>) – Provides an audit trail for modifications to the original data.</p></li>
+<li><p><strong>func_name</strong> (<em>str</em>) – Name of the calling function.</p></li>
+<li><p><strong>operation</strong> (<em>str</em>) – Name of the operation performed on the data set.</p></li>
+<li><p><strong>source</strong> (<em>str</em>) – The method of production of the original data.</p></li>
+<li><p><strong>references</strong> (<em>str</em>) – Published or web-based references that describe the data or methods
+used to produce it.</p></li>
+<li><p><strong>url</strong> (<em>str</em><em>, </em><em>optional</em>) – Data URL.</p></li>
+<li><p><strong>url_date</strong> (<em>str</em><em>, </em><em>optional</em>) – Date and time of last access to URL.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Atmospheric profile.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.12.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.util.to_chemical_formula">
+<span class="sig-prename descclassname"><span class="pre">joseki.util.</span></span><span class="sig-name descname"><span class="pre">to_chemical_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.util.to_chemical_formula" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert to chemical formula.</p>
+<p>If molecule name is unknown, returns name unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Molecule name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Molecule formula.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="joseki.util.translate_cfc">
+<span class="sig-prename descclassname"><span class="pre">joseki.util.</span></span><span class="sig-name descname"><span class="pre">translate_cfc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#joseki.util.translate_cfc" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert chlorofulorocarbon name to corresponding chemical formula.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Chlorofulorocarbon name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Chlorofulorocarbon chemical formula.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError:</strong> – If the name does not match a known chlorofulorocarbon.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="contributing.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Contributor Guide</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="bibliography.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Bibliography</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Yvan Nollet
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Reference</a><ul>
+<li><a class="reference internal" href="#module-joseki.accessor"><code class="docutils literal notranslate"><span class="pre">accessor</span></code></a><ul>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor</span></code></a><ul>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor.column_mass_density"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor.column_mass_density</span></code></a></li>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor.column_number_density"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor.column_number_density</span></code></a></li>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor.mass_density_at_sea_level"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor.mass_density_at_sea_level</span></code></a></li>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor.molecules"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor.molecules</span></code></a></li>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor.number_density_at_sea_level"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor.number_density_at_sea_level</span></code></a></li>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor.rescale"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor.rescale()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor.scaling_factors"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor.scaling_factors()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.accessor.JosekiAccessor.volume_mixing_fraction_at_sea_level"><code class="docutils literal notranslate"><span class="pre">JosekiAccessor.volume_mixing_fraction_at_sea_level</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#joseki.accessor.molecular_mass"><code class="docutils literal notranslate"><span class="pre">molecular_mass()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.accessor.volume_fraction_sum"><code class="docutils literal notranslate"><span class="pre">volume_fraction_sum()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-joseki.afgl_1986"><code class="docutils literal notranslate"><span class="pre">afgl_1986</span></code></a><ul>
+<li><a class="reference internal" href="#joseki.afgl_1986.Identifier"><code class="docutils literal notranslate"><span class="pre">Identifier</span></code></a></li>
+<li><a class="reference internal" href="#joseki.afgl_1986.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.afgl_1986.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.afgl_1986.to_xarray"><code class="docutils literal notranslate"><span class="pre">to_xarray()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-joseki.core"><code class="docutils literal notranslate"><span class="pre">core</span></code></a><ul>
+<li><a class="reference internal" href="#joseki.core.Identifier"><code class="docutils literal notranslate"><span class="pre">Identifier</span></code></a></li>
+<li><a class="reference internal" href="#joseki.core.convert_to_identifier"><code class="docutils literal notranslate"><span class="pre">convert_to_identifier()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.core.interp"><code class="docutils literal notranslate"><span class="pre">interp()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.core.make"><code class="docutils literal notranslate"><span class="pre">make()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.core.represent_profile_in_cells"><code class="docutils literal notranslate"><span class="pre">represent_profile_in_cells()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-joseki.__main__"><code class="docutils literal notranslate"><span class="pre">joseki</span></code></a></li>
+<li><a class="reference internal" href="#module-joseki.rfm"><code class="docutils literal notranslate"><span class="pre">rfm</span></code></a><ul>
+<li><a class="reference internal" href="#joseki.rfm.Identifier"><code class="docutils literal notranslate"><span class="pre">Identifier</span></code></a></li>
+<li><a class="reference internal" href="#joseki.rfm.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.rfm.read_additional_molecules"><code class="docutils literal notranslate"><span class="pre">read_additional_molecules()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.rfm.read_file_content"><code class="docutils literal notranslate"><span class="pre">read_file_content()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-joseki.util"><code class="docutils literal notranslate"><span class="pre">util</span></code></a><ul>
+<li><a class="reference internal" href="#joseki.util.datetime_utcnow_stripped"><code class="docutils literal notranslate"><span class="pre">datetime_utcnow_stripped()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.util.make_data_set"><code class="docutils literal notranslate"><span class="pre">make_data_set()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.util.to_chemical_formula"><code class="docutils literal notranslate"><span class="pre">to_chemical_formula()</span></code></a></li>
+<li><a class="reference internal" href="#joseki.util.translate_cfc"><code class="docutils literal notranslate"><span class="pre">translate_cfc()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
