@@ -21,8 +21,9 @@ different operations, such as interpolation and rescaling, on a dataset.
   * *AFGL Atmospheric Constituent Profiles (0-120 km)*
   * *MIPAS (2007) reference atmospheres*
   * *U.S. Standard Atmosphere, 1976*
-* Profiles interpolation along the altitude.
-* Projection of the nodes-based profile on the corresponding centers-based altitude mesh.
+* Specify the altitude mesh to interpolate the atmospheric profile at.
+* Move from the nodes-representation to the cells-representation of the 
+  altitude mesh.
 * Command-line interface.
 * Python API.
 
