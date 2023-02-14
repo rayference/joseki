@@ -285,6 +285,7 @@ def to_dataset(
     identifier: Identifier,
     z: t.Optional[pint.Quantity] = None,
     method: t.Optional[t.Mapping[str, str]] = None,
+    conserve_column: bool = False,
     **kwargs: t.Any,
 ) -> xr.Dataset:
     """Helper for `Profile.to_dataset` method"""
@@ -299,7 +300,12 @@ def to_dataset(
     # Interpolate to new vertical grid if necessary
     if z is not None:
         method = DEFAULT_METHOD if method is None else method
-        ds = interp(ds=ds, z_new=z, method=method)
+        ds = interp(
+            ds=ds,
+            z_new=z,
+            method=method,
+            conserve_column=conserve_column,
+        )
         return ds
     else:
         return ds
@@ -314,12 +320,14 @@ class MIPASMidlatitudeDay(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         return to_dataset(
             identifier=Identifier.MIDLATITUDE_DAY,
             z=z,
             method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -333,12 +341,14 @@ class MIPASMidlatitudeNight(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         return to_dataset(
             identifier=Identifier.MIDLATITUDE_NIGHT,
             z=z,
             method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -352,12 +362,14 @@ class MIPASPolarSummer(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         return to_dataset(
             identifier=Identifier.POLAR_SUMMER,
             z=z,
             method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -371,12 +383,14 @@ class MIPASPolarWinter(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         return to_dataset(
             identifier=Identifier.POLAR_WINTER,
             z=z,
             method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )
 
@@ -390,11 +404,13 @@ class MIPASTropical(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         return to_dataset(
             identifier=Identifier.TROPICAL,
             z=z,
             method=interp_method,
+            conserve_column=conserve_column,
             **kwargs,
         )

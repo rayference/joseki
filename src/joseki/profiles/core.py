@@ -30,16 +30,42 @@ DEFAULT_METHOD = {
 }
 
 
+def rescale_to_column(reference: xr.Dataset, ds: xr.Dataset) -> xr.Dataset:
+    """Rescale volume fraction to ensure that column densities are conserved.
+    
+    Args:
+        reference: Reference profile.
+        ds: Profile to rescale.
+    
+    Returns:
+        Rescaled profile.
+    """
+    desired = reference.joseki.column_number_density
+    actual = ds.joseki.column_number_density
+    rescaled = ds.joseki.rescale(
+        factors= {
+            m: (desired[m] / actual[m]).m_as("dimensionless")
+            for m in reference.joseki.molecules
+        }
+    )
+    return rescaled
+
+
 def interp(
     ds: xr.Dataset,
     z_new: pint.Quantity,
     method: t.Dict[str, str] = DEFAULT_METHOD,
+    conserve_column: bool = False,
 ) -> xr.Dataset:
     """Interpolate atmospheric profile on new altitudes.
 
     Args:
         ds: Atmospheric profile to interpolate.
         z_new: Altitudes values at which to interpolate the atmospheric profile.
+        method: Mapping of variable and interpolation method.
+            If a variable is not in the mapping, the linear interpolation is used.
+            By default, linear interpolation is used for all variables.
+        conserve_column: If True, ensure that column densities are conserved.
 
     method: Mapping of variable and interpolation method.
         If a variable is not in the mapping, the linear interpolation is used.
@@ -91,6 +117,10 @@ def interp(
         coords=coords,
         attrs=attrs,
     )
+    
+    # Compute scaling factors to conserve column densities
+    if conserve_column:
+        return rescale_to_column(reference=ds, ds=interpolated)
 
     return interpolated
 
@@ -98,15 +128,16 @@ def interp(
 def represent_profile_in_cells(
     ds: xr.Dataset,
     method: t.Dict[str, str] = DEFAULT_METHOD,
+    conserve_column: bool = False,
 ) -> xr.Dataset:
     """Compute the cells representation of the atmosphere thermophysical profile.
 
     Args:
         ds: Initial atmospheric profile.
-
         method: Mapping of variable and interpolation method.
             If a variable is not in the mapping, the linear interpolation is used.
             By default, linear interpolation is used for all variables.
+        conserve_column: If True, ensure that column densities are conserved.
 
     Returns:
         Cells representation of the atmosphere thermophysical profile.
@@ -128,10 +159,13 @@ def represent_profile_in_cells(
 
     z_nodes = to_quantity(ds.z)
     z_centers = (z_nodes[:-1] + z_nodes[1:]) / 2.0
-    interpolated: xr.Dataset = interp(
+
+    logger.debug("O3 column amount: %s", ds.joseki.column_number_density["O3"].to("dobson_unit"))
+    interpolated = interp(
         ds=ds,
         z_new=z_centers,
         method=method,
+        conserve_column=False,  # we rescale later
     )
     interpolated.z.attrs = dict(
         standard_name="layer_center_altitude",
@@ -150,11 +184,14 @@ def represent_profile_in_cells(
             ),
         )
     )
+    logger.debug("O3 column amount: %s", interpolated.joseki.column_number_density["O3"].to("dobson_unit"))
     interpolated.attrs.update(
         history=interpolated.history + f"\n{utcnow()} "
         f"- represent profile on cells - joseki, version {__version__}"
     )
 
+    if conserve_column:
+        return rescale_to_column(reference=ds, ds=interpolated)
     return interpolated
 
 
@@ -169,6 +206,7 @@ class Profile(ABC):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
         """
@@ -187,6 +225,8 @@ class Profile(ABC):
                 used to define the profile.
                 Interpolation may also not be required, e.g. if the profile is
                 defined by analytical function(s) of the altitude variable.
+            conserve_column: If `True`, ensure that column densities are conserved
+                during interpolation.
             kwargs: Parameters passed to lower-level methods.
 
         Returns:

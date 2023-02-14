@@ -155,15 +155,6 @@ class Schema:
                     f"{ds[var].attrs['standard_name']}"
                 )
 
-        logger.debug("Checking that coordinates have the correct standard names")
-        for coord, (_, _, _, standard_name) in self.coords.items():
-            if ds[coord].attrs["standard_name"] != standard_name:
-                raise ValueError(  # pragma: no cover
-                    f"incorrect standard name for {coord}. Expected "
-                    f"{standard_name}, got "
-                    f"{ds[coord].attrs['standard_name']}"
-                )
-
         logger.debug(
             "Checking that all x_* data variables have the correct units and "
             "standard names"
@@ -189,7 +180,7 @@ class Schema:
             )
             vfs = volume_fraction_sum(ds)
             if np.any(vfs.m > 1):
-                raise ValueError(
+                raise ValueError(  # pragma: no cover
                     "The rescaling factors lead to a profile where the volume "
                     "fraction sum is larger than 1."
                 )

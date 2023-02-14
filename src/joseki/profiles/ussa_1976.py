@@ -35,14 +35,11 @@ class USSA1976(Profile):
         self,
         z: t.Optional[pint.Quantity] = None,
         interp_method: t.Optional[t.Mapping[str, str]] = None,
+        conserve_column: bool = False,
         **kwargs: t.Any,
     ) -> xr.Dataset:
-        # interpolation is not required
-        if interp_method is not None:
-            logger.warning(  # pragma: no cover
-                "interpolation is not required. The value of the "
-                "'interp_method' parameter will be ignored."
-            )
+        # Since the ussa_1976 model can be evaluated at any altitude, both
+        # interp_method and conserve_column are ignored.
 
         # kwargs are ignored
         if kwargs:

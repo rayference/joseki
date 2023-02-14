@@ -1,5 +1,6 @@
 """Accessor module."""
 import datetime
+import logging
 import typing as t
 
 import pint
@@ -9,6 +10,8 @@ from .__version__ import __version__
 from .profiles.schema import schema
 from .units import to_quantity, ureg
 
+
+logger = logging.getLogger(__name__)
 
 # average molecular masses [dalton]
 # (computed with molmass: https://pypi.org/project/molmass/)
@@ -158,6 +161,11 @@ class JosekiAccessor:  # pragma: no cover
         try:
             with xr.set_options(keep_attrs=True):
                 dz = to_quantity(ds.z_bounds.diff(dim="zbv", n=1).squeeze())
+            
+            logger.debug(
+                "Computing column number density using the centered rectangle "
+                "rule."
+            )
 
             n = to_quantity(ds.n)
 
@@ -172,11 +180,15 @@ class JosekiAccessor:  # pragma: no cover
 
         except AttributeError:  # z_bounds attribute does not exist
 
+            logger.debug(
+                "Computing column number density using the trapezoidal rule."
+            )
+
             _column_number_density = {}
             for m in self.molecules:
                 integral = (ds[f"x_{m}"] * ds.n).integrate(
                     coord="z"
-                )  # integrate  using the trapeziodal rule
+                )  # integrate using the trapezoidal rule
                 units = " ".join(
                     [ds[var].attrs["units"] for var in [f"x_{m}", "n", "z"]]
                 )

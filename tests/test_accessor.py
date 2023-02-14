@@ -10,11 +10,21 @@ from joseki.units import to_quantity
 from joseki.units import ureg
 
 
+def test_column_number_density_integration():
+    """Same result is returned when profile is represented in cells or not."""
+    ds1 = joseki.make("mipas_2007-midlatitude_day")
+    ds2 = joseki.make("mipas_2007-midlatitude_day", represent_in_cells=True)
+    assert_approx_equal(
+        ds1.joseki.column_number_density["CO2"].m,
+        ds2.joseki.column_number_density["CO2"].m,
+        significant=5,
+    )
+
 @pytest.mark.parametrize(
     "identifier",
     ["ussa_1976", "afgl_1986-us_standard", "mipas_2007-midlatitude_day"]
 )
-def test_column_mass_density_in_cells(identifier: str):
+def test_column_mass_density(identifier: str):
     """Returns a dictionary."""
     ds = joseki.make(identifier)
     assert isinstance(ds.joseki.column_mass_density, dict)
