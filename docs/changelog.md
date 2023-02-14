@@ -1,8 +1,9 @@
-## `2.0.1` (unreleased)
+## `2.1.0` (unreleased)
 
 !!! success "Improvements"
 
     * Added all missing HITRAN species
+    * Fix out-dated command-line interface
 
 ## `2.0.0` (2023-02-14)
 

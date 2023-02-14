@@ -20,7 +20,7 @@ def runner() -> CliRunner:
 @pytest.mark.parametrize(
     "identifier", ["afgl_1986-midlatitude_summer", "mipas_2007-midlatitude_day"]
 )
-def test_main_succeeds(runner: CliRunner, tmpdir: t.Any, identifier: str) -> None:
+def test_main_succeeds(runner: CliRunner, tmpdir: t.Any, identifier: str):
     """Exits with a status code of zero."""
     result = runner.invoke(
         __main__.main,
@@ -29,7 +29,7 @@ def test_main_succeeds(runner: CliRunner, tmpdir: t.Any, identifier: str) -> Non
     assert result.exit_code == 0
 
 
-def test_main_open_data_set(runner: CliRunner, tmpdir: t.Any) -> None:
+def test_main_open_data_set(runner: CliRunner, tmpdir: t.Any):
     """Returns a xarray.Dataset."""
     path = pathlib.Path(tmpdir / "ds.nc")
     runner.invoke(
@@ -50,7 +50,7 @@ def altitudes_path(tmpdir: t.Any) -> pathlib.Path:
 
 def test_main_altitude_path(
     runner: CliRunner, tmpdir: t.Any, altitudes_path: pathlib.Path
-) -> None:
+):
     """Exits with a status code of zero when --altitudes option is used."""
     result = runner.invoke(
         __main__.main,
@@ -63,7 +63,7 @@ def test_main_altitude_path(
     assert result.exit_code == 0
 
 
-def test_main_represent_in_cells(runner: CliRunner, tmpdir: t.Any) -> None:
+def test_main_represent_in_cells(runner: CliRunner, tmpdir: t.Any):
     """Exits with a status code of zero with option --represent-in-cells."""
     result = runner.invoke(
         __main__.main,
@@ -71,6 +71,33 @@ def test_main_represent_in_cells(runner: CliRunner, tmpdir: t.Any) -> None:
             "--identifier=afgl_1986-tropical",
             f"--file-name={tmpdir / 'ds.nc'}",
             "--represent-in-cells",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_main_interp_method(runner: CliRunner, tmpdir: t.Any):
+    """Exits with a status code of zero with option --p-interp-method."""
+    result = runner.invoke(
+        __main__.main,
+        [
+            "--identifier=afgl_1986-tropical",
+            f"--file-name={tmpdir / 'ds.nc'}",
+            "--p-interp-method=quadratic",
+        ],
+    )
+    assert result.exit_code == 0
+
+
+def test_main_conserve_column(runner: CliRunner, tmpdir: t.Any):
+    """Exits with a status code of zero with option --conserve-column"""
+    result = runner.invoke(
+        __main__.main,
+        [
+            "--identifier=afgl_1986-tropical",
+            f"--file-name={tmpdir / 'ds.nc'}",
+            "--represent-in-cells",
+            "--conserve-column",
         ],
     )
     assert result.exit_code == 0

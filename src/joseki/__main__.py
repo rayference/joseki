@@ -72,6 +72,15 @@ INTERPOLATION_METHOD_CHOICES = [
     is_flag=True,
 )
 @click.option(
+    "--conserve-column",
+    "-c",
+    help=(
+        "Ensure that column densities are conserved during interpolation or "
+        "when representing the profile in cells."
+    ),
+    is_flag=True,
+)
+@click.option(
     "--p-interp-method",
     "-p",
     help="Pressure interpolation method.",
@@ -122,6 +131,7 @@ def main(
     altitudes: t.Optional[str],
     altitude_units: str,
     represent_in_cells: bool,
+    conserve_column: bool,
     p_interp_method: str,
     t_interp_method: str,
     n_interp_method: str,
@@ -135,15 +145,21 @@ def main(
     else:
         z = None
 
+    interp_method = {
+        "p": p_interp_method,
+        "t": t_interp_method,
+        "n": n_interp_method,
+        "x": x_interp_method,
+        "default": "linear",
+    }
+
     # make dataset
     ds = make(
         identifier=identifier,
         z=z,
-        p_interp_method=p_interp_method,
-        t_interp_method=t_interp_method,
-        n_interp_method=n_interp_method,
-        x_interp_method=x_interp_method,
+        interp_method=interp_method,
         represent_in_cells=represent_in_cells,
+        conserve_column=conserve_column,
     )
 
     # write dataset
