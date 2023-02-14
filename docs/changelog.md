@@ -1,3 +1,9 @@
+## `2.0.1` (unreleased)
+
+!!! success "Improvements"
+
+    * Added all missing HITRAN species
+
 ## `2.0.0` (2023-02-14)
 
 !!! help "Documentation"
