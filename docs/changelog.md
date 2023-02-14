@@ -1,4 +1,4 @@
-## `2.0.0` (unreleased)
+## `2.0.0` (2023-02-14)
 
 !!! help "Documentation"
 
