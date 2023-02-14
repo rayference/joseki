@@ -1,5 +1,13 @@
 # MIPAS (2007) data files
 
+The *MIPAS reference atmospheres* are documented in the following published 
+article:
+
+Remedios, J. J., R. J. Leigh, A. M. Waterfall, D. P. Moore, H. Sembhi, I. Parkes, J. Greenhough, M. P. Chipperfield, and D. Hauglustaine. 2007. ‘MIPAS Reference Atmospheres and Comparisons to V4.61/V4.62 MIPAS Level 2 Geophysical Data Sets’. Atmospheric Chemistry and Physics Discussions 7 (4): 9973–10017. [https://doi.org/10.5194/acpd-7-9973-2007](https://doi.org/10.5194/acpd-7-9973-2007).
+
+
+## Downloaded data
+
 Data files were downloaded on 2022-12-12 from:
 https://web.archive.org/web/20161112234010/http://eodg.atm.ox.ac.uk/RFM/atm/.
 
