@@ -9,7 +9,7 @@ from .core import make
 from .units import ureg
 from .profiles.factory import factory
 
-IDENTIFIER_CHOICES = list(factory.registry.keys())
+IDENTIFIER_CHOICES = factory.registered_identifiers
 
 INTERPOLATION_METHOD_CHOICES = [
     "linear",
