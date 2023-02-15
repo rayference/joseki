@@ -1,5 +1,10 @@
 ## `2.1.0` (unreleased)
 
+!!! help "Documentation"
+
+    * Add installation instructions for conda
+
+
 !!! success "Improvements"
 
     * Added all missing HITRAN species
