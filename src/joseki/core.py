@@ -88,3 +88,13 @@ def load_dataset(path: os.PathLike, *args, **kwargs) -> xr.Dataset:
         Profile.
     """
     return xr.load_dataset(path, *args, **kwargs)
+
+
+def identifiers() -> t.List[str]:
+    """
+    List all registered profile identifiers.
+
+    Returns:
+        List of all registered profile identifiers.
+    """
+    return factory.registered_identifiers

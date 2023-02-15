@@ -18,6 +18,16 @@ class ProfileFactory:
     """Profile registry."""
     registry: t.Dict[str, Profile] = field(factory=dict)
 
+    @property
+    def registered_identifiers(self) -> t.List[str]:
+        """
+        Registered profile identifiers.
+
+        Returns:
+            List of registered profile identifiers.
+        """
+        return list(self.registry.keys())
+        
     def register(
         self,
         identifier: str,

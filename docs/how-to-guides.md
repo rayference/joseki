@@ -18,12 +18,10 @@ ds = joseki.make(identifier="afgl_1986-us_standard")
 Display the available identifiers with:
 
 ```python
-from joseki.profiles import factory
-
-list(factory.registry.keys())
+joseki.identifiers()
 ```
 
-Use the [`to_dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.to_netcdf.html)
+Use the [`to_netcdf`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.to_netcdf.html)
 method to save the dataset to the disk as a 
 [netCDF](https://www.unidata.ucar.edu/software/netcdf/) file:
 
