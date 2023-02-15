@@ -19,9 +19,8 @@ from scipy import interpolate
 
 from ..__version__ import __version__
 from ..units import to_quantity, ureg
-from .util import utcnow
 from .schema import schema
-
+from .util import utcnow
 
 logger = logging.getLogger(__name__)
 
@@ -160,7 +159,6 @@ def represent_profile_in_cells(
     z_nodes = to_quantity(ds.z)
     z_centers = (z_nodes[:-1] + z_nodes[1:]) / 2.0
 
-    logger.debug("O3 column amount: %s", ds.joseki.column_number_density["O3"].to("dobson_unit"))
     interpolated = interp(
         ds=ds,
         z_new=z_centers,
@@ -184,7 +182,6 @@ def represent_profile_in_cells(
             ),
         )
     )
-    logger.debug("O3 column amount: %s", interpolated.joseki.column_number_density["O3"].to("dobson_unit"))
     interpolated.attrs.update(
         history=interpolated.history + f"\n{utcnow()} "
         f"- represent profile on cells - joseki, version {__version__}"
