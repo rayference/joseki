@@ -1,6 +1,7 @@
 """Core module."""
-import typing as t
 import logging
+import os
+import typing as t
 
 import pint
 import xarray as xr
@@ -61,3 +62,29 @@ def make(
         )
     
     return ds
+
+
+def open_dataset(path: os.PathLike, *args, **kwargs) -> xr.Dataset:
+    """
+    Thin wrapper around `xarray.open_dataset`.
+    
+    Args:
+        path: Path to the dataset.
+
+    Returns:
+        Profile.
+    """
+    return xr.open_dataset(path, *args, **kwargs)
+
+
+def load_dataset(path: os.PathLike, *args, **kwargs) -> xr.Dataset:
+    """
+    Thin wrapper around `xarray.load_dataset`.
+    
+    Args:
+        path: Path to the dataset.
+
+    Returns:
+        Profile.
+    """
+    return xr.load_dataset(path, *args, **kwargs)

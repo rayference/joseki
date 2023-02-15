@@ -44,12 +44,10 @@ For other formats, refer to the
     the information on the quantity units is lost.
 
 Open the dataset again using 
-[`xarray.open_dataset`](https://docs.xarray.dev/en/stable/generated/xarray.open_dataset.html):
+[`open_dataset`](reference.md#src.joseki.core.open_dataset):
 
 ```python
-import xarray as xr
-
-ds = xr.open_dataset("my_dataset.nc")
+ds = joseki.open_dataset("my_dataset.nc")
 ```
 
 The datasets format is described [here](explanation.md#data-set-format).

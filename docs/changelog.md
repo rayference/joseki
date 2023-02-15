@@ -9,6 +9,7 @@
 
     * Added all missing HITRAN species
     * Fix out-dated command-line interface
+    * Add thin wrappers for `xarray.open_dataset` and `xarray.load_dataset`
 
 ## `2.0.0` (2023-02-14)
 
