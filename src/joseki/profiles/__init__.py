@@ -18,3 +18,19 @@ from .mipas_2007 import (
 )
 from .ussa_1976 import USSA1976
 from .factory import factory
+
+__all__ = [
+    "AFGL1986Tropical",
+    "AFGL1986MidlatitudeSummer",
+    "AFGL1986MidlatitudeWinter",
+    "AFGL1986SubarcticSummer",
+    "AFGL1986SubarcticWinter",
+    "AFGL1986USStandard",
+    "MIPASMidlatitudeDay",
+    "MIPASMidlatitudeNight",
+    "MIPASPolarSummer",
+    "MIPASPolarWinter",
+    "MIPASTropical",
+    "USSA1976",
+    "factory",
+]
