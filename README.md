@@ -41,6 +41,12 @@ You can install *Joseki* via `pip` from [`PyPI`](https://pypi.org/):
 pip install joseki
 ```
 
+or via [`conda`](https://docs.conda.io):
+
+```shell
+conda install -c conda-forge joseki
+```
+
 ## Documentation
 
 Visit https://nollety.github.io/joseki/.
