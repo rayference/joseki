@@ -13,6 +13,11 @@
     * Add convenience method to list available identifiers
 
 
+!!! note "Internal Changes"
+
+    * Lower version constraint on Numpy
+
+
 ## `2.0.0` (2023-02-14)
 
 !!! help "Documentation"
