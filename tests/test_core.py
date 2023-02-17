@@ -5,7 +5,7 @@ import xarray as xr
 from numpy.testing import assert_approx_equal
 
 from joseki import unit_registry as ureg
-from joseki.core import make
+from joseki.core import make, open_dataset, load_dataset, identifiers
 
 
 def test_make():
@@ -68,14 +68,14 @@ def test_make_additional_molecules_true(identifier: str):
 def test_make_ussa_1976():
     """Returns dataset."""
     ds = make(identifier="ussa_1976")
-    assert isinstance(ds, xr.Dataset)
+    assert ds.joseki.is_valid
 
 
 def test_make_ussa_1976_z():
     """Returns dataset."""
     z = np.linspace(0.0, 100) * ureg.km
     ds = make(identifier="ussa_1976", z=z)
-    assert isinstance(ds, xr.Dataset)
+    assert ds.joseki.is_valid
 
 
 def test_make_conserve_column_1():
@@ -126,3 +126,23 @@ def test_make_conserve_column_3():
             ds1.joseki.column_number_density[m].m,
             significant=6
         )
+
+def test_open_dataset(tmpdir):
+    """Returns xr.Dataset."""
+    ds = make(identifier="afgl_1986-tropical")
+    path = tmpdir.join("test.nc")
+    ds.to_netcdf(path)
+    ds2 = open_dataset(path)
+    assert ds2.joseki.is_valid
+
+def test_load_dataset(tmpdir):
+    """Returns xr.Dataset."""
+    ds = make(identifier="afgl_1986-tropical")
+    path = tmpdir.join("test.nc")
+    ds.to_netcdf(path)
+    ds2 = load_dataset(path)
+    assert ds2.joseki.is_valid
+
+def test_identifiers():
+    """Returns list of identifiers."""
+    assert isinstance(identifiers(), list)
