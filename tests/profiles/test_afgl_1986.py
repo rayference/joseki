@@ -8,13 +8,14 @@ from joseki.profiles.afgl_1986 import parse
 from joseki.profiles.afgl_1986 import Identifier
 from joseki.profiles.afgl_1986 import to_dataset
 
+
 @pytest.mark.parametrize("identifier", [n for n in Identifier])
-def test_parse_returns_dataframe(identifier: Identifier) -> None:
+def test_parse_returns_dataframe(identifier: Identifier):
     """Returns a pandas's DataFrame."""
     df = parse(identifier=identifier)
     assert isinstance(df, pd.DataFrame)
 
-def test_to_dataset_z() -> None:
+def test_to_dataset_z():
     """Returns a valid dataset."""
     ds = to_dataset(
         identifier=Identifier.TROPICAL,

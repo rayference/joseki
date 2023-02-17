@@ -20,13 +20,14 @@ from joseki.profiles.mipas_2007 import (
     MIPASTropical,
 )
 
-def test_parse_unit() -> None:
+
+def test_parse_unit():
     """Returns expected units."""
     assert parse_units("[K]") == "K"
     assert parse_units("[mb]") == "millibar"
 
 
-def test_parse_unit_invalid() -> None:
+def test_parse_unit_invalid():
     """Invalid unit string raises ValueError."""
     with pytest.raises(ValueError):
         parse_units("[missing right bracket")
@@ -38,7 +39,7 @@ def test_parse_unit_invalid() -> None:
         parse_units("missing right and left bracket")
 
 
-def test_parse_var_name() -> None:
+def test_parse_var_name():
     """Variable names are translated as expected."""
     assert parse_var_name("HGT") == "z"
     assert parse_var_name("PRE") == "p"
@@ -46,21 +47,21 @@ def test_parse_var_name() -> None:
     assert parse_var_name("other") == "other"
 
 
-def test_parse_var_line_2_parts() -> None:
+def test_parse_var_line_2_parts():
     """Parse 2-part line."""
     s = "*VAR_NAME [VAR_UNITS]"
     var_name, var_units = parse_var_line(s)
     assert var_name == "VAR_NAME" and var_units == "VAR_UNITS"
 
 
-def test_parse_var_line_3_parts() -> None:
+def test_parse_var_line_3_parts():
     """Parse 3-part line."""
     s = "*VAR_NAME (ALIAS) [VAR_UNITS]"
     var_name, var_units = parse_var_line(s)
     assert var_name == "VAR_NAME" and var_units == "VAR_UNITS"
 
 
-def test_parse_var_line_invalid() -> None:
+def test_parse_var_line_invalid():
     """Raises ValueError when line has invalid format."""
     invalid_lines = ["*VAR_NAME", "*VAR_NAME (ALIAS) [VAR_UNITS] extra"]
     for invalid_line in invalid_lines:
@@ -68,25 +69,25 @@ def test_parse_var_line_invalid() -> None:
             parse_var_line(invalid_line)
 
 
-def test_parse_values_line_whitespace() -> None:
+def test_parse_values_line_whitespace():
     """Parse with whitespace delimiter."""
     s = "1.0 12.0  5.0       4.0 0.0"
     assert parse_values_line(s) == ["1.0", "12.0", "5.0", "4.0", "0.0"]
 
 
-def test_parse_values_line_commas_and_whitespace() -> None:
+def test_parse_values_line_commas_and_whitespace():
     """Parse with commas and whitespace delimiters combined."""
     s = "1.0,2.0,   3.0    , 7.0      ,10.0"
     assert parse_values_line(s) == ["1.0", "2.0", "3.0", "7.0", "10.0"]
 
 
-def test_parse_values_line_commas_and_whitespace_ends_with_comma() -> None:
+def test_parse_values_line_commas_and_whitespace_ends_with_comma():
     """Parse with commas and whitespace delimiters combined."""
     s = "1.0,2.0,   3.0    , 7.0      ,10.0 ,"
     assert parse_values_line(s) == ["1.0", "2.0", "3.0", "7.0", "10.0"]
 
 
-def test_parse_content() -> None:
+def test_parse_content():
     """Returns a dict."""
     lines = [
         "! Comment",
@@ -120,7 +121,7 @@ def test_parse_content() -> None:
     assert "x_O2" in output
 
 
-def test_parse_content_2() -> None:
+def test_parse_content_2():
     """Returns a dict."""
     lines = [
         "! Comments",
@@ -147,33 +148,33 @@ def test_parse_content_2() -> None:
     assert isinstance(output, dict)
 
 
-def test_read_file_content() -> None:
+def test_read_file_content():
     """Returns a tuple."""
     output = read_file_content(identifier=Identifier.MIDLATITUDE_DAY)
     assert isinstance(output, str)
 
 
-def test_translate_cfc() -> None:
+def test_translate_cfc():
     """Converts F13 into CClF3."""
     assert translate_cfc("F13") == "CClF3"
 
 
-def test_translate_cfc_unknown() -> None:
+def test_translate_cfc_unknown():
     """Raises when the chlorofulorocarbon is unknown."""
     with pytest.raises(ValueError):
         translate_cfc("unknown")
 
 
-def test_to_chemical_formula_cfc() -> None:
+def test_to_chemical_formula_cfc():
     """Converts a chlorofulorocarbon name to its chemical formula."""
     assert to_chemical_formula("F13") == "CClF3"
 
 
-def test_to_chemical_formula_h2o() -> None:
+def test_to_chemical_formula_h2o():
     """Returns non-chlorofulorocarbon name unchanged."""
     assert to_chemical_formula("H2O") == "H2O"
 
-def test_to_dataset_z() -> None:
+def test_to_dataset_z():
     ds = to_dataset(
         identifier=Identifier.TROPICAL,
         z=np.linspace(0, 10, 11) * ureg.km,
@@ -187,7 +188,7 @@ def test_to_dataset_z() -> None:
     MIPASPolarWinter(),
     MIPASTropical(),
 ])
-def test_profile_to_dataset(profile) -> None:
+def test_profile_to_dataset(profile):
     """Returns a dataset."""
     ds = profile.to_dataset()
     assert ds.joseki.is_valid

@@ -14,7 +14,7 @@ def test_data_set() -> xr.Dataset:
     return make(identifier="afgl_1986-tropical")
 
 
-def test_interp_returns_data_set(test_data_set: xr.Dataset) -> None:
+def test_interp_returns_data_set(test_data_set: xr.Dataset):
     """Returns an xarray.Dataset."""
     interpolated = interp(
         ds=test_data_set,
@@ -23,19 +23,19 @@ def test_interp_returns_data_set(test_data_set: xr.Dataset) -> None:
     assert isinstance(interpolated, xr.Dataset)
 
 
-def test_interp_out_of_bound(test_data_set: xr.Dataset) -> None:
+def test_interp_out_of_bound(test_data_set: xr.Dataset):
     """Raises when out of bounds values are provided."""
     with pytest.raises(ValueError):
         interp(ds=test_data_set, z_new=np.linspace(0, 150) * ureg.km)
 
 
-def test_represent_profile_in_cells(test_data_set: xr.Dataset) -> None:
+def test_represent_profile_in_cells(test_data_set: xr.Dataset):
     """Returns a xarray.Dataset object."""
     interpolated = represent_profile_in_cells(ds=test_data_set)
     assert isinstance(interpolated, xr.Dataset)
 
 
-def test_represent_profile_in_cells_twice(test_data_set: xr.Dataset) -> None:
+def test_represent_profile_in_cells_twice(test_data_set: xr.Dataset):
     """Running function twice has no effect."""
     ds1 = represent_profile_in_cells(ds=test_data_set)
     ds2 = represent_profile_in_cells(ds=ds1)

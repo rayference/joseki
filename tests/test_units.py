@@ -19,12 +19,12 @@ def dataset() -> xr.Dataset:
     )
 
 
-def test_to_quantity(dataset: xr.Dataset) -> None:
+def test_to_quantity(dataset: xr.Dataset):
     """Returns a quantity."""
     assert isinstance(to_quantity(dataset.x), pint.Quantity)
 
 
-def test_to_quantity_raises(dataset: xr.Dataset) -> None:
+def test_to_quantity_raises(dataset: xr.Dataset):
     """Raises when the DataArray's metadata does not contain a units field."""
     with pytest.raises(ValueError):
         to_quantity(dataset.y)
