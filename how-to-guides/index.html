@@ -15,7 +15,7 @@
         <link rel="next" href="../reference/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.10">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
     
     
       
@@ -482,11 +482,9 @@ For example, make the so-called <em>AFGL US Standard</em> atmospheric profile fr
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">ds</span> <span class="o">=</span> <span class="n">joseki</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">identifier</span><span class="o">=</span><span class="s2">&quot;afgl_1986-us_standard&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Display the available identifiers with:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">joseki.profiles</span> <span class="kn">import</span> <span class="n">factory</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">list</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">joseki</span><span class="o">.</span><span class="n">identifiers</span><span class="p">()</span>
 </code></pre></div>
-<p>Use the <a href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.to_netcdf.html"><code>to_dataset</code></a>
+<p>Use the <a href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.to_netcdf.html"><code>to_netcdf</code></a>
 method to save the dataset to the disk as a 
 <a href="https://www.unidata.ucar.edu/software/netcdf/">netCDF</a> file:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">ds</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="s2">&quot;my_dataset.nc&quot;</span><span class="p">)</span>
@@ -501,10 +499,8 @@ method to save the dataset to the disk as a
 the information on the quantity units is lost.</p>
 </details>
 <p>Open the dataset again using 
-<a href="https://docs.xarray.dev/en/stable/generated/xarray.open_dataset.html"><code>xarray.open_dataset</code></a>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s2">&quot;my_dataset.nc&quot;</span><span class="p">)</span>
+<a href="../reference/#src.joseki.core.open_dataset"><code>open_dataset</code></a>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">ds</span> <span class="o">=</span> <span class="n">joseki</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s2">&quot;my_dataset.nc&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>The datasets format is described <a href="../explanation/#data-set-format">here</a>.</p>
 <h2 id="altitude-grid">Altitude grid<a class="headerlink" href="#altitude-grid" title="Permanent link">&para;</a></h2>
@@ -732,7 +728,7 @@ volume fraction (<code>x_*</code>):</p>
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.6df46069.min.js"></script>
+      <script src="../assets/javascripts/bundle.4b2c34cd.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
       
