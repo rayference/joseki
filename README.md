@@ -51,3 +51,11 @@ conda install -c conda-forge joseki
 ## Documentation
 
 Visit https://nollety.github.io/joseki/.
+
+## Ikigai
+
+*Joseki* was born in the context of the development of the 
+[Eradiate](https://github.com/eradiate/eradiate) radiative transfer model, from
+the need to collect, document and trace, integrate and modify *popular* 
+thermophysical profiles.
+As such, its features evolve in close relationship to those of *Eradiate*.
