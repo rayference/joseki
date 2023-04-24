@@ -32,7 +32,7 @@ jobs:
         uses: excitedleigh/setup-nox@main
 
       - name: Install dependencies
-        run: pdm install
+        run: pdm sync
 
       - name: Run Tests
         run: nox -s test
