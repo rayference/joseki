@@ -15,7 +15,7 @@ import pint
 
 from ..__version__ import __version__
 from ..units import ureg
-from .util import utcnow
+from .util import utcnow, number_density
 
 logger = logging.getLogger(__name__)
 
@@ -66,14 +66,14 @@ class Schema:
     def validate(
         self,
         ds: xr.Dataset,
-        check_volume_fraction_sum: bool = False,
+        check_x_sum: bool = False,
         ret_true_if_valid: bool = False,
     ) -> t.Optional[bool]:
         """Validate dataset.
 
         Args:
             ds: Dataset to validate.
-            check_volume_fraction_sum: if True, check that volume fraction sums
+            check_x_sum: if True, check that volume fraction sums
                 are never larger than one.
             ret_true_if_valid: make this method return True if the dataset is
                 valid.
@@ -174,7 +174,7 @@ class Schema:
                         f"{ds[var].attrs['standard_name']}"
                     )
 
-        if check_volume_fraction_sum:
+        if check_x_sum:
             logger.debug(
                 "Checking that volume fraction sums are never larger than one"
             )
@@ -211,8 +211,16 @@ class Schema:
 
         logger.debug("checking that all data variables are present")
         for var in self.data_vars:
-            if var not in data_vars:
-                raise ValueError(f"missing data variable: {var}")  # pragma: no cover
+            if var == "n" not in data_vars:
+                n = number_density(
+                    p=data_vars["p"],
+                    t=data_vars["t"],
+                )
+                data_vars["n"] = n
+            else:
+                if var not in data_vars:
+                    raise ValueError(f"missing data variable: {var}")  # pragma: no cover
+
 
         logger.debug("checking that there is at least one x_ data variable")
         if not any([name.startswith("x_") for name in data_vars]):

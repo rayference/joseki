@@ -180,5 +180,18 @@ def test_rescale_invalid(identifier: str):
     with pytest.raises(ValueError):
         ds.joseki.rescale(
             factors={"O2": 2.0},
-            check_volume_fraction_sum=True,
+            check_x_sum=True,
         )
+
+def test_rescale_to_column_mass_density():
+    """Column mass density of H2O matches target value."""
+    ds = joseki.make("afgl_1986-midlatitude_summer")
+    target = {
+        "H2O": 20.0 * ureg.kg * ureg.m**-2,
+    }
+    rescaled = ds.joseki.rescale_to(target)
+    assert_approx_equal(
+        rescaled.joseki.column_mass_density["H2O"].m,
+        target["H2O"].m,
+        significant=3,
+    )

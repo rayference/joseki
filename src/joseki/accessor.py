@@ -3,87 +3,17 @@ import datetime
 import logging
 import typing as t
 
+import numpy as np
 import pint
 import xarray as xr
 
 from .__version__ import __version__
+from .constants import MM, AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION
 from .profiles.schema import schema
+from .profiles.util import molar_mass
 from .units import to_quantity, ureg
 
-
 logger = logging.getLogger(__name__)
-
-# average molecular masses [dalton]
-# (computed with molmass: https://pypi.org/project/molmass/)
-MM = {
-    "Ar": 39.948,
-    "CCl2F2": 120.913,
-    "CCl3F": 137.368,
-    "CCl4": 153.822,
-    "CF4": 88.004,
-    "CHClF2": 86.468,
-    "CH3Br": 94.938,
-    "CH3CN": 41.052,
-    "CH3Cl": 50.487,
-    "CH3F": 34.033,
-    "CH3I": 141.939,
-    "CH3OH": 32.042,
-    "CH4": 16.043,
-    "CO": 28.010,
-    "COF2": 66.007,
-    "CO2": 44.010,
-    "COCl2": 98.916,
-    "CS": 44.076,
-    "CS2": 76.14,
-    "C2H2": 26.037,
-    "C2H4": 28.053,
-    "C2H6": 30.069,
-    "C2N2": 52.035,
-    "C4H2": 50.059,
-    "ClO": 51.452,
-    "ClONO2": 97.458,
-    "GeH4": 76.662,
-    "H": 1.008,
-    "H2": 2.016,
-    "HBr": 80.911,
-    "HCN": 27.025,
-    "HCOOH": 46.025,
-    "HC3N": 51.047,
-    "HCl": 36.461,
-    "He": 4.003,
-    "HF": 20.006,
-    "HI": 127.912,
-    "HOBr": 96.911,
-    "HOCl": 52.460,
-    "HO2": 33.007,
-    "HNO3": 63.013,
-    "HNO4": 79.012,
-    "H2O": 18.015,
-    "H2O2": 34.015,
-    "H2CO": 30.026,
-    "H2S": 34.081,
-    "Kr": 83.798,
-    "NF3": 71.002,
-    "NH3": 17.031,
-    "Ne": 20.180,
-    "NO": 30.006,
-    "NO+": 30.006,
-    "NO2": 46.006,
-    "N2": 28.013,
-    "N2O": 44.013,
-    "N2O5": 108.010,
-    "OH": 17.007,
-    "OCS": 60.075,
-    "O": 15.999,
-    "O2": 31.999,
-    "O3": 47.998,
-    "PH3": 33.998,
-    "SF6": 146.055,
-    "SO": 48.064,
-    "SO2": 64.064,
-    "SO3": 80.063,
-    "Xe": 131.293,
-}
 
 def molecular_mass(m: str) -> pint.Quantity:
     """Return the average molecular mass of a molecule.
@@ -98,8 +28,8 @@ def molecular_mass(m: str) -> pint.Quantity:
 
 
 def _scaling_factor(
-    initial_amount: pint.Quantity,  # type: ignore[type-arg]
-    target_amount: pint.Quantity,  # type: ignore[type-arg]
+    initial_amount: pint.Quantity,
+    target_amount: pint.Quantity,
 ) -> float:
     """Compute scaling factor given initial and target amounts.
 
@@ -284,7 +214,10 @@ class JosekiAccessor:  # pragma: no cover
             A mapping of molecule and volume mixing fraction at sea level.
         """
         ds = self._obj
-        return {m: to_quantity(ds[f"x_{m}"].isel(z=0)) for m in self.molecules}
+        return {
+            m: to_quantity(ds[f"x_{m}"].isel(z=0)).item()
+            for m in self.molecules
+        }
 
     @property
     def volume_fraction(self) -> xr.DataArray:
@@ -306,6 +239,100 @@ class JosekiAccessor:  # pragma: no cover
         )
         concatenated.name = "x"
         return concatenated
+
+    @property
+    def mass_fraction(self) -> xr.DataArray:
+        """Extract mass fraction and tabulate as a function of (m, z).
+
+        Returns:
+            Mass fraction.
+        """
+        x = self.volume_fraction
+        m_air = self.air_molar_mass
+        m = molar_mass(molecules=self.molecules)
+        y = (x * m / m_air).rename("y")
+        y.attrs.update(
+            {
+                "standard_name": "mass_fraction_in_air",
+                "long_name": "mass fraction",
+                "units": "kg * kg^-1",
+            }
+        )
+        return y
+
+    @property
+    def air_molar_mass(self) -> xr.DataArray:
+        r"""
+        Compute air molar mass as a function of altitude.
+
+        Returns:
+            Air molar mass.
+
+        Notes:
+            The air molar mass is given by:
+
+            $$
+            M_{\mathrm{air}} = 
+            \frac{
+                \sum_{\mathrm{M}} x_{\mathrm{M}} \, m_{\mathrm{M}}
+            }{
+                \sum_{\mathrm{M}} x_{\mathrm{M}}
+            }
+            $$
+
+            where
+            * $x_{\mathrm{M}}$ is the volume fraction of molecule M,
+            * $m_{\mathrm{M}}$ is the molar mass of molecule M.
+
+            To compute the air molar mass accurately, the volume fraction of
+            molecular nitrogen (N2), molecular oxygen (O2), and argon (Ar) are
+            required. If these are not present in the dataset, they are
+            computed using the assumption that the volume fraction of these
+            molecules are constant with altitude and set to the following
+            values:
+
+            * molecular nitrogen (N2): 0.78084
+            * molecular oxygen (O2): 0.209476
+            * argon (Ar): 0.00934
+
+            are independent of altitude.
+
+            Since nothing garantees that the volume fraction sum is equal to
+            one, the air molar mass is computed as the sum of the volume
+            fraction weighted molar mass divided by the sum of the volume
+            fraction.
+        """
+        ds = self._obj
+        
+        # for molar mass computation to be accurate, main air constituents
+        # must be present in the dataset
+        ds_copy = ds.copy(deep=True)
+        for m in AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION:
+            if f"x_{m}" not in ds:
+                value = AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION[m]
+                ds_copy[f"x_{m}"] = ("z", np.full_like(ds.n, value))
+                ds_copy[f"x_{m}"].attrs.update({"units": "dimensionless"})
+        
+        # compute air molar mass
+        x = ds_copy.joseki.volume_fraction
+        molecules = x.m.values
+        mm = xr.DataArray(
+            data=np.array([MM[m] for m in molecules]),
+            coords={"m": ("m", molecules)},
+            attrs={"units": "dimensionless"}
+        )
+
+        mm_average = (x * mm).sum(dim="m") / (x.sum(dim="m"))
+
+        mm_average.attrs.update(
+            {
+                "long_name": "air molar mass",
+                "units": "kg/mol",
+            }
+        )
+
+        return mm_average
+
 
     def scaling_factors(
         self, target: t.MutableMapping[str, pint.Quantity]
@@ -332,8 +359,8 @@ class JosekiAccessor:  # pragma: no cover
             * a mass density at sea level [`mass * length^-3`],
             * a volume mixing fraction at sea level [`dimensionless`]
 
-            The scaling factor is then evaluated as the ratio of the target amount
-            with the original amount, for each molecule.
+            The scaling factor is then evaluated as the ratio of the target
+            amount with the original amount, for each molecule.
 
         See Also:
             `rescale`
@@ -361,16 +388,16 @@ class JosekiAccessor:  # pragma: no cover
     def rescale(
         self,
         factors: t.MutableMapping[str, float],
-        check_volume_fraction_sum: bool = False
+        check_x_sum: bool = False
     ) -> xr.Dataset:
         """Rescale molecules concentration in atmospheric profile.
 
         Args:
             factors: A mapping of molecule and scaling factor.
-            check_volume_fraction_sum: if True, check that volume fraction sums
+            check_x_sum: if True, check that volume fraction sums
                 are never larger than one.
         Raises:
-            ValueError: if check_volume_fraction_sum is `True` and the 
+            ValueError: if `check_x_sum` is `True` and the 
                 dataset is not valid.
 
         Returns:
@@ -388,7 +415,7 @@ class JosekiAccessor:  # pragma: no cover
 
         # validate rescaled dataset
         try:
-            ds.joseki.validate(check_volume_fraction_sum=check_volume_fraction_sum)
+            ds.joseki.validate(check_x_sum=check_x_sum)
         except ValueError as e:
             raise ValueError("Cannot rescale") from e
         
@@ -402,9 +429,34 @@ class JosekiAccessor:  # pragma: no cover
 
         return ds
 
+    def rescale_to(
+        self,
+        target: t.Mapping[str, pint.Quantity],
+        check_x_sum: bool = False,
+    ) -> xr.Dataset:
+        """
+        Rescale volume fractions to match target molecular total column 
+        densities.
+
+        Args:
+            target: Mapping of molecule and target total column density. 
+                Total column must be either a column number density 
+                [`length^-2`], a column mass density [`mass * length^-2`], a 
+                number densitx at sea level [`length^-3`], a mass density at 
+                sea level [`mass * length^-3`], a volume mixing fraction at 
+                sea level [`dimensionless`].
+        
+        Returns:
+            Rescaled dataset (new object).    
+        """
+        return self.rescale(
+            factors=self.scaling_factors(target=target),
+            check_x_sum=check_x_sum,
+        )
+
     def validate(
         self,
-        check_volume_fraction_sum: bool = False,
+        check_x_sum: bool = False,
         ret_true_if_valid: bool = False,
     ) -> bool:
         """Validate atmosphere thermophysical profile dataset schema.
@@ -414,7 +466,7 @@ class JosekiAccessor:  # pragma: no cover
         """
         return schema.validate(
             ds=self._obj,
-            check_volume_fraction_sum=check_volume_fraction_sum,
+            check_x_sum=check_x_sum,
             ret_true_if_valid=ret_true_if_valid,
         )
 

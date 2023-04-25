@@ -28,6 +28,11 @@ DEFAULT_METHOD = {
     "default": "linear",
 }
 
+DEFAULT_OPTIONS = {
+    #"num": 100,
+    #"zstep": 0.1 * ureg.km,
+    "zstep": "auto",
+}
 
 def rescale_to_column(reference: xr.Dataset, ds: xr.Dataset) -> xr.Dataset:
     """Rescale volume fraction to ensure that column densities are conserved.
@@ -41,13 +46,22 @@ def rescale_to_column(reference: xr.Dataset, ds: xr.Dataset) -> xr.Dataset:
     """
     desired = reference.joseki.column_number_density
     actual = ds.joseki.column_number_density
-    rescaled = ds.joseki.rescale(
-        factors= {
-            m: (desired[m] / actual[m]).m_as("dimensionless")
-            for m in reference.joseki.molecules
-        }
-    )
-    return rescaled
+    factors = {}
+    for m in reference.joseki.molecules:
+        if desired[m].m == 0.0:
+            factors[m] = 0.0
+        elif actual[m].m == 0.0:
+            msg = (
+                f"Actual column number density of {m} is zero but the reference "
+                f"column number density is not ({desired[m]:~P}): rescaling "
+                f"is impossible."
+            )
+            logger.critical(msg)
+            raise ValueError(msg)
+        else:
+            factors[m] = (desired[m] / actual[m]).m_as("dimensionless")
+
+    return ds.joseki.rescale(factors=factors)
 
 
 def interp(
@@ -55,6 +69,7 @@ def interp(
     z_new: pint.Quantity,
     method: t.Dict[str, str] = DEFAULT_METHOD,
     conserve_column: bool = False,
+    **kwargs: t.Any,
 ) -> xr.Dataset:
     """Interpolate atmospheric profile on new altitudes.
 
@@ -65,18 +80,30 @@ def interp(
             If a variable is not in the mapping, the linear interpolation is used.
             By default, linear interpolation is used for all variables.
         conserve_column: If True, ensure that column densities are conserved.
-
-    method: Mapping of variable and interpolation method.
-        If a variable is not in the mapping, the linear interpolation is used.
-        By default, linear interpolation is used for all variables.
+        kwargs: Parameters passed to `scipy.interpolate.interp1d` (except 
+            'kind' and 'bounds_error').
 
     Returns:
         Interpolated atmospheric profile.
     """
+    # sort altitude values
+    z_new = np.sort(z_new)
+
     z_units = ds.z.attrs["units"]
     z_new_values = z_new.m_as(z_units)
 
     coords = {"z": z_new.to(z_units)}
+
+    # kwargs cannot contain 'kind' and 'bounds_error'
+    kwargs.pop("kind", None)
+    kwargs.pop("bounds_error", None)
+
+    try:
+        if kwargs["fill_value"] == "extrapolate":  # pragma: no cover
+            bounds_error = None
+    except KeyError:
+        bounds_error = True
+
 
     # Interpolate pressure, temperature and density
     data_vars = {}
@@ -85,7 +112,8 @@ def interp(
             x=ds.z.values,
             y=ds[var].values,
             kind=method.get(var, method["default"]),
-            bounds_error=True,
+            bounds_error=bounds_error,
+            **kwargs,
         )
         data_vars[var] = ureg.Quantity(f(z_new_values), ds[var].attrs["units"])
 
@@ -96,7 +124,8 @@ def interp(
             x=ds.z.values,
             y=ds[var].values,
             kind=method.get(var, method["default"]),
-            bounds_error=True,
+            bounds_error=bounds_error,
+            **kwargs,
         )
         data_vars[var] = ureg.Quantity(f(z_new_values), ds[var].attrs["units"])
 
@@ -191,6 +220,133 @@ def represent_profile_in_cells(
         return rescale_to_column(reference=ds, ds=interpolated)
     return interpolated
 
+
+def extrapolate(
+    ds: xr.Dataset,
+    z_extra: pint.Quantity,
+    direction: str,
+    method: t.Dict[str, str] = DEFAULT_METHOD,
+    conserve_column: bool = False,
+) -> xr.Dataset:
+    """
+    Extrapolate an atmospheric profile to new altitude(s).
+
+    Args:
+        ds: Initial atmospheric profile.
+        z_extra: Altitude(s) to extrapolate to.
+        direction: Direction of the extrapolation, either "up" or "down".
+        method: Mapping of variable and interpolation method.
+            If a variable is not in the mapping, the linear interpolation is used.
+            By default, linear interpolation is used for all variables.
+        conserve_column: If True, ensure that column densities are conserved.
+    
+    Raises:
+        ValueError: If the extrapolation direction is not "up" or "down".
+
+    Returns:
+        Extrapolated atmospheric profile.
+    """
+    if direction not in ["up", "down"]:
+        msg = (
+            f"Extrapolation direction must be either 'up' or 'down', got "
+            f"{direction}."
+        )
+        logger.critical(msg)
+        raise ValueError(msg)
+
+    z = to_quantity(ds.z)
+
+    if direction == "down" and np.any(z_extra >= z.min()):
+        msg = (
+            f"Cannot extrapolate down to {z_extra:~P}, "
+            f"minimum altitude is {z.min():~P}."
+        )
+        logger.critical(msg)
+        raise ValueError(msg)
+    
+    elif direction == "up" and np.any(z_extra <= z.max()):
+        msg = (
+            f"Cannot extrapolate up to {z_extra:~P}, "
+            f"maximum altitude is {z.max():~P}."
+        )
+        logger.critical(msg)
+        raise ValueError(msg)
+    
+    else:
+        extrapolated = interp(
+            ds=ds,
+            z_new=np.concatenate([np.atleast_1d(z_extra), z]),
+            method=method,
+            conserve_column=conserve_column,
+            fill_value="extrapolate",
+        )
+        extrapolated.attrs.update(
+            history=extrapolated.history + f"\n{utcnow()} "
+            f"- extrapolate - joseki, version {__version__}"
+        )
+        return extrapolated
+
+
+def regularize(
+    ds: xr.Dataset,
+    method: t.Dict[str, str] = DEFAULT_METHOD,
+    conserve_column: bool = False,
+    options: t.Dict[str, t.Union[int, str, pint.Quantity]] = DEFAULT_OPTIONS,
+    **kwargs: t.Any,
+) -> xr.Dataset:
+    """Regularize the profile's altitude grid.
+    
+    Args:
+        ds: Initial atmospheric profile.
+        method: Mapping of variable and interpolation method.
+            If a variable is not in the mapping, the linear interpolation is used.
+            By default, linear interpolation is used for all variables.
+        conserve_column: If True, ensure that column densities are conserved.
+        options: Options for the regularization.
+            Mapping with possible keys:
+                - "num": Number of points in the new altitude grid.
+                - "zstep": Altitude step in the new altitude grid.
+                    If "auto", the minimum altitude step is used.
+        kwargs: Keyword arguments passed to the interpolation function.
+
+    Returns:
+        Regularized atmospheric profile.
+    """
+    z = to_quantity(ds.z)
+    if options.get("num", None):
+        z_new = np.linspace(
+            z.min(),
+            z.max(),
+            options["num"],
+        )
+    elif options.get("zstep", None):
+        zstep = options["zstep"]
+        zunits = z.units
+        if isinstance(zstep, ureg.Quantity):
+            pass
+        elif isinstance(zstep, str):
+            if zstep == "auto":
+                zstep = np.diff(z).min()
+            else:
+                raise ValueError(f"Invalid zstep value: {zstep}")
+        else:
+            raise ValueError(f"Invalid zstep value: {zstep}")
+        z_new = np.arange(
+            z.min().m_as(zunits),
+            z.max().m_as(zunits),
+            zstep.m_as(zunits),
+        ) * zunits
+
+    else:
+        raise ValueError("options must contain either 'num' or 'zstep' key.")
+
+    return interp(
+        ds=ds,
+        z_new=z_new,
+        method=method,
+        conserve_column=conserve_column,
+        **kwargs,
+    )
 
 @define
 class Profile(ABC):

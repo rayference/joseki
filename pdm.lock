@@ -751,6 +751,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "nbstripout"
+version = "0.6.1"
+requires_python = ">=3.6"
+summary = "Strips outputs from Jupyter and IPython notebooks"
+dependencies = [
+    "nbformat",
+]
+
+[[package]]
 name = "nest-asyncio"
 version = "1.5.6"
 requires_python = ">=3.5"
@@ -1225,8 +1234,9 @@ requires_python = ">=3.7"
 summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
-lock_version = "4.1"
-content_hash = "sha256:65a5dcdc062e565c9c989b4374a0413aab64eaffaceb2e60adb5633684574b66"
+lock_version = "4.2"
+groups = ["default", "dev", "docs", "test"]
+content_hash = "sha256:57cc04c7d2e057790937de42824be15d270698323356b58e955749c74fb5a418"
 
 [metadata.files]
 "aiofiles 22.1.0" = [
@@ -1980,6 +1990,10 @@ content_hash = "sha256:65a5dcdc062e565c9c989b4374a0413aab64eaffaceb2e60adb563368
 "nbformat 5.7.3" = [
     {url = "https://files.pythonhosted.org/packages/21/ad/020fed74bfde983a3b70cc95843d6adbe59171aa9a3da5aab403aa722a17/nbformat-5.7.3-py3-none-any.whl", hash = "sha256:22a98a6516ca216002b0a34591af5bcb8072ca6c63910baffc901cfa07fefbf0"},
     {url = "https://files.pythonhosted.org/packages/ce/42/fae44dfe70960c488e5b9b53c617dedd1c7932aff1962c59b2a923e82bb8/nbformat-5.7.3.tar.gz", hash = "sha256:4b021fca24d3a747bf4e626694033d792d594705829e5e35b14ee3369f9f6477"},
+]
+"nbstripout 0.6.1" = [
+    {url = "https://files.pythonhosted.org/packages/30/dc/cdc77625d3064790ee17366b088be77bc20527ee6f66d636e8a50f863f64/nbstripout-0.6.1.tar.gz", hash = "sha256:9065bcdd1488b386e4f3c081ffc1d48f4513a2f8d8bf4d0d9a28208c5dafe9d3"},
+    {url = "https://files.pythonhosted.org/packages/85/bd/b008a9f66ce2537ff86fbcd3beaf5a6fd86ede0897b0b6e9e65c447bb84a/nbstripout-0.6.1-py2.py3-none-any.whl", hash = "sha256:5ff6eb0debbcd656c4a64db8e082a24fabcfc753a9e8c9f6d786971e8f29e110"},
 ]
 "nest-asyncio 1.5.6" = [
     {url = "https://files.pythonhosted.org/packages/35/76/64c51c1cbe704ad79ef6ec82f232d1893b9365f2ff194111787dc91b004f/nest_asyncio-1.5.6.tar.gz", hash = "sha256:d267cc1ff794403f7df692964d1d2a3fa9418ffea2a3f6859a439ff482fef290"},

@@ -29,7 +29,7 @@ $$
 \rho_{\mathrm{M}} = m_{\mathrm{M}} \, n_{\mathrm{M}}
 $$
 
-where $\mathrm{M}$ is the molecular mass.
+where $m_{\mathrm{M}}$ is the molecular mass of molecule M.
 
 Since molecular mass does not change with altitude, we simply have
 
@@ -64,22 +64,21 @@ visualise NetCDF data.
 
 The NetCDF format allows to store metadata alongside data.
 Joseki's datasets metadata follow the
-[conventions for Climate and Forecast (v1.8)](http://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html).
+[conventions for Climate and Forecast (v1.10)](https://cfconventions.org/Data/cf-conventions/cf-conventions-1.10/cf-conventions.html).
 
 ### Standard names
 
 The Climate and Forecast (CF) conventions define standard names to describe
 variables.
 Joseki's datasets comply with
-[CF Standard Name Table Version 77, 19 January 2021](http://cfconventions.org/Data/cf-standard-names/77/build/cf-standard-name-table.html),
+[CF Standard Name Table Version 81, 25 April 2023](https://cfconventions.org/Data/cf-standard-names/81/build/cf-standard-name-table.html)
 except for the following variables for which a standard name did not exist
-in the table and was derived:
+(hence we derived one):
 
 
 | Standard name        | Long name            |      Units      |
 | :------------------- | :------------------- | :-------------: |
 | `air_number_density` | `air number density` |     `m^-3`      |
-| `volume_fraction`    | `volume fraction`    | `dimensionless` |
 
 ### Structure
 
@@ -90,10 +89,11 @@ A dataset includes 4+ data variables:
 | `air_pressure`       | `air pressure`       |   `p`   |      `Pa`       |
 | `air_temperature`    | `air temperature`    |   `t`   |       `K`       |
 | `air_number_density` | `air number density` |   `n`   |     `m^-3`      |
-| `volume_fraction`    | `volume fraction`    | `x_<m>` | `dimensionless` |
+| `mole_fraction_of_M_in_air` | `mole fraction of M in air` | `x_M` | `dimensionless` |
 
-where `<m>` is the chemical formula of the given molecule, and one of the two
-following coordinates variables:
+where `M` is the chemical formula of the given molecule (e.g. 
+`mole_fraction_of_H2O_in_air` is associated the symbol `x_H2O`), and one of the 
+two following coordinates variables:
 
 | Standard name           | Long name               | Symbol | Units |
 | :---------------------- | :---------------------- | :----: | :---: |
