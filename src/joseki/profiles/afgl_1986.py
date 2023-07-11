@@ -157,7 +157,7 @@ def dataframe_to_dataset(
 
     # attributes
     pretty_identifier = f"AFGL (1986) {identifier.value.replace('_', '-')}"
-    pretty_title = f"{pretty_identifier} atmosphere thernmophysical profile"
+    pretty_title = f"{pretty_identifier} atmosphere thermophysical profile"
 
     attrs = {
         "Conventions": "CF-1.10",

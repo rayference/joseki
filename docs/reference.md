@@ -15,6 +15,9 @@ This reference manual details functions, modules, and objects included in
 
 ::: src.joseki.profiles.factory
 
+### CAMS
+
+::: src.joseki.profiles.cams
 ### Core
 
 ::: src.joseki.profiles.core
@@ -34,6 +37,10 @@ This reference manual details functions, modules, and objects included in
 ### US Standard Atmosphere (1976)
 
 ::: src.joseki.profiles.ussa_1976
+
+### Utilities
+
+::: src.joseki.profiles.util
 
 ## Command line interface
 

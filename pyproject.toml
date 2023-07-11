@@ -43,6 +43,7 @@ dev = [
     "ipykernel>=6.21.0",
     "ipython>=8.9.0",
     "matplotlib>=3.6.3",
+    "nbstripout>=0.6.1",
 ]
 docs = [
     "mkdocs>=1.4.2",
