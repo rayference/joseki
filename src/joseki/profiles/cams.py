@@ -168,7 +168,7 @@ def from_cams_reanalysis(
         if "sp" in surface_selected:
             surface_pressure = to_quantity(surface_selected["sp"])
         else:
-            if pressure_data == "surface_pressure":
+            if pressure_data == "surface_pressure":  # pragma: no cover
                 raise ValueError(
                     "Could not found a 'sp' surface pressure data variable "
                     "in the surface dataset."
@@ -177,7 +177,7 @@ def from_cams_reanalysis(
                 )
             surface_pressure = None  # pragma: no cover
     else:
-        if pressure_data == "surface_pressure":
+        if pressure_data == "surface_pressure":  # pragma: no cover
             raise ValueError(
                 "The CAMS surface dataset could not be found. "
                 "As a result, the surface pressure cannot be fetched."
@@ -582,8 +582,7 @@ def rescale_pressure_profile(
     return ds
 
 
-# TODO: the pressure data is not from CAMS. It is from the US 1976 model.
-# Close to the surface, the pressure difference can be large.
+# TODO: the model level to altitude conversion is approximated
 def model_level_to_altitude(
     ds: xr.Dataset,
     pressure_data: str = "model_level_60",
@@ -660,7 +659,7 @@ def model_level_to_altitude(
         "z": ("z", z.m_as("km"), {"units": "km", "long_name": "altitude"})
     })
 
-    if pressure_data == "surface_pressure":
+    if pressure_data == "surface_pressure":  # pragma: no cover
         rescale_pressure_profile(ds, surface_pressure)
 
     # Report on surface pressure discrepancy
