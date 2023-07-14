@@ -62,8 +62,8 @@ def from_cams_reanalysis(
     data: PathLike | list[PathLike],
     identifier: str,
     time: str | datetime.datetime | np.datetime64,
-    lon: float | pint.Quantity,
     lat: float | pint.Quantity,
+    lon: float | pint.Quantity,
     molecules: list[str] | None = None,
     missing_molecules_from: xr.Dataset | None = None,
     extrapolate: dict | None = None,
@@ -81,8 +81,8 @@ def from_cams_reanalysis(
             dataset. This is used to populate the dataset `reference`, `url` 
             and `urldate` attributes.
         time: Time.
-        lon: Longitude [degrees].
         lat: Latitude [degrees].
+        lon: Longitude [degrees].
         molecules: List of molecules to include in the profile. If this list
             includes molecules that are not in the CAMS data.
             If None, all molecules are included.
