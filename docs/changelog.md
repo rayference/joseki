@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Test that surface pressure is used to rescale pressure profile.
+* Parameter pressure_data to `joseki.profiles.from_cams_reanalysis` to 
+  indicate how to compute the pressure profile (either with or without
+  rescaling with the surface pressure).
 * Test CAMS data in `joseki/tests/data`.
 * Tests for `joseki.profiles.cams` module.
 * Tests for `joseki.core.regularize` and `joseki.core.extrapolate`.

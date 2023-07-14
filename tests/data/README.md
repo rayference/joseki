@@ -31,3 +31,18 @@
 | Restricted area | North 29°, West 22°, South 27°, East 24° |
 | Format | NetCDF (experimental) |
 
+
+## `25b63a29-3eab-4599-92f4-7bba42ec6add.zip`
+
+* **Product**: CAMS global reanalysis (EAC4) 
+* **Submission date**: 2023-07-14 14:19:34
+* **Request ID**: 25b63a29-3eab-4599-92f4-7bba42ec6add
+
+| Form entry | Values |
+| :--: | :-- |
+| Variable | Mean sea level pressure, Specific humidity, Surface pressure, Temperature |
+| Model level | 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60 |
+| Date | 2021-04-01 to 2021-04-02 |
+| Time | 00:00, 06:00, 12:00, 18:00 |
+| Restricted area | North 28°, West 86°, South 27°, East 87° |
+| Format | NetCDF (experimental) |

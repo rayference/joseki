@@ -8,6 +8,7 @@ from numpy.testing import assert_almost_equal, assert_allclose
 
 import joseki
 from joseki import unit_registry as ureg
+from joseki.units import to_quantity
 from joseki.profiles.cams import (
     from_cams_reanalysis,
     get_molecule_amounts,
@@ -22,8 +23,8 @@ def test_from_cams_reanalysis():
         data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
         identifier="EAC4",
         time="2020-07-01T00:00:00",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
     )
     assert ds.joseki.is_valid
     expected_molecules = ["H2O", "O3"]
@@ -37,8 +38,8 @@ def test_from_cams_reanalysis_molecules_drop():
         data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
         identifier="EAC4",
         time="2020-07-01T00:00:00",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
         molecules=molecules,
     )
     assert ds.joseki.is_valid
@@ -52,8 +53,8 @@ def test_from_cams_reanalysis_molecules_add():
         data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
         identifier="EAC4",
         time="2020-07-01T00:00:00",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
         molecules=molecules,
         missing_molecules_from=joseki.make("afgl_1986-us_standard")
     )
@@ -68,8 +69,8 @@ def test_from_cams_reanalysis_molecules_invalid():
             data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
             identifier="EAC4",
             time="2020-07-01T00:00:00",
-            lon=28.0,
             lat=23.0,
+            lon=28.0,
             molecules=molecules,
         )
 
@@ -80,8 +81,8 @@ def test_from_cams_reanalysis_extrapolate_up():
         data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
         identifier="EAC4",
         time="2020-07-01T00:00:00",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
         extrapolate={"up": {"z": zup}}
     )
     assert ds.joseki.is_valid
@@ -94,8 +95,8 @@ def test_from_cams_reanalysis_extrapolate_down():
         data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
         identifier="EAC4",
         time="2020-07-01T00:00:00",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
         extrapolate={"down": {"z": zdown}}
     )
     assert ds.joseki.is_valid
@@ -108,8 +109,8 @@ def test_from_cams_reanalysis_extrapolate_invalid():
             data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
             identifier="EAC4",
             time="2020-07-01T00:00:00",
-            lon=28.0,
             lat=23.0,
+            lon=28.0,
             extrapolate={"invalid": "specifications"}
         )
 
@@ -119,8 +120,8 @@ def test_from_cams_reanalysis_regularize_bool():
         data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
         identifier="EAC4",
         time="2020-07-01T00:00:00",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
         regularize=True,
     )
     assert ds.joseki.is_valid
@@ -134,8 +135,8 @@ def test_from_cams_reanalysis_regularize_specs():
         data="tests/data/97da7a58-674a-4a1f-a92b-534cb95d07bb.zip",
         identifier="EAC4",
         time="2020-07-01T00:00:00",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
         regularize={"options": {"num": num}},
     )
     assert ds.joseki.is_valid
@@ -145,8 +146,8 @@ def test_get_molecule_amounts():
     """Returns mapping of H2O and O3 and their total amounts as quantities."""
     amounts = get_molecule_amounts(
         "tests/data/232f85b4-b3e9-47a7-a52d-9f955c38b9f6.nc",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
         time="2020-07-01T00:00:00",
     )
 
@@ -158,8 +159,8 @@ def test_get_molecule_amounts_h2o():
     molecules = ["H2O"]
     amounts = get_molecule_amounts(
         "tests/data/232f85b4-b3e9-47a7-a52d-9f955c38b9f6.nc",
-        lon=28.0,
         lat=23.0,
+        lon=28.0,
         time="2020-07-01T00:00:00",
         molecules=molecules,
     )
@@ -172,8 +173,8 @@ def test_get_molecule_amounts_invalid():
     with pytest.raises(ValueError):
         get_molecule_amounts(
             "tests/data/232f85b4-b3e9-47a7-a52d-9f955c38b9f6.nc",
-            lon=28.0,
             lat=23.0,
+            lon=28.0,
             time="2020-07-01T00:00:00",
             molecules=["CO2"],
         )
@@ -217,3 +218,17 @@ def test_to_paths_list():
 def test_to_paths_invalid_type():
     with pytest.raises(NotImplementedError):
         to_paths(42)
+
+def test_from_cams_reanalysis_pressure_data():
+    """Surface pressure data is used to rescale the pressure profile."""
+    ds = from_cams_reanalysis(
+        data="tests/data/25b63a29-3eab-4599-92f4-7bba42ec6add.zip",
+        identifier="EAC4",
+        time="2020-04-01T12:00:00",
+        lat=28.0,
+        lon=86.0,
+        pressure_data="surface_pressure",
+    )
+
+    surface_pressure = to_quantity(ds.p.isel(z=0))
+    assert np.abs(surface_pressure - 1013.25 * ureg.hPa).magnitude > 1.0
