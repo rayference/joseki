@@ -68,7 +68,8 @@ def from_cams_reanalysis(
     missing_molecules_from: xr.Dataset | None = None,
     extrapolate: dict | None = None,
     regularize: bool | dict | None = None,
-    extract_dir : Path | None = None
+    extract_dir : Path | None = None,
+    pressure_data : str | None = "model_level_60",
 ) -> xr.Dataset:
     """Convert CAMS reanalysis data to a profile.
 
@@ -101,12 +102,20 @@ def from_cams_reanalysis(
             'options': Regularization options.
         extract_dir: Directory where to extract the CAMS data. If None, a
             temporary directory is used.
+        pressure_data: indicates how to compute the pressure data. Either
+            'model_level_60' or 'surface_pressure'. If 'model_level_60',
+            the pressure data is computed from the L60 model level table.
+            If 'surface_pressure', the pressure data is computed by rescaling
+            the L60 model level table with the surface pressure from the CAMS
+            surface dataset.
     
     Raises:
         ValueError: If the dataset is not a multi-level dataset or if the 
             archive does not contain a multi-level dataset.
         ValueError: If molecules are requested that are not in the dataset
             and `missing_molecules_from` is not specified.
+        ValueError: If `pressure_data` is set to `'surface_pressure'` but the
+            CAMS surface dataset is not provided.
 
     Returns:
         Profile dataset.
@@ -159,16 +168,32 @@ def from_cams_reanalysis(
         if "sp" in surface_selected:
             surface_pressure = to_quantity(surface_selected["sp"])
         else:
+            if pressure_data == "surface_pressure":
+                raise ValueError(
+                    "Could not found a 'sp' surface pressure data variable "
+                    "in the surface dataset."
+                    "This is required when the option 'pressure_data' is set "
+                    "to 'surface_pressure'."
+                )
             surface_pressure = None  # pragma: no cover
     else:
-        surface_pressure = None  # pragma: no cover
+        if pressure_data == "surface_pressure":
+            raise ValueError(
+                "The CAMS surface dataset could not be found. "
+                "As a result, the surface pressure cannot be fetched."
+                "This is required when the option 'pressure_data' is set to "
+                "'surface_pressure'."
+            )
+        else:
+            surface_pressure = None  # pragma: no cover
 
     if surface_pressure is not None:  # pragma: no cover
         logger.info("Surface pressure: %s", f"{surface_pressure:~P}")
 
-    # Translate model levels into altitude values
+    # Translate model levels into altitude values (and add pressure data)
     altitude_dataset = model_level_to_altitude(
         selected,
+        pressure_data=pressure_data,
         surface_pressure=surface_pressure,
     )
 
@@ -528,17 +553,53 @@ def getpath(filename: str) -> Path:
     return importlib_resources.files("joseki.data.ecmwf").joinpath(filename)
 
 
+def rescale_pressure_profile(
+    ds: xr.Dataset,
+    surface_pressure: pint.Quantity
+) -> xr.Dataset:
+    """Rescale pressure profile with surface pressure.
+    
+    Args:
+        ds: Dataset with pressure profile.
+        surface_pressure: Surface pressure.
+    
+    Returns:
+        Dataset with rescaled pressure profile.
+
+    Notes:
+        The pressure profile is multiplied by a scaling factor such that
+        the surface pressure matches the provided surface pressure.
+    """
+    logger.debug("Rescaling pressure data with surface pressure")
+    ds_surface_pressure = to_quantity(ds.p.sel(z=0, method="nearest"))
+    logger.debug("Surface pressure: %s", ds_surface_pressure)
+    scaling_factor = (
+        surface_pressure / ds_surface_pressure
+    ).m_as("dimensionless")
+    logger.debug("Scaling factor: %s", scaling_factor)
+    with xr.set_options(keep_attrs=True):
+        ds["p"] = ds["p"] * scaling_factor
+    return ds
+
+
 # TODO: the pressure data is not from CAMS. It is from the US 1976 model.
 # Close to the surface, the pressure difference can be large.
 def model_level_to_altitude(
     ds: xr.Dataset,
+    pressure_data: str = "model_level_60",
     surface_pressure: pint.Quantity | None = None,
 ) -> xr.Dataset:
     """
-    Convert model level data to altitude data.
+    Convert model level data to altitude data and add pressure data.
 
     Args:
         ds: Dataset with model level data.
+        pressure_data: indicates how to compute the pressure data. Either
+            'model_level_60' or 'surface_pressure'. If 'model_level_60',
+            the pressure data is computed from the L60 model level table.
+            If 'surface_pressure', the pressure data is computed by rescaling
+            the L60 model level table with the surface pressure from the CAMS
+            surface dataset.
         surface_pressure: Surface pressure from the CAMS surface dataset.
             Serves to compare with L60 model level pressure data and report
             on discrepancies (this discrepancies become large over 
@@ -546,7 +607,7 @@ def model_level_to_altitude(
             reported.
     
     Returns:
-        Dataset with altitude data.
+        Dataset tabulated against altitude and with pressure data.
 
     Notes:
         The relationship between model level and (geometric) altitude is 
@@ -560,10 +621,10 @@ def model_level_to_altitude(
         We use the DataArray object to interpolate our model level datasets.
         In the process, the pressure data corresponding to the model level is 
         added.
+        If pressure_data is set to 'surface_pressure', we rescale the pressure
+        data with the surface pressure from the CAMS surface dataset.
         Last, we sort the data by increasing altitude value.
-
-        This transformation is not accurate close to the surface, and in
-        particular for high altitude (with respect to mean sea level) regions.
+        This transformation is not accurate.
     """
     l60_path = getpath(filename="model_levels_60.csv")
     df = pd.read_csv(l60_path)
@@ -578,6 +639,10 @@ def model_level_to_altitude(
             )
         },
     )
+
+    # first, drop any variable called 'z' as that 
+    ds = ds.drop_vars("z") if "z" in ds else ds
+
     interpolated = ds.interp(level=level).drop_vars("level")
     ds = interpolated.assign(
         {
@@ -594,6 +659,9 @@ def model_level_to_altitude(
     ds = ds.assign({
         "z": ("z", z.m_as("km"), {"units": "km", "long_name": "altitude"})
     })
+
+    if pressure_data == "surface_pressure":
+        rescale_pressure_profile(ds, surface_pressure)
 
     # Report on surface pressure discrepancy
     if surface_pressure is not None:  # pragma: no cover
