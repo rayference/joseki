@@ -63,3 +63,7 @@ nav:
   - explanation.md
   - changelog.md
   - bibliography.md
+
+extra:
+  version:
+    provider: mike
