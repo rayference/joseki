@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Documentation versioning
 * `molecules` parameter to `joseki.make` to select the molecules to be 
   included in the profile.
 * `select_molecules` method in `joseki.profiles.core` to select the
