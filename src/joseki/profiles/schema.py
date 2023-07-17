@@ -24,14 +24,14 @@ def history() -> str:
     return f"{utcnow()} dataset formatting by joseki version {__version__}."
 
 
-def volume_fraction_sum(ds: xr.Dataset) -> pint.Quantity:
-    """Compute the sum of volume mixing fractions.
+def mole_fraction_sum(ds: xr.Dataset) -> pint.Quantity:
+    """Compute the sum of mole fractions.
 
     Args:
         ds: Dataset.
 
     Returns:
-        The sum of volume fractions.
+        The sum of mole fractions.
     """
     return (
         sum([ds[c] for c in ds.data_vars if c.startswith("x_")]).values
@@ -73,7 +73,7 @@ class Schema:
 
         Args:
             ds: Dataset to validate.
-            check_x_sum: if True, check that volume fraction sums
+            check_x_sum: if True, check that mole fraction sums
                 are never larger than one.
             ret_true_if_valid: make this method return True if the dataset is
                 valid.
@@ -167,21 +167,21 @@ class Schema:
                         f"incorrect units for {var}. Expected dimensionless, "
                         f"got {ds[var].attrs['units']}"
                     )
-                if ds[var].attrs["standard_name"] != f"{m}_volume_fraction":
+                if ds[var].attrs["standard_name"] != f"{m}_mole_fraction":
                     raise ValueError(  # pragma: no cover
                         f"incorrect standard name for {var}. Expected "
-                        f"{m}_volume_fraction, got "
+                        f"{m}_mole_fraction, got "
                         f"{ds[var].attrs['standard_name']}"
                     )
 
         if check_x_sum:
             logger.debug(
-                "Checking that volume fraction sums are never larger than one"
+                "Checking that mole fraction sums are never larger than one"
             )
-            vfs = volume_fraction_sum(ds)
+            vfs = mole_fraction_sum(ds)
             if np.any(vfs.m > 1):
                 raise ValueError(  # pragma: no cover
-                    "The rescaling factors lead to a profile where the volume "
+                    "The rescaling factors lead to a profile where the mole "
                     "fraction sum is larger than 1."
                 )
 
@@ -256,8 +256,8 @@ class Schema:
                     "z",
                     data_vars[var].m_as("dimensionless"),
                     {
-                        "standard_name": f"{m}_volume_fraction",
-                        "long_name": f"{m} volume fraction",
+                        "standard_name": f"{m}_mole_fraction",
+                        "long_name": f"{m} mole fraction",
                         "units": "dimensionless",
                     },
                 )

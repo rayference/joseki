@@ -95,7 +95,7 @@ class JosekiAccessor:  # pragma: no cover
             where
 
             * $z$ is the altitude,
-            * $x_{\mathrm{M}}(z)$ is the volume mixing ratio of molecule M
+            * $x_{\mathrm{M}}(z)$ is the mole fraction of molecule M
             at altitude $z$,
             * $n(z)$ is the air number density at altitude $z$,
             * $n_{\mathrm{M}}(z)$ is the number density of molecule M at
@@ -205,13 +205,13 @@ class JosekiAccessor:  # pragma: no cover
         }
 
     @property
-    def volume_fraction_at_sea_level(
+    def mole_fraction_at_sea_level(
         self,
     ) -> t.Dict[str, pint.Quantity]:
-        """Compute volume fraction at sea level.
+        """Compute mole fraction at sea level.
 
         Returns:
-            A mapping of molecule and volume mixing fraction at sea level.
+            A mapping of molecule and mole fraction at sea level.
         """
         ds = self._obj
         return {
@@ -220,11 +220,11 @@ class JosekiAccessor:  # pragma: no cover
         }
 
     @property
-    def volume_fraction(self) -> xr.DataArray:
-        """Extract volume fraction and tabulate as a function of (m, z).
+    def mole_fraction(self) -> xr.DataArray:
+        """Extract mole fraction and tabulate as a function of (m, z).
 
         Returns:
-            Volume fraction.
+            Mole fraction.
         """
         ds = self._obj
         molecules = self.molecules
@@ -232,8 +232,8 @@ class JosekiAccessor:  # pragma: no cover
         concatenated["m"] = ("m", molecules, {"long_name": "molecule"})
         concatenated.attrs.update(
             {
-                "standard_name": "volume_fraction",
-                "long_name": "volume fraction",
+                "standard_name": "mole_fraction",
+                "long_name": "mole fraction",
                 "units": "dimensionless",
             }
         )
@@ -247,7 +247,7 @@ class JosekiAccessor:  # pragma: no cover
         Returns:
             Mass fraction.
         """
-        x = self.volume_fraction
+        x = self.mole_fraction
         m_air = self.air_molar_mass
         m = molar_mass(molecules=self.molecules)
         y = (x * m / m_air).rename("y")
@@ -281,13 +281,13 @@ class JosekiAccessor:  # pragma: no cover
             $$
 
             where
-            * $x_{\mathrm{M}}$ is the volume fraction of molecule M,
+            * $x_{\mathrm{M}}$ is the mole fraction of molecule M,
             * $m_{\mathrm{M}}$ is the molar mass of molecule M.
 
-            To compute the air molar mass accurately, the volume fraction of
+            To compute the air molar mass accurately, the mole fraction of
             molecular nitrogen (N2), molecular oxygen (O2), and argon (Ar) are
             required. If these are not present in the dataset, they are
-            computed using the assumption that the volume fraction of these
+            computed using the assumption that the mole fraction of these
             molecules are constant with altitude and set to the following
             values:
 
@@ -297,9 +297,9 @@ class JosekiAccessor:  # pragma: no cover
 
             are independent of altitude.
 
-            Since nothing garantees that the volume fraction sum is equal to
-            one, the air molar mass is computed as the sum of the volume
-            fraction weighted molar mass divided by the sum of the volume
+            Since nothing garantees that the mole fraction sum is equal to
+            one, the air molar mass is computed as the sum of the mole
+            fraction weighted molar mass divided by the sum of the mole
             fraction.
         """
         ds = self._obj
@@ -314,7 +314,7 @@ class JosekiAccessor:  # pragma: no cover
                 ds_copy[f"x_{m}"].attrs.update({"units": "dimensionless"})
         
         # compute air molar mass
-        x = ds_copy.joseki.volume_fraction
+        x = ds_copy.joseki.mole_fraction
         molecules = x.m.values
         mm = xr.DataArray(
             data=np.array([MM[m] for m in molecules]),
@@ -357,7 +357,7 @@ class JosekiAccessor:  # pragma: no cover
             * a column mass density [`mass * length^-2`],
             * a number densitx at sea level [`length^-3`],
             * a mass density at sea level [`mass * length^-3`],
-            * a volume mixing fraction at sea level [`dimensionless`]
+            * a mole mixing fraction at sea level [`dimensionless`]
 
             The scaling factor is then evaluated as the ratio of the target
             amount with the original amount, for each molecule.
@@ -370,7 +370,7 @@ class JosekiAccessor:  # pragma: no cover
             "[mass] * [length]^-2": self.column_mass_density,
             "[length]^-3": self.number_density_at_sea_level,
             "[mass] * [length]^-3": self.mass_density_at_sea_level,
-            "": self.volume_fraction_at_sea_level,
+            "": self.mole_fraction_at_sea_level,
         }
         factors = {}
         for m, target_amount in target.items():
@@ -394,7 +394,7 @@ class JosekiAccessor:  # pragma: no cover
 
         Args:
             factors: A mapping of molecule and scaling factor.
-            check_x_sum: if True, check that volume fraction sums
+            check_x_sum: if True, check that mole fraction sums
                 are never larger than one.
         Raises:
             ValueError: if `check_x_sum` is `True` and the 
@@ -405,7 +405,7 @@ class JosekiAccessor:  # pragma: no cover
         """
         ds = self._obj
 
-        # update volume fraction
+        # update mole fraction
         x_new = {}
         for m in factors:
             with xr.set_options(keep_attrs=True):
@@ -420,10 +420,10 @@ class JosekiAccessor:  # pragma: no cover
             raise ValueError("Cannot rescale") from e
         
         # update history attribute
-        now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
         for m in factors.keys():
             ds.attrs["history"] += (
-                f"\n{now} - rescaled {m}'s volume mixing ratio using a scaling "
+                f"\n{now} - rescaled {m}'s mole fraction using a scaling "
                 f"factor of {factors[m]:.3f} - joseki, version {__version__}"
             )
 
@@ -435,7 +435,7 @@ class JosekiAccessor:  # pragma: no cover
         check_x_sum: bool = False,
     ) -> xr.Dataset:
         """
-        Rescale volume fractions to match target molecular total column 
+        Rescale mole fractions to match target molecular total column 
         densities.
 
         Args:
@@ -443,7 +443,7 @@ class JosekiAccessor:  # pragma: no cover
                 Total column must be either a column number density 
                 [`length^-2`], a column mass density [`mass * length^-2`], a 
                 number densitx at sea level [`length^-3`], a mass density at 
-                sea level [`mass * length^-3`], a volume mixing fraction at 
+                sea level [`mass * length^-3`], a mole fraction at 
                 sea level [`dimensionless`].
         
         Returns:
@@ -453,6 +453,30 @@ class JosekiAccessor:  # pragma: no cover
             factors=self.scaling_factors(target=target),
             check_x_sum=check_x_sum,
         )
+
+    def drop_molecules(
+        self,
+        molecules: t.List[str],
+    ) -> xr.Dataset:
+        """Drop molecules from dataset.
+
+        Args:
+            molecules: List of molecules to drop.
+
+        Returns:
+            Dataset with molecules dropped.
+        """
+        ds = self._obj
+
+        # update history attribute
+        now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+        
+        ds.attrs["history"] += (
+            f"\n{now} - dropped mole fraction data for molecules "
+            f"{', '.join(molecules)} - joseki, version {__version__}"
+        )
+
+        return ds.drop_vars([f"x_{m}" for m in molecules])
 
     def validate(
         self,

@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* `molecules` parameter to `joseki.make` to select the molecules to be 
+  included in the profile.
+* `select_molecules` method in `joseki.profiles.core` to select the
+  molecules to be included in the profile.
+* `drop_molecules` accessor method to drop mole fraction data for specified 
+  molecules.
 * Test that surface pressure is used to rescale pressure profile.
 * Parameter pressure_data to `joseki.profiles.from_cams_reanalysis` to 
   indicate how to compute the pressure profile (either with or without
@@ -36,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* Rename *volume (mixing) fraction* -> *mole fraction*.
 * Updated `joseki.units` tests.
 * `joseki.units.to_quantity` is dispatched against `pint.Quantity`, `dict`, 
   `int`, `float`, `list`, `numpy.ndarray` and `xarray.DataArray`.

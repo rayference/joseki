@@ -6,7 +6,13 @@ from numpy.testing import assert_approx_equal, assert_allclose
 
 from joseki import unit_registry as ureg
 from joseki.core import make
-from joseki.profiles.core import rescale_to_column, interp, extrapolate, regularize
+from joseki.profiles.core import (
+    rescale_to_column,
+    interp,
+    extrapolate,
+    regularize,
+    select_molecules,
+)
 from joseki.core import represent_profile_in_cells
 from joseki.units import to_quantity
 
@@ -222,3 +228,25 @@ def test_regularize_num(test_data_set: xr.Dataset):
     )
 
     assert regularized.z.size == num
+
+
+def test_select_molecules(test_data_set: xr.Dataset):
+    """Select molecules."""
+    selected = select_molecules(
+        ds=test_data_set,
+        molecules=["H2O", "CO2"],
+    )
+
+    assert "H2O" in selected.joseki.molecules
+    assert "CO2" in selected.joseki.molecules
+    assert "O3" not in selected.joseki.molecules
+
+def test_select_molecules_invalid(test_data_set: xr.Dataset):
+    """Raise when selected molecules are not available."""
+    molecules = ["SO2", "NO2"]
+    ds = test_data_set.drop([f"x_{m}" for m in molecules])
+    with pytest.raises(ValueError):
+        select_molecules(
+            ds=ds,
+            molecules=["H2O", "CO2", "SO2", "NO2"],
+        )

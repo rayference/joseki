@@ -127,6 +127,11 @@ def test_make_conserve_column_3():
             significant=6
         )
 
+def test_select_molecules():
+    """Returns xr.Dataset."""
+    ds = make(identifier="afgl_1986-tropical", molecules=["H2O", "CO2"])
+    assert ds.joseki.molecules == ["H2O", "CO2"]
+
 def test_open_dataset(tmpdir):
     """Returns xr.Dataset."""
     ds = make(identifier="afgl_1986-tropical")
