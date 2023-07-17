@@ -71,7 +71,7 @@ class USSA1976(Profile):
         data_vars["t"] = to_quantity(ds["t"]).to("K")
         data_vars["n"] = to_quantity(ds["n_tot"]).to("m^-3")
 
-        # compute volume fraction
+        # compute mole fraction
         for s in ds["s"].values:
             nx = to_quantity(ds["n"].sel(s=s))
             n_tot = to_quantity(ds["n_tot"])

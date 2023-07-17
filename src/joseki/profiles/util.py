@@ -1,14 +1,13 @@
 """Utility module."""
 import datetime
 import typing as t
-import warnings
 
 import numpy as np
 import pint
 import xarray as xr
 
 from ..constants import K, MM
-from ..units import to_quantity, ureg
+from ..units import ureg
 
 
 def utcnow() -> str:
@@ -123,12 +122,12 @@ def air_molar_mass_from_mass_fraction(
 
 
 
-def mass_fraction_to_volume_fraction3(
+def mass_fraction_to_mole_fraction3(
     y: xr.DataArray,
     m_air: pint.Quantity = 28.9644 * ureg.g / ureg.mole,
 ) -> xr.DataArray:
     r"""
-    Convert mass fractions to volume fractions.
+    Convert mass fractions to mole fractions.
     
     Args:
         y: Mass fraction as a function of molecule (`m`) and altitude (`z`).
@@ -138,7 +137,7 @@ def mass_fraction_to_volume_fraction3(
         Volume fraction as a function of molecule (`m`) and altitude (`z`).
     
     Notes:
-        The volume fraction of molecule M at altitude $z$ is computed according 
+        The mole fraction of molecule M at altitude $z$ is computed according 
         to the following equation:
 
         $$
@@ -160,12 +159,12 @@ def mass_fraction_to_volume_fraction3(
     # compute molar masses of each molecular species
     mm = molar_mass(molecules=y.m.values.tolist())
 
-    # compute volume fraction
+    # compute mole fraction
     x = (m_air.m_as("g/mol") * y / mm).rename("x")
     x.attrs.update(
         {
-            "long_name": "Volume fraction",
-            "standard_name": "volume_fraction",
+            "long_name": "Mole fraction",
+            "standard_name": "mole_fraction",
             "units": "dimensionless"
         }
     )

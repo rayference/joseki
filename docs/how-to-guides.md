@@ -112,11 +112,28 @@ cells-represented profile.
 Similarly to [when specifying the altitude grid](#altitude-grid), you can 
 ensure that column densities are conserved with the `conserve_column` parameter.
 
+## Molecules selection
+
+You might be interested only in the mole fraction data of specific molecules.
+To select the molecules you want to be included in your profile, specify them
+with the `molecules` parameter:
+
+```python
+ds = joseki.make(
+    identifier="afgl_1986-us_standard",
+    molecules=["H2O", "CO2", "O3"],
+)
+```
+
+In the above example, the mole fraction data covers the molecules H2O, CO2 and 
+O3 only.
+
+
 ## Advanced options
 
 The collection of atmospheric profiles defined by
-[Anderson et al (1986)](bibliography.md#Anderson+1986) includes volume mixing
-ratio data for 28 molecules, where molecules 8-28 are described as *additional*.
+[Anderson et al (1986)](bibliography.md#Anderson+1986) includes mole fraction
+data for 28 molecules, where molecules 8-28 are described as *additional*.
 By default, these additional molecules are included in the atmospheric profile.
 To discard these additional molecules, set the `additional_molecules`
 parameter to `False`:
@@ -199,7 +216,7 @@ molecules.
 
 You can easily make a plot of any of the variables of a dataset, i.e.,
 air pressure (``p``), air temperature (``t``), air number density (``n``) or
-volume fraction (``x_*``):
+mole fraction (``x_*``):
 
 ??? example "Pressure plot"
 
@@ -267,7 +284,7 @@ volume fraction (``x_*``):
           xscale="log",
        )
 
-    plt.xlabel("volume fraction [dimensionless]")
+    plt.xlabel("mole fraction [dimensionless]")
     plt.legend(ds.joseki.molecules)
     plt.show()
     ```

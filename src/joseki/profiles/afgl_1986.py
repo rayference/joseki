@@ -153,7 +153,7 @@ def dataframe_to_dataset(
     for s in molecules:
         data_vars[f"x_{s}"] = (
             df[s].values * ureg.ppm
-        )  # raw data volume fraction are given in ppmv
+        )  # raw data mole fraction are given in ppmv
 
     # attributes
     pretty_identifier = f"AFGL (1986) {identifier.value.replace('_', '-')}"

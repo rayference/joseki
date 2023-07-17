@@ -105,10 +105,10 @@ def test_mass_density_at_sea_level(identifier: str, expected: pint.Quantity):
         ("mipas_2007-midlatitude_day", 0.0003685 * ureg.dimensionless)
     ]
 )
-def test_volume_fraction_at_sea_level(identifier: str, expected):
-    """CO2 volume mixing fraction at sea level matches expected value."""
+def test_mole_fraction_at_sea_level(identifier: str, expected):
+    """CO2 mole mixing fraction at sea level matches expected value."""
     ds = joseki.make(identifier)
-    value = ds.joseki.volume_fraction_at_sea_level["CO2"].to(ureg.dimensionless)
+    value = ds.joseki.mole_fraction_at_sea_level["CO2"].to(ureg.dimensionless)
     assert_approx_equal(value.m, expected.m)
 
 
@@ -195,3 +195,17 @@ def test_rescale_to_column_mass_density():
         target["H2O"].m,
         significant=3,
     )
+
+@pytest.mark.parametrize(
+    "molecules",
+    [
+        ["H2O"],
+        ["H2O", "CO2"],
+    ]
+)
+def test_drop_molecules(molecules):
+    """x_M data variable is(are) dropped."""
+    ds = joseki.make("afgl_1986-midlatitude_summer")
+    assert all([m in ds.joseki.molecules for m in molecules])
+    dropped = ds.joseki.drop_molecules(molecules)
+    assert all([m not in dropped.joseki.molecules for m in molecules])

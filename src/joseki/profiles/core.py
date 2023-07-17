@@ -35,7 +35,7 @@ DEFAULT_OPTIONS = {
 }
 
 def rescale_to_column(reference: xr.Dataset, ds: xr.Dataset) -> xr.Dataset:
-    """Rescale volume fraction to ensure that column densities are conserved.
+    """Rescale mole fraction to ensure that column densities are conserved.
     
     Args:
         reference: Reference profile.
@@ -117,7 +117,7 @@ def interp(
         )
         data_vars[var] = ureg.Quantity(f(z_new_values), ds[var].attrs["units"])
 
-    # Interpolate volume fraction
+    # Interpolate mole fraction
     for m in ds.joseki.molecules:
         var = f"x_{m}"
         f = interpolate.interp1d(
@@ -174,7 +174,7 @@ def represent_profile_in_cells(
         Atmosphere cells (or layers) are defined by two consecutive altitude 
         values. The layer's center altitude is defined as the arithmetic 
         average of these two values. The pressure, temperature, number density 
-        and volume fraction fields are interpolated at these layer' center 
+        and mole fraction fields are interpolated at these layer' center 
         altitude values. In the new atmospheric profile, the `z` coordinate 
         is updated with layer' center altitude values and a data variable 
         `z_bounds` indicating the altitude bounds of each layer, is added.
@@ -347,6 +347,32 @@ def regularize(
         conserve_column=conserve_column,
         **kwargs,
     )
+
+
+def select_molecules(
+    ds: xr.Dataset,
+    molecules: t.List[str],
+) -> xr.Dataset:
+    """
+    Select specified molecules in the profile.
+
+    Args:
+        ds: Initial atmospheric profile.
+        molecules: List of molecules to select.
+    
+    Returns:
+        Atmospheric profile with exactly the specified molecules.
+    """
+    drop_molecules = [m for m in ds.joseki.molecules if m not in molecules]
+    ds_dropped = ds.joseki.drop_molecules(drop_molecules)
+
+    if all([m in ds_dropped.joseki.molecules for m in molecules]):
+        return ds_dropped
+    else:
+        raise ValueError(
+            f"Could not select molecules {molecules}, "
+            f"available molecules are {ds.joseki.molecules}."
+        )
 
 @define
 class Profile(ABC):

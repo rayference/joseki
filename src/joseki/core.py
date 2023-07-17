@@ -1,4 +1,6 @@
 """Core module."""
+from __future__ import annotations
+
 import logging
 import os
 import typing as t
@@ -7,17 +9,22 @@ import pint
 import xarray as xr
 
 from .profiles.factory import factory
-from .profiles.core import represent_profile_in_cells, DEFAULT_METHOD
+from .profiles.core import (
+    DEFAULT_METHOD,
+    represent_profile_in_cells,
+    select_molecules,
+)
 
 logger = logging.getLogger(__name__)
 
 
 def make(
     identifier: str,
-    z: t.Optional[pint.Quantity] = None,
-    interp_method: t.Optional[t.Mapping[str, str]] = DEFAULT_METHOD,
+    z: pint.Quantity | None = None,
+    interp_method: t.Mapping[str, str] | None = DEFAULT_METHOD,
     represent_in_cells: bool = False,
     conserve_column: bool = False,
+    molecules: t.List[str] | None = None,
     **kwargs: t.Any,
 ) -> xr.Dataset:
     """
@@ -32,6 +39,7 @@ def make(
             interpolated profile.
         conserve_column: If `True`, ensure that column densities are conserved
             during interpolation.
+        molecules: List of molecules to include in the profile.
         kwargs: Additional keyword arguments passed to the profile constructor.
     
     Returns:
@@ -42,6 +50,7 @@ def make(
     logger.debug("interp_method: %s", interp_method)
     logger.debug("represent_in_cells: %s", represent_in_cells)
     logger.debug("conserve_column: %s", conserve_column)
+    logger.debug("molecules: %s", molecules)
     logger.debug("kwargs: %s", kwargs)
 
     profile = factory.create(identifier)
@@ -60,6 +69,9 @@ def make(
             method=interp_method,
             conserve_column=conserve_column,
         )
+    
+    if molecules is not None:
+        ds = select_molecules(ds, molecules)
     
     return ds
 

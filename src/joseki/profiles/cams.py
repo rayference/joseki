@@ -20,7 +20,7 @@ import pint
 import xarray as xr
 
 from ..units import ureg, to_quantity
-from .util import mass_fraction_to_volume_fraction3, to_m_suffixed_data
+from .util import mass_fraction_to_mole_fraction3, to_m_suffixed_data
 from .schema import schema
 from .core import DEFAULT_METHOD
 from .core import regularize as _regularize, extrapolate as _extrapolate
@@ -717,11 +717,11 @@ def mole_fractions(ds: xr.Dataset) -> xr.DataArray:
         }
     )
 
-    # Convert mass mixing ratio to volume mixing ratio
-    x = mass_fraction_to_volume_fraction3(y=y)
+    # Convert mass mixing ratio to mole mixing ratio
+    x = mass_fraction_to_mole_fraction3(y=y)
 
     # Re-organise the `xarray.DataArray` into a `xarray.Dataset` with one 
-    # data variable per molecule volume fraction
+    # data variable per molecule mole fraction
     return to_m_suffixed_data(x)
 
 
