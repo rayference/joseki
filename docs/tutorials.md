@@ -245,3 +245,35 @@ plt.show()
 ```
 
 ![image](fig/tutorials/cams/2.png)
+
+### 3. Merge EAC4 and EGG4 datasets
+
+The EAC4 multi-level data does not provide with the carbon dioxide and methane concentration. The EGG4 dataset does. However the EGG4 dataset does not provide with the concentration of ozone, nitrous oxide, carbon monoxide, nitrogen monoxide, sulfur dioxide and nitrogen dioxide whereas the EAC4 dataset does. In order to obtain a description of air composition as complete as possible, we can merge the two datasets together.
+
+
+```python
+test_eac4 = find_test_data("774f1fd2-63c5-4b59-b23d-eadcad7d6b83.zip")
+test_egg4 = find_test_data("86dbfcd6-9e0b-40df-8ea7-aa2e328339dc.zip")
+
+ds_eac4 = from_cams_reanalysis(
+    data=test_eac4,
+    time="2020-01-01",
+    lon=23.0,
+    lat=28.0,
+    identifier="EAC4",
+)  # x_H2O, x_O3
+
+ds_egg4 = from_cams_reanalysis(
+    data=test_egg4,
+    time="2020-01-01",
+    lon=23.0,
+    lat=28.0,
+    identifier="EGG4",
+    pressure_data="model_level_60"  # surface pressure is not available in EGG4
+)  # x_CO2, x_CH4
+
+merged = joseki.merge([ds_eac4, ds_egg4])
+```
+
+The merged dataset contains the mole fraction data for the following molecules:
+$\rm{H}_2\rm{O}$, $\rm{C}\rm{O}_2$, $\rm{O}_3$, $\rm{C}\rm{H}_4$.

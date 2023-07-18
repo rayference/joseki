@@ -5,7 +5,7 @@ import xarray as xr
 from numpy.testing import assert_approx_equal
 
 from joseki import unit_registry as ureg
-from joseki.core import make, open_dataset, load_dataset, identifiers
+from joseki.core import make, open_dataset, load_dataset, merge, identifiers
 
 
 def test_make():
@@ -147,6 +147,12 @@ def test_load_dataset(tmpdir):
     ds.to_netcdf(path)
     ds2 = load_dataset(path)
     assert ds2.joseki.is_valid
+
+def test_merge_1():
+    ds1 = make(identifier="afgl_1986-tropical", molecules=["H2O", "CO2"])
+    ds2 = make(identifier="afgl_1986-tropical", molecules=["O3"])
+    ds = merge([ds1, ds2])
+    assert ds.joseki.molecules == ["H2O", "CO2", "O3"]
 
 def test_identifiers():
     """Returns list of identifiers."""

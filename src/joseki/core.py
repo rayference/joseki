@@ -1,6 +1,7 @@
 """Core module."""
 from __future__ import annotations
 
+import datetime
 import logging
 import os
 import typing as t
@@ -14,6 +15,8 @@ from .profiles.core import (
     represent_profile_in_cells,
     select_molecules,
 )
+from .__version__ import __version__
+
 
 logger = logging.getLogger(__name__)
 
@@ -100,6 +103,64 @@ def load_dataset(path: os.PathLike, *args, **kwargs) -> xr.Dataset:
         Profile.
     """
     return xr.load_dataset(path, *args, **kwargs)
+
+
+def merge(
+    datasets: t.Iterable[xr.Dataset],
+    new_title: str | None = None,
+) -> xr.Dataset:
+    """
+    Merge multiple profiles into a single profile.
+    
+    Args:
+        datasets: Iterable of profiles.
+        new_title: New title for the merged profile. If `None`, the title of
+            the first profile is used.
+
+    Returns:
+        Merged profile.
+    
+    Notes:
+        The first profile in the iterable is used as the base profile; when
+        variables with the same name are encountered in subsequent profiles,
+        the variable from the first profile is used.
+    """
+    merged = xr.merge(
+        datasets,
+        compat="override",  # pick variable from first dataset
+        combine_attrs="override",  # copy attrs from the first dataset to the result
+    )
+
+    # update attributes
+    now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+
+    institutions = set([ds.attrs["institution"] for ds in datasets])
+    sources = set([ds.attrs["source"] for ds in datasets])
+    references = set([ds.attrs["references"] for ds in datasets])
+    urls = set([ds.attrs["url"] for ds in datasets])
+    urldates = set([ds.attrs["urldate"] for ds in datasets])
+    conventions = set([ds.attrs["Conventions"] for ds in datasets])
+
+    with_profiles = "with profile " if len(datasets) == 2 else "with profiles "
+    with_profiles += ", ".join([f"'{ds.title}'" for ds in datasets[1:]])
+    merged.attrs["history"] += (
+        f"\n{now} - merged profile '{datasets[0].title}' {with_profiles} "
+        f"joseki, version {__version__}"
+    )
+
+    merged.attrs["institution"] = "\n".join(institutions)
+    merged.attrs["source"] = "\n".join(sources)
+    merged.attrs["references"] = "\n".join(references)
+    merged.attrs["url"] = "\n".join(urls)
+    merged.attrs["urldate"] = "\n".join(urldates)
+    merged.attrs["Conventions"] = "\n".join(conventions)
+
+    if new_title is not None:  # pragma: no cover
+        merged.attrs["title"] = new_title
+    else:  # pragma: no cover
+        merged.attrs["title"] = datasets[0].title
+
+    return merged
 
 
 def identifiers() -> t.List[str]:
