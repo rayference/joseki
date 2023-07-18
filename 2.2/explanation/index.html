@@ -82,10 +82,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -537,7 +533,7 @@ altitude <span class="arithmatex">\(z\)</span>.</p>
 <div class="arithmatex">\[
 \rho_{\mathrm{M}} = m_{\mathrm{M}} \, n_{\mathrm{M}}
 \]</div>
-<p>where <span class="arithmatex">\(m_{\mathrm{M}}\)</span> is the molecular mass of molecule M.</p>
+<p>where <span class="arithmatex">\(\mathrm{M}\)</span> is the molecular mass.</p>
 <p>Since molecular mass does not change with altitude, we simply have</p>
 <div class="arithmatex">\[
 P_{\mathrm{M}} = m_{\mathrm{M}} \, N_{\mathrm{M}}
@@ -560,14 +556,14 @@ visualise NetCDF data.</p>
 <h3 id="metadata-conventions">Metadata conventions<a class="headerlink" href="#metadata-conventions" title="Permanent link">&para;</a></h3>
 <p>The NetCDF format allows to store metadata alongside data.
 Joseki's datasets metadata follow the
-<a href="https://cfconventions.org/Data/cf-conventions/cf-conventions-1.10/cf-conventions.html">conventions for Climate and Forecast (v1.10)</a>.</p>
+<a href="http://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html">conventions for Climate and Forecast (v1.8)</a>.</p>
 <h3 id="standard-names">Standard names<a class="headerlink" href="#standard-names" title="Permanent link">&para;</a></h3>
 <p>The Climate and Forecast (CF) conventions define standard names to describe
 variables.
 Joseki's datasets comply with
-<a href="https://cfconventions.org/Data/cf-standard-names/81/build/cf-standard-name-table.html">CF Standard Name Table Version 81, 25 April 2023</a>
+<a href="http://cfconventions.org/Data/cf-standard-names/77/build/cf-standard-name-table.html">CF Standard Name Table Version 77, 19 January 2021</a>,
 except for the following variables for which a standard name did not exist
-(hence we derived one):</p>
+in the table and was derived:</p>
 <table>
 <thead>
 <tr>
@@ -581,6 +577,11 @@ except for the following variables for which a standard name did not exist
 <td align="left"><code>air_number_density</code></td>
 <td align="left"><code>air number density</code></td>
 <td align="center"><code>m^-3</code></td>
+</tr>
+<tr>
+<td align="left"><code>volume_fraction</code></td>
+<td align="left"><code>volume fraction</code></td>
+<td align="center"><code>dimensionless</code></td>
 </tr>
 </tbody>
 </table>
@@ -615,16 +616,15 @@ except for the following variables for which a standard name did not exist
 <td align="center"><code>m^-3</code></td>
 </tr>
 <tr>
-<td align="left"><code>mole_fraction_of_M_in_air</code></td>
-<td align="left"><code>mole fraction of M in air</code></td>
-<td align="center"><code>x_M</code></td>
+<td align="left"><code>volume_fraction</code></td>
+<td align="left"><code>volume fraction</code></td>
+<td align="center"><code>x_&lt;m&gt;</code></td>
 <td align="center"><code>dimensionless</code></td>
 </tr>
 </tbody>
 </table>
-<p>where <code>M</code> is the chemical formula of the given molecule (e.g. 
-<code>mole_fraction_of_H2O_in_air</code> is associated the symbol <code>x_H2O</code>), and one of the 
-two following coordinates variables:</p>
+<p>where <code>&lt;m&gt;</code> is the chemical formula of the given molecule, and one of the two
+following coordinates variables:</p>
 <table>
 <thead>
 <tr>
@@ -688,7 +688,7 @@ two following coordinates variables:</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.51198bba.min.js"></script>
