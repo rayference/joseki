@@ -50,7 +50,7 @@ conda install -c conda-forge joseki
 
 ## Documentation
 
-Visit https://nollety.github.io/joseki/.
+Visit https://nollety.github.io/joseki/latest.
 
 ## Ikigai
 
