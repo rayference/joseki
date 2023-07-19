@@ -244,7 +244,7 @@ def test_select_molecules(test_data_set: xr.Dataset):
 def test_select_molecules_invalid(test_data_set: xr.Dataset):
     """Raise when selected molecules are not available."""
     molecules = ["SO2", "NO2"]
-    ds = test_data_set.drop([f"x_{m}" for m in molecules])
+    ds = test_data_set.drop_vars([f"x_{m}" for m in molecules])
     with pytest.raises(ValueError):
         select_molecules(
             ds=ds,
