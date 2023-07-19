@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * update `CITATION.cff` for version `2.2.0`
+* change `pressure_data` default value to `"surface_pressure"` in 
+  `from_cams_reanalysis` 
 
 ### Fixed
 

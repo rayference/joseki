@@ -69,7 +69,7 @@ def from_cams_reanalysis(
     extrapolate: dict | None = None,
     regularize: bool | dict | None = None,
     extract_dir : Path | None = None,
-    pressure_data : str | None = "model_level_60",
+    pressure_data : str | None = "surface_pressure",
 ) -> xr.Dataset:
     """Convert CAMS reanalysis data to a profile.
 
@@ -161,6 +161,8 @@ def from_cams_reanalysis(
 
     # Select in time and space
     selected = select(level_dataset, time, longitude.m, latitude.m)
+
+    pressure_data = "surface_pressure" if pressure_data is None else pressure_data
 
     # Read surface pressure if available
     if surface_dataset is not None:
