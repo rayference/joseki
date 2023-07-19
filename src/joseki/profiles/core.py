@@ -44,6 +44,16 @@ def rescale_to_column(reference: xr.Dataset, ds: xr.Dataset) -> xr.Dataset:
     Returns:
         Rescaled profile.
     """
+    if not all([reference.dims[_] == 1 for _ in reference.dims if _ != "z"]):
+        raise NotImplementedError
+    else:
+        reference = reference.squeeze(drop=True)
+
+    if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+        raise NotImplementedError
+    else:
+        ds = ds.squeeze(drop=True)
+    
     desired = reference.joseki.column_number_density
     actual = ds.joseki.column_number_density
     factors = {}
@@ -86,6 +96,14 @@ def interp(
     Returns:
         Interpolated atmospheric profile.
     """
+    if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+        raise NotImplementedError
+    else:
+        time = ds.time[0].values
+        latitude = to_quantity(ds.latitude[0].values)
+        longitude = to_quantity(ds.longitude[0].values)
+        ds = ds.squeeze(drop=True)
+    
     # sort altitude values
     z_new = np.sort(z_new)
 
@@ -140,11 +158,16 @@ def interp(
 
     # Convert to dataset
     logger.debug("convert interpolated data to dataset")
-    interpolated = schema.convert(
-        data_vars=data_vars,
-        coords=coords,
-        attrs=attrs,
-    )
+    interpolated = schema.convert({
+        **data_vars,
+        **coords,
+        **attrs,
+        **{
+            "time": time,
+            "latitude": latitude,
+            "longitude": longitude,
+        }
+    })
     
     # Compute scaling factors to conserve column densities
     if conserve_column:
@@ -181,6 +204,11 @@ def represent_profile_in_cells(
         A copy of the dataset is returned, the original dataset is not 
         modified.
     """
+    if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+        raise NotImplementedError
+    else:
+        ds = ds.squeeze(drop=True)
+
     # if the profile is already represented in cells, do nothing
     if ds.z.standard_name == "layer_center_altitude":
         return ds

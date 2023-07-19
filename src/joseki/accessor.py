@@ -109,6 +109,12 @@ class JosekiAccessor:  # pragma: no cover
             integration is performed using the trapezoidal rule.
         """
         ds = self._obj
+
+        if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+            raise NotImplementedError
+        else:
+            ds = ds.squeeze(drop=True)
+
         try:
             with xr.set_options(keep_attrs=True):
                 dz = to_quantity(ds.z_bounds.diff(dim="zbv", n=1).squeeze())
@@ -140,6 +146,7 @@ class JosekiAccessor:  # pragma: no cover
                 integral = (ds[f"x_{m}"] * ds.n).integrate(
                     coord="z"
                 )  # integrate using the trapezoidal rule
+                logger.debug("attrs=%s", [ds[var].attrs for var in [f"x_{m}", "n"]])
                 units = " ".join(
                     [ds[var].attrs["units"] for var in [f"x_{m}", "n", "z"]]
                 )
@@ -186,6 +193,12 @@ class JosekiAccessor:  # pragma: no cover
             A mapping of molecule and number density at sea level.
         """
         ds = self._obj
+
+        if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+            raise NotImplementedError
+        else:
+            ds = ds.squeeze(drop=True)
+        
         n = to_quantity(ds.n.isel(z=0))
         return {m: (to_quantity(ds[f"x_{m}"].isel(z=0)) * n) for m in self.molecules}
 
@@ -214,6 +227,12 @@ class JosekiAccessor:  # pragma: no cover
             A mapping of molecule and mole fraction at sea level.
         """
         ds = self._obj
+
+        if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+            raise NotImplementedError
+        else:
+            ds = ds.squeeze(drop=True)
+
         return {
             m: to_quantity(ds[f"x_{m}"].isel(z=0)).item()
             for m in self.molecules
@@ -227,6 +246,12 @@ class JosekiAccessor:  # pragma: no cover
             Mole fraction.
         """
         ds = self._obj
+
+        if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+            raise NotImplementedError
+        else:
+            ds = ds.squeeze(drop=True)
+
         molecules = self.molecules
         concatenated = xr.concat([ds[f"x_{m}"] for m in molecules], dim="m")
         concatenated["m"] = ("m", molecules, {"long_name": "molecule"})
@@ -303,6 +328,11 @@ class JosekiAccessor:  # pragma: no cover
             fraction.
         """
         ds = self._obj
+
+        if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+            raise NotImplementedError
+        else:
+            ds = ds.squeeze(drop=True)
         
         # for molar mass computation to be accurate, main air constituents
         # must be present in the dataset
@@ -404,6 +434,11 @@ class JosekiAccessor:  # pragma: no cover
             Rescaled dataset (new object).
         """
         ds = self._obj
+
+        if not all([ds.dims[_] == 1 for _ in ds.dims if _ != "z"]):
+            raise NotImplementedError
+        else:
+            ds = ds.squeeze(drop=True)
 
         # update mole fraction
         x_new = {}

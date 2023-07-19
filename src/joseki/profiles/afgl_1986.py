@@ -66,6 +66,33 @@ DATA_FILES = {
     Identifier.US_STANDARD: ("table_1f.csv", *TABLE_2_DATA_FILES),
 }
 
+LATITUDE = {
+    Identifier.TROPICAL: [15.0] * ureg.deg,  # see reference
+    Identifier.MIDLATITUDE_SUMMER: [45.0] * ureg.deg,  # see reference
+    Identifier.MIDLATITUDE_WINTER: [45.0] * ureg.deg,  # see reference
+    Identifier.SUBARCTIC_SUMMER: [60.0] * ureg.deg,  # see reference
+    Identifier.SUBARCTIC_WINTER: [60.0] * ureg.deg,  # see reference
+    Identifier.US_STANDARD: [45.0] * ureg.deg,  # ?
+}
+
+LONGITUDE = {
+    Identifier.TROPICAL: [0.0] * ureg.deg,  # dummy value
+    Identifier.MIDLATITUDE_SUMMER: [0.0] * ureg.deg,  # dummy value
+    Identifier.MIDLATITUDE_WINTER: [0.0] * ureg.deg,  # dummy value
+    Identifier.SUBARCTIC_SUMMER: [0.0] * ureg.deg,  # dummy value
+    Identifier.SUBARCTIC_WINTER: [0.0] * ureg.deg,  # dummy value
+    Identifier.US_STANDARD: [0.0] * ureg.deg,  # dummy value
+}
+
+TIME = {
+    Identifier.TROPICAL: ["1986"],  # annual average
+    Identifier.MIDLATITUDE_SUMMER: ["1986-07"],  # summer
+    Identifier.MIDLATITUDE_WINTER: ["1986-01"],  # winter
+    Identifier.SUBARCTIC_SUMMER: ["1986-07"],  # summer
+    Identifier.SUBARCTIC_WINTER: ["1986-01"],  # winter
+    Identifier.US_STANDARD: ["1986"],  # annual average
+}
+
 
 def parse(identifier: Identifier) -> pd.DataFrame:
     """Parse table data files for a given atmospheric profile.
@@ -104,7 +131,7 @@ def parse(identifier: Identifier) -> pd.DataFrame:
 def dataframe_to_dataset(
     df: pd.DataFrame,
     identifier: Identifier,
-    additional_molecules: bool = True,
+    additional_molecules: bool = True,  # TODO: change to False
 ) -> xr.Dataset:
     """Convert the output of the `parse` method to a `xarray.Dataset`.
 
@@ -142,24 +169,33 @@ def dataframe_to_dataset(
         molecules = molecules[:7]
 
     # coordinates
-    coords = {"z": ureg.Quantity(df.z.values, "km")}
+    time = TIME[identifier]
+    latitude = LATITUDE[identifier]
+    longitude = LONGITUDE[identifier]
+    z = df.z.values * ureg.km
 
     # data variables
-    data_vars = {}
-    data_vars["p"] = ureg.Quantity(df.p.values, "millibar").to("Pa")
-    data_vars["t"] = ureg.Quantity(df.t.values, "K")
-    data_vars["n"] = ureg.Quantity(df.n.values, "cm^-3").to("m^-3")
-
-    for s in molecules:
-        data_vars[f"x_{s}"] = (
-            df[s].values * ureg.ppm
-        )  # raw data mole fraction are given in ppmv
+    p = df.p.values * ureg.millibar
+    t = df.t.values * ureg.K
+    n = df.n.values * ureg.cm **-3
+    x = {
+        f"x_{m}": df[m].values * ureg.ppmv  # raw data mole fraction are given in ppmv
+        for m in molecules
+    }
 
     # attributes
     pretty_identifier = f"AFGL (1986) {identifier.value.replace('_', '-')}"
     pretty_title = f"{pretty_identifier} atmosphere thermophysical profile"
 
-    attrs = {
+    data = {
+        "time": time,
+        "latitude": latitude,
+        "longitude": longitude,
+        "z": z,
+        "p": p,
+        "t": t,
+        "n": n,
+        **x,
         "Conventions": "CF-1.10",
         "title": pretty_title,
         "institution": INSTITUION,
@@ -170,16 +206,12 @@ def dataframe_to_dataset(
         "urldate": URLDATE,
     }
 
-    return schema.convert(
-        data_vars=data_vars,
-        coords=coords,
-        attrs=attrs,
-    )
+    return schema.convert(data=data)
 
 
 def get_dataset(
     identifier: Identifier,
-    additional_molecules: bool = True,
+    additional_molecules: bool = True,  # TODO: change to False
 ) -> xr.Dataset:
     """Read data files for a given atmospheric profile.
 

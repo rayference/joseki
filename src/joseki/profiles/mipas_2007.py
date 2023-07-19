@@ -33,6 +33,16 @@ from .schema import history, schema
 
 logger = logging.getLogger(__name__)
 
+
+class Identifier(enum.Enum):
+    """MIPAS atmosphere thermophysical profile identifier enumeration."""
+
+    MIDLATITUDE_DAY = "midlatitude_day"
+    MIDLATITUDE_NIGHT = "midlatitude_night"
+    POLAR_WINTER = "polar_winter"
+    POLAR_SUMMER = "polar_summer"
+    TROPICAL = "tropical"
+
 SOURCE = "Combination of model and observational data"
 
 REFERENCE = (
@@ -56,6 +66,30 @@ CFC_FORMULAE = {
     "CHCl2F": ("Freon-21", "F21", "HCFC-21"),
     "C2Cl3F3": ("Freon-113", "F113", "CFC-113"),
     "C2Cl2F4": ("Freon-114", "F114", "CFC-114"),
+}
+
+LATITUDE = {
+    Identifier.MIDLATITUDE_DAY: [45.0] * ureg.deg,  # ?
+    Identifier.MIDLATITUDE_NIGHT: [45.0] * ureg.deg,  # ?
+    Identifier.POLAR_WINTER: [60.0] * ureg.deg,  # ?
+    Identifier.POLAR_SUMMER: [60.0] * ureg.deg,  # ?
+    Identifier.TROPICAL: [15.0] * ureg.deg,  # ?
+}
+
+LONGITUDE = {
+    Identifier.MIDLATITUDE_DAY: [0.0] * ureg.deg,  # ?
+    Identifier.MIDLATITUDE_NIGHT: [0.0] * ureg.deg,  # ?
+    Identifier.POLAR_WINTER: [0.0] * ureg.deg,  # ?
+    Identifier.POLAR_SUMMER: [0.0] * ureg.deg,  # ?
+    Identifier.TROPICAL: [0.0] * ureg.deg,  # ?
+}
+
+TIME = {
+    Identifier.MIDLATITUDE_DAY: ["12:00:00"],  # ?
+    Identifier.MIDLATITUDE_NIGHT: ["00:00:00"],  # ?
+    Identifier.POLAR_WINTER: ["2007-01"],  # ?
+    Identifier.POLAR_SUMMER: ["2007-07"],  # ?
+    Identifier.TROPICAL: ["2007"],  # ?
 }
 
 # Boltzmann constant
@@ -97,15 +131,6 @@ def translate_cfc(name: str) -> str:
             return formula
     raise ValueError("Unknown chlorofulorocarbon {name}")
 
-
-class Identifier(enum.Enum):
-    """MIPAS atmosphere thermophysical profile identifier enumeration."""
-
-    MIDLATITUDE_DAY = "midlatitude_day"
-    MIDLATITUDE_NIGHT = "midlatitude_night"
-    POLAR_WINTER = "polar_winter"
-    POLAR_SUMMER = "polar_summer"
-    TROPICAL = "tropical"
 
 
 def parse_units(s: str) -> str:
@@ -240,27 +265,21 @@ def get_dataset(identifier: Identifier) -> xr.Dataset:
         Atmospheric profile.
     """
     content = read_file_content(identifier=identifier)
-    quantities = parse_content(content.splitlines())
+    data = parse_content(content.splitlines())
 
-    # Coordinates
-    coords = {"z": quantities.pop("z")}
+    time = TIME[identifier]
+    latitude = LATITUDE[identifier]
+    longitude = LONGITUDE[identifier]
+    data.update({"time": time, "latitude": latitude, "longitude": longitude})
 
-    # Data variables
-    data_vars = {}
-    p = quantities.pop("p")
-    data_vars["p"] = p
-    t = quantities.pop("t")
-    data_vars["t"] = t
+    p = data["p"]
+    t = data["t"]
     n = p / (K * t)  # perfect gas equation
-    data_vars["n"] = n
-    data_vars.update(quantities)
+    data.update({"n": n})
 
-    logger.debug("data variables: %s", data_vars.keys())
-
-    # Attributes
     pretty_id = identifier.value.replace("_", " ")
     pretty_title = f"MIPAS {pretty_id} Reference Atmosphere"
-    attrs = {
+    data.update({
         "Conventions": "CF-1.10",
         "history": history(),
         "title": pretty_title,
@@ -269,16 +288,9 @@ def get_dataset(identifier: Identifier) -> xr.Dataset:
         "references": REFERENCE,
         "url": URL,
         "urldate": URL_DATE,
-    }
-
-    # Dataset
-    ds = schema.convert(
-        data_vars=data_vars,
-        coords=coords,
-        attrs=attrs,
-    )
-
-    return ds
+    })
+    
+    return schema.convert(data)
 
 
 def to_dataset(

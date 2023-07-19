@@ -12,7 +12,7 @@ import ussa1976
 import xarray as xr
 from attrs import define
 
-from ..units import to_quantity
+from ..units import to_quantity, ureg
 from .schema import schema, history
 from .core import Profile
 from .factory import factory
@@ -64,20 +64,23 @@ class USSA1976(Profile):
             ds = ussa1976.compute(z=z.m_as("m"), variables=variables)
 
         # extract data
-        coords = {"z": to_quantity(ds["z"]).to("km")}
-
-        data_vars = {}
-        data_vars["p"] = to_quantity(ds["p"]).to("Pa")
-        data_vars["t"] = to_quantity(ds["t"]).to("K")
-        data_vars["n"] = to_quantity(ds["n_tot"]).to("m^-3")
+        data = {
+            "time": ["1976"],
+            "latitude": [0.0] * ureg.deg,
+            "longitude": [0.0] * ureg.deg,
+            "z": to_quantity(ds["z"]),
+            "p": to_quantity(ds["p"]),
+            "t": to_quantity(ds["t"]),
+            "n": to_quantity(ds["n_tot"]),
+        }
 
         # compute mole fraction
         for s in ds["s"].values:
             nx = to_quantity(ds["n"].sel(s=s))
             n_tot = to_quantity(ds["n_tot"])
-            data_vars[f"x_{s}"] = (nx / n_tot).to("dimensionless")
+            data[f"x_{s}"] = (nx / n_tot).to("dimensionless")
 
-        attrs = {
+        data.update({
             "Conventions": "CF-1.10",
             "title": "U.S. Standard Atmosphere 1976",
             "institution": "NOAA",
@@ -86,12 +89,6 @@ class USSA1976(Profile):
             "references": ds.attrs["references"],
             "url": "https://ntrs.nasa.gov/citations/19770009539",
             "urldate": "2022-12-08",
-        }
+        })
 
-        ds = schema.convert(
-            data_vars,
-            coords,
-            attrs,
-        )
-
-        return ds
+        return schema.convert(data)
