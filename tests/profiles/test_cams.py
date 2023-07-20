@@ -224,9 +224,9 @@ def test_from_cams_reanalysis_pressure_data():
     ds = from_cams_reanalysis(
         data="tests/data/25b63a29-3eab-4599-92f4-7bba42ec6add.zip",
         identifier="EAC4",
-        time="2020-04-01T12:00:00",
-        lat=28.0,
-        lon=86.0,
+        time="2021-04-01T12:00:00",
+        lat=27.5,
+        lon=86.5,
         pressure_data="surface_pressure",
     )
 

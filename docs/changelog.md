@@ -16,10 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * update `CITATION.cff` for version `2.2.0`
 * change `pressure_data` default value to `"surface_pressure"` in 
   `from_cams_reanalysis` 
+* in `from_cams_reanalysis()`, interpolate along time, longitude and latitude 
+  instead of selecting the nearest neighbour.
 
 ### Fixed
 
 * Link to documentation in `README.md`
+* Wrong latitude and longitude coordinates in tutorials 
 
 ## [2.2.0] - 2023-07-18
 

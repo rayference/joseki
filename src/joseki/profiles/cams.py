@@ -160,13 +160,23 @@ def from_cams_reanalysis(
         raise ValueError("Could not find a multi-level dataset.") 
 
     # Select in time and space
-    selected = select(level_dataset, time, longitude.m, latitude.m)
+    interpolated = interp_time_space(
+        level_dataset,
+        time,
+        longitude.m,
+        latitude.m,
+    )
 
     pressure_data = "surface_pressure" if pressure_data is None else pressure_data
 
     # Read surface pressure if available
     if surface_dataset is not None:
-        surface_selected = select(surface_dataset, time, longitude.m, latitude.m)
+        surface_selected = interp_time_space(
+            surface_dataset,
+            time,
+            longitude.m,
+            latitude.m,
+        )
         if "sp" in surface_selected:
             surface_pressure = to_quantity(surface_selected["sp"])
         else:
@@ -194,7 +204,7 @@ def from_cams_reanalysis(
 
     # Translate model levels into altitude values (and add pressure data)
     altitude_dataset = model_level_to_altitude(
-        selected,
+        interpolated,
         pressure_data=pressure_data,
         surface_pressure=surface_pressure,
     )
@@ -520,13 +530,13 @@ def identify(datasets: list) -> tuple:
     return level_dataset, surface_dataset
 
 
-def select(
+def interp_time_space(
     ds: xr.Dataset,
     datetime: str | datetime.datetime | np.datetime64,
     lon: float,
     lat: float,
 ):
-    """Select a CAMS dataset at specific datetime, longitude and latitude.
+    """Interpolate a CAMS dataset at specific datetime, longitude and latitude.
     
     Args:
         ds: CAMS Dataset.
@@ -535,11 +545,18 @@ def select(
         lat: Latitude [degrees].
 
     Notes:
-        The dataset is selected using the nearest method.
+        The dataset is interpolated using the linear method.
     """
-    _ds = ds.sel(time=datetime, method="nearest", drop=True)
-    _ds = _ds.sel(latitude=lat, longitude=lon, method="nearest", drop=True)
-    return _ds
+    return ds.interp(
+        time=datetime,
+        method="linear",
+        kwargs={"bounds_error": True},
+    ).interp(
+        latitude=lat,
+        longitude=lon,
+        method="linear",
+        kwargs={"bounds_error": True},
+    )
 
 
 def getpath(filename: str) -> Path:
@@ -772,7 +789,7 @@ def get_molecule_amounts(
     _, surface_dataset = identify(datasets)
 
     # Select in time and space
-    selected = select(surface_dataset, time, longitude.m, latitude.m)
+    selected = interp_time_space(surface_dataset, time, longitude.m, latitude.m)
 
     amount = {}
     for dv in selected.data_vars:

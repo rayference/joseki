@@ -60,14 +60,10 @@ In this tutorial series, we will choose the below time and geographical coordina
 
 
 ```python
-JULY_1ST_2020 = "2020-07-01T12:00:00.000000000"
-
-class LYBIA4_PICS:
-    LATITUDE = 28.67
-    LONGITUDE = 23.42
+TIME = "2020-07-01T12:00:00.000000000"
+LATITUDE = 23.42
+LONGITUDE = 27.67
 ```
-
-The selected data corresponds to the 1st of July 2020 over the Lybia 4 Pseudo Invariant Calibration Site (PICS).
 
 ### 1. Rescale a standard profile
 
@@ -85,9 +81,9 @@ with [`get_molecule_amounts`](reference.md#src.joseki.profiles.cams.get_molecule
 ```python
 cams_amounts = get_molecule_amounts(
     test_eac4_single_level_data,
-    time=JULY_1ST_2020,
-    lon=LYBIA4_PICS.LONGITUDE,
-    lat=LYBIA4_PICS.LATITUDE,
+    time=TIME,
+    lon=LONGITUDE,
+    lat=LATITUDE,
 )
 ```
 
@@ -159,9 +155,9 @@ To create a profile entirely from CAMS data, we use the EAC4 multi-level data.
 ```python
 ds = from_cams_reanalysis(
     data=test_eac4_multi_level_data,
-    time=JULY_1ST_2020,
-    lon=LYBIA4_PICS.LONGITUDE,
-    lat=LYBIA4_PICS.LATITUDE,
+    time=TIME,
+    lon=LONGITUDE,
+    lat=LATITUDE,
     identifier="EAC4",
 )
 ```
