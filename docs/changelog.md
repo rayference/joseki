@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * maintainers guide at `maintainers.md`
+* Added `merge` method to merge multiple profiles together
+* Maintainers guide: added a section on how to modify the tutorials 
 
 ### Changed
 
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Link to documentation in `README.md`
 * Wrong latitude and longitude coordinates in tutorials 
+* Added `merge` method to merge multiple profiles together
 
 ## [2.2.0] - 2023-07-18
 

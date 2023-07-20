@@ -1,5 +1,16 @@
 # Guide to maintainers
 
+## Update the tutorials
+
+### Make the modifications
+
+* modify the file `docs/tutorials.ipynb` (not `docs/tutorials.md`)
+
+### After the modifications
+
+* run the notebook and check that it executes successfully
+* strip the output: `nbstripout docs/tutorials`
+* convert to markdown: `jupyter nbconvert --to markdown docs/tutorials.ipynb`
 ## Make a PyPI/conda release
 
 ### Before the release
