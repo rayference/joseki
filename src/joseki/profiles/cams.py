@@ -144,6 +144,104 @@ def from_cams_reanalysis(
     longitude = to_quantity(lon, units="degree")
     latitude = to_quantity(lat, units="degree")
 
+    # format data into timeseries
+    timeseries = from_cams_reanalysis_helper(
+        data=data,
+        identifier=identifier,
+        lat=lat,
+        lon=lon,
+        molecules=molecules,
+        missing_molecules_from=missing_molecules_from,
+        extract_dir=extract_dir,
+        pressure_data=pressure_data,
+    )
+
+    # interpolate data in time
+    # TODO: handle case where time coordinate has 1 value only
+    data = timeseries.interp(
+        time=time,
+        method="linear",
+        kwargs={"bounds_error": True},
+    )
+
+    ds = schema.convert(
+        data_vars={
+            "p": to_quantity(data.p),
+            "t": to_quantity(data.t),
+            **{
+                xm: to_quantity(data[xm])
+                for xm in data if xm.startswith("x_")
+            },
+        },
+        coords={
+            "z": to_quantity(data.z),
+        },
+        attrs=generate_cams_attrs(
+            latitude=latitude,
+            longitude=longitude,
+            time=time,
+            identifier=identifier,
+        )
+    )
+
+    if extrapolate:
+        extrapolate_up = extrapolate.get("up", None)
+        extrapolate_down = extrapolate.get("down", None)
+
+        if extrapolate_up is None and extrapolate_down is None:
+            raise ValueError("Either 'up' or 'down' must be specified.")
+
+        if extrapolate_up:
+            z_up = extrapolate_up.get("z", None)
+            method_up = extrapolate_up.get("method", {"default": "nearest"})
+            ds = _extrapolate(
+                ds=ds,
+                direction="up",
+                z_extra=z_up,
+                method=method_up,
+            )
+        if extrapolate_down:
+            z_down = extrapolate_down.get("z", None)
+            method_down = extrapolate_down.get("method", {"default": "linear"})
+            ds = _extrapolate(
+                ds=ds,
+                direction="down",
+                z_extra=z_down,
+                method=method_down,
+            )
+    else:
+        ds = ds
+
+    if regularize:
+        z = to_quantity(ds.z)
+        default_num = int((z.max() - z.min()) // np.diff(z).min())
+        if isinstance(regularize, bool):
+            regularize = {}
+        ds = _regularize(
+            ds=ds,
+            method=regularize.get("method", DEFAULT_METHOD),
+            conserve_column=regularize.get("conserve_column", False),
+            options=regularize.get('options', {"num": default_num}),
+        )
+    else:
+        ds = ds
+    
+    return ds
+
+def from_cams_reanalysis_helper(
+    data: PathLike | list[PathLike],
+    identifier: str,
+    lat: float | pint.Quantity,
+    lon: float | pint.Quantity,
+    molecules: list[str] | None = None,
+    missing_molecules_from: xr.Dataset | None = None,
+    extract_dir : Path | None = None,
+    pressure_data : str | None = "surface_pressure",
+) -> xr.Dataset:
+    
+    longitude = to_quantity(lon, units="degree")
+    latitude = to_quantity(lat, units="degree")
+
     # Open datasets (we sort by time because CAMS data is not always sorted by 
     # time and this is required to select at a timestamp)
     datasets = [
@@ -159,10 +257,9 @@ def from_cams_reanalysis(
     if level_dataset is None:  # pragma: no cover
         raise ValueError("Could not find a multi-level dataset.") 
 
-    # Select in time and space
-    interpolated = interp_time_space(
+    # Interpolate in space
+    interpolated = interp_space(
         level_dataset,
-        time,
         longitude.m,
         latitude.m,
     )
@@ -171,9 +268,8 @@ def from_cams_reanalysis(
 
     # Read surface pressure if available
     if surface_dataset is not None:
-        surface_selected = interp_time_space(
+        surface_selected = interp_space(
             surface_dataset,
-            time,
             longitude.m,
             latitude.m,
         )
@@ -239,16 +335,24 @@ def from_cams_reanalysis(
     
     # add missing molecules
     if missing_molecules_from is not None:
+
+        # drop all variables in dataset 'missing_molecules_from' that do not 
+        # start with 'x_'
         _data = missing_molecules_from.drop_vars([
             v for v in missing_molecules_from.data_vars
             if not v.startswith("x_")
         ])
 
+        # list all molecules in dataset 'missing_molecules_from'
         _all_molecules = [x[2:] for x in _data.data_vars]
+
+        # compute molecules to drop in dataset 'missing_molecules_from'
         _drop_molecules = [
             m for m in _all_molecules
             if m not in missing_molecules
         ]
+
+        # select the molecules data to add
         _missing_data = _data.drop_vars([
             f"x_{m}" for m in _drop_molecules
         ])
@@ -258,6 +362,9 @@ def from_cams_reanalysis(
         _missing_data = _missing_data.interp(
             z=data.z.values,
         )
+
+        # TODO: time coordinate must match or not exist
+        # TODO: if it does not exist, '_missing_data' dims must expanded
 
         # missing molecule data can be added
         data = data.assign(
@@ -271,20 +378,48 @@ def from_cams_reanalysis(
     data = data.assign(
         {
             "p": (
-                    "z",
+                    ["time", "z"],
                     altitude_dataset["p"].values,
-                    {"units": altitude_dataset["p"].units},
+                    {
+                        "standard_name": "air_pressure",
+                        "long_name": "air pressure",
+                        "units": altitude_dataset["p"].units
+                    },
                 ),
             "t": (
-                    "z",
+                    ["time", "z"],
                     altitude_dataset["t"].values,
-                    {"units": altitude_dataset["t"].units},
+                    {
+                        "standard_name": "air_temperature",
+                        "long_name": "air temperature",
+                        "units": altitude_dataset["t"].units
+                    },
                 ),
         }
     )
 
+    lower_time = data.time.values.min()
+    upper_time = data.time.values.max()
+    time = f"{lower_time} to {upper_time}"
 
-    # Dataset attributes
+    attrs = generate_cams_attrs(
+        latitude=latitude,
+        longitude=longitude,
+        time=time,
+        identifier=identifier,
+    )
+
+    data.attrs.update(attrs)
+
+    return data
+
+def generate_cams_attrs(
+    latitude: pint.Quantity,
+    longitude: pint.Quantity,
+    time: str,
+    identifier: str,
+) -> dict:
+    
     INSTITUTION = "European Centre for Medium-Range Weather Forecasts (ECMWF)"
     SOURCE = (
         "4DVar data assimilation in CY42R1 of ECMWF’s Integrated Forecast "
@@ -327,78 +462,21 @@ def from_cams_reanalysis(
         "EGG4": "2023-06-16",
     }
 
-    ds = schema.convert(
-        data_vars={
-            "p": to_quantity(data.p),
-            "t": to_quantity(data.t),
-            **{
-                xm: to_quantity(data[xm])
-                for xm in data if xm.startswith("x_")
-            },
-        },
-        coords={
-            "z": to_quantity(data.z),
-        },
-        attrs={
-            "title": "CAMS global reanalysis (EAC4) atmospheric profile",
-            "institution": INSTITUTION,
-            "source": SOURCE,
-            "history": f"{utcnow} - CAMS data converted to Joseki format",
-            "references": REFERENCE[identifier],
-            "comment": COMMENT,
-            "acknowledgment": acknowledgment,
-            "url": URL[identifier],
-            "urldate": URL_DATE[identifier],
-            "latitude": f"{latitude:~}",
-            "longitude": f"{longitude:~}",
-            "Conventions": "CF-1.10",
-        }
-    )
-
-    if extrapolate:
-        #z = to_quantity(ds.z)
-        extrapolate_up = extrapolate.get("up", None)
-        extrapolate_down = extrapolate.get("down", None)
-
-        if extrapolate_up is None and extrapolate_down is None:
-            raise ValueError("Either 'up' or 'down' must be specified.")
-
-        if extrapolate_up:
-            z_up = extrapolate_up.get("z", None)
-            method_up = extrapolate_up.get("method", {"default": "nearest"})
-            ds = _extrapolate(
-                ds=ds,
-                direction="up",
-                z_extra=z_up,
-                method=method_up,
-            )
-        if extrapolate_down:
-            z_down = extrapolate_down.get("z", None)
-            method_down = extrapolate_down.get("method", {"default": "linear"})
-            ds = _extrapolate(
-                ds=ds,
-                direction="down",
-                z_extra=z_down,
-                method=method_down,
-            )
-    else:
-        ds = ds
-
-    if regularize:
-        z = to_quantity(ds.z)
-        default_num = int((z.max() - z.min()) // np.diff(z).min())
-        if isinstance(regularize, bool):
-            regularize = {}
-        ds = _regularize(
-            ds=ds,
-            method=regularize.get("method", DEFAULT_METHOD),
-            conserve_column=regularize.get("conserve_column", False),
-            options=regularize.get('options', {"num": default_num}),
-        )
-    else:
-        ds = ds
-    
-    return ds
+    return {
+        "title": "CAMS global reanalysis (EAC4) atmospheric profile",
+        "institution": INSTITUTION,
+        "source": SOURCE,
+        "history": f"{utcnow} - CAMS data converted to Joseki format",
+        "references": REFERENCE[identifier],
+        "comment": COMMENT,
+        "acknowledgment": acknowledgment,
+        "url": URL[identifier],
+        "urldate": URL_DATE[identifier],
+        "latitude": f"{latitude:~}",
+        "longitude": f"{longitude:~}",
+        "time": time,
+        "Conventions": "CF-1.10",
+    }
 
 
 # TODO: add support for .tar.gz archives
@@ -530,6 +608,29 @@ def identify(datasets: list) -> tuple:
     return level_dataset, surface_dataset
 
 
+def interp_space(
+    ds: xr.Dataset,
+    lon: float,
+    lat: float,
+):
+    """Interpolate a CAMS dataset at specific longitude and latitude.
+    
+    Args:
+        ds: CAMS Dataset.
+        lon: Longitude [degrees].
+        lat: Latitude [degrees].
+
+    Notes:
+        The dataset is interpolated using the linear method.
+    """
+    return ds.interp(
+        latitude=lat,
+        longitude=lon,
+        method="linear",
+        kwargs={"bounds_error": True},
+    )
+
+
 def interp_time_space(
     ds: xr.Dataset,
     datetime: str | datetime.datetime | np.datetime64,
@@ -594,14 +695,14 @@ def rescale_pressure_profile(
     logger.debug("Surface pressure: %s", ds_surface_pressure)
     scaling_factor = (
         surface_pressure / ds_surface_pressure
-    ).m_as("dimensionless")
+    ).m_as("dimensionless")[:, np.newaxis]
     logger.debug("Scaling factor: %s", scaling_factor)
     with xr.set_options(keep_attrs=True):
         ds["p"] = ds["p"] * scaling_factor
     return ds
 
 
-# TODO: the model level to altitude conversion is approximated
+# TODO: the model level to altitude conversion is approximate
 def model_level_to_altitude(
     ds: xr.Dataset,
     pressure_data: str = "model_level_60",
@@ -662,11 +763,14 @@ def model_level_to_altitude(
     ds = ds.drop_vars("z") if "z" in ds else ds
 
     interpolated = ds.interp(level=level).drop_vars("level")
+    p = np.array(df["pf [hPa]"].values[1:], dtype=float)
+    p_tiled = np.tile(p, interpolated.time.values.size)
+    p_tiled_reshaped = p_tiled.reshape(interpolated.time.values.size, p.size)
     ds = interpolated.assign(
         {
             "p": (
-                "z",
-                np.array(df["pf [hPa]"].values[1:], dtype=float),
+                ["time", "z"],
+                p_tiled_reshaped,
                 {"units": "hPa"},
             ),
         }
@@ -675,7 +779,15 @@ def model_level_to_altitude(
     # Ensure altitude are in kilometer
     z = to_quantity(ds.z)
     ds = ds.assign({
-        "z": ("z", z.m_as("km"), {"units": "km", "long_name": "altitude"})
+        "z": (
+            "z",
+            z.m_as("km"),
+            {
+                "units": "km",
+                "long_name": "altitude",
+                "standard_name": "altitude",
+            }
+        )
     })
 
     if pressure_data == "surface_pressure":  # pragma: no cover
@@ -695,7 +807,7 @@ def model_level_to_altitude(
         )
         logger.info(
             "Surface pressure discrepancy: %s",
-            f"{rel_diff.m_as('1'):.1%}",
+            f"{rel_diff.to('1'):.1%}",
         )
 
     return ds
@@ -732,6 +844,7 @@ def mole_fractions(ds: xr.Dataset) -> xr.DataArray:
         ),
         coords={
             "m": ("m", molecules_joseki),
+            "time": ds["time"],
             "z": ds["z"],
         }
     )
@@ -789,16 +902,21 @@ def get_molecule_amounts(
     _, surface_dataset = identify(datasets)
 
     # Select in time and space
-    selected = interp_time_space(surface_dataset, time, longitude.m, latitude.m)
+    interpolated = interp_time_space(
+        surface_dataset,
+        time,
+        longitude.m,
+        latitude.m,
+    )
 
     amount = {}
-    for dv in selected.data_vars:
+    for dv in interpolated.data_vars:
         try:
             m = MOLECULE_TOTALS[dv]
         except KeyError:  # pragma: no cover
             pass
         else:
-            amount[m] = to_quantity(selected[dv])
+            amount[m] = to_quantity(interpolated[dv])
     
     # check that all molecules are present
     if molecules is not None:

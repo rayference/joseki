@@ -71,7 +71,11 @@ def to_m_suffixed_data(da: xr.DataArray) -> xr.Dataset:
     ds = xr.Dataset()
     for m in molecules:
         ds[f"{data_var_name}_{m}"] = da.sel(m=m, drop=True)
-        ds[f"{data_var_name}_{m}"].attrs = data_var_attrs
+        ds[f"{data_var_name}_{m}"].attrs = {
+            "standard_name": f"{m}_mole_fraction",
+            "long_name": f"{m} mole fraction",
+            "units": data_var_attrs["units"],
+        }
     return ds
 
 
