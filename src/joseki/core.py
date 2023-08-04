@@ -30,6 +30,8 @@ def make(
     conserve_column: bool = False,
     molecules: t.List[str] | None = None,
     regularize: bool | dict | None = None,
+    rescale_to: dict | None = None,
+    check_x_sum: bool = False,
     **kwargs: t.Any,
 ) -> xr.Dataset:
     """
@@ -42,16 +44,30 @@ def make(
         conserve_column: If `True`, ensure that column densities are conserved
             during interpolation.
         molecules: List of molecules to include in the profile.
+        regularize: Regularize the altitude grid with specified options which
+            are passed to 
+            [regularize](reference.md#src.joseki.profiles.core.regularize).
+        rescale_to: Rescale molecular concentrations to the specified target 
+            values which are passed to 
+            [rescale_to](reference.md#src.joseki.accessor.JosekiAccessor.rescale_to).  
+        check_x_sum: If `True`, check that the mole fraction sums are less or 
+            equal to 1.
         kwargs: Additional keyword arguments passed to the profile constructor.
     
     Returns:
         Profile as xarray.Dataset.
+    
+    See Also:
+        [regularize](reference.md#src.joseki.profiles.core.regularize)
+        [rescale_to](reference.md#src.joseki.accessor.JosekiAccessor.rescale_to)
     """
     logger.info("Creating profile %s", identifier)
     logger.debug("z: %s", z)
     logger.debug("interp_method: %s", interp_method)
     logger.debug("conserve_column: %s", conserve_column)
     logger.debug("molecules: %s", molecules)
+    logger.debug("regularize: %s", regularize)
+    logger.debug("rescale_to: %s", rescale_to)
     logger.debug("kwargs: %s", kwargs)
 
     profile = factory.create(identifier)
@@ -79,6 +95,13 @@ def make(
             method=regularize.get("method", DEFAULT_METHOD),
             conserve_column=regularize.get("conserve_column", False),
             options=regularize.get('options', {"num": default_num}),
+        )
+    
+    # Molecular concentration rescaling
+    if rescale_to:
+        ds = ds.joseki.rescale_to(
+            target=rescale_to,
+            check_x_sum=check_x_sum,
         )
     
     return ds

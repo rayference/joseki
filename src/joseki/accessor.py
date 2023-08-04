@@ -422,6 +422,8 @@ class JosekiAccessor:  # pragma: no cover
                 number densitx at sea level [`length^-3`], a mass density at 
                 sea level [`mass * length^-3`], a mole fraction at 
                 sea level [`dimensionless`].
+            check_x_sum: if True, check that mole fraction sums are never
+                larger than one.
         
         Returns:
             Rescaled dataset (new object).    

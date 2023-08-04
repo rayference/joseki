@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * parameter `regularize` to `make`.
+* parameters `rescale_to` and `check_x_sum` to `make`.
 
 ### Changed
 
