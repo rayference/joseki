@@ -11,6 +11,19 @@
 * run the notebook and check that it executes successfully
 * strip the output: `nbstripout docs/tutorials`
 * convert to markdown: `jupyter nbconvert --to markdown docs/tutorials.ipynb`
+
+## Run the tests and verify test coverage
+
+* run the test with `pytest tests`
+* to verify the test coverage, run:
+  ```shell
+  coverage run -m pytest -v tests
+  python -m coverage combine   
+  python -m coverage html --skip-covered --skip-empty
+  python -m coverage report --fail-under=100
+  ```
+  and inspect the coverage report.
+
 ## Make a PyPI/conda release
 
 ### Before the release

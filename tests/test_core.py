@@ -83,10 +83,70 @@ def test_make_conserve_column():
             significant=6
         )
 
-def test_select_molecules():
-    """Returns xr.Dataset."""
+def test_make_molecules():
+    """Returns dataset with molecules corresponding to selection."""
     ds = make(identifier="afgl_1986-tropical", molecules=["H2O", "CO2"])
     assert ds.joseki.molecules == ["H2O", "CO2"]
+
+
+def test_make_regularize_bool():
+    """Returns valid dataset with constant altitude step."""
+    ds = make(identifier="afgl_1986-tropical", regularize=True)
+
+    assert np.allclose(
+        np.diff(ds.z.values),
+        np.diff(ds.z.values)[0],
+        rtol=1e-9,
+        atol=1e-6,
+    )
+    assert ds.joseki.is_valid
+
+
+def test_make_regularize_dict():
+    """Returns valid dataset with constant altitude step."""
+    num = 1201
+    ds = make(
+        identifier="afgl_1986-tropical",
+        regularize={"options": {"num": num}},
+    )
+
+    assert ds.z.size == num
+
+
+@pytest.mark.parametrize(
+    "target",
+    [
+        {
+            "H2O": 25 * ureg.kg / ureg.m**2
+        },
+        {
+            "H2O": 25 * ureg.kg / ureg.m**2,
+            "CO2": 420 * ureg.ppm
+        },
+        {
+            "H2O": 25 * ureg.kg / ureg.m**2,
+            "CO2": 420 * ureg.ppm,
+            "O3": 350 * ureg.dobson_unit
+        }
+    ],
+)
+def test_make_rescale_to(target):
+    ds = make(
+        identifier="afgl_1986-tropical",
+        rescale_to=target,
+    )
+    value = {
+        "H2O": ds.joseki.column_mass_density["H2O"],
+        "CO2": ds.joseki.mole_fraction_at_sea_level["CO2"],
+        "O3": ds.joseki.column_number_density["O3"],
+    }
+
+    for molecule in target:
+        assert_approx_equal(
+            value[molecule].m_as(target[molecule].units),
+            target[molecule].m,
+            significant=6,
+        )
 
 def test_open_dataset(tmpdir):
     """Returns xr.Dataset."""
@@ -96,6 +156,7 @@ def test_open_dataset(tmpdir):
     ds2 = open_dataset(path)
     assert ds2.joseki.is_valid
 
+
 def test_load_dataset(tmpdir):
     """Returns xr.Dataset."""
     ds = make(identifier="afgl_1986-tropical")
@@ -104,11 +165,13 @@ def test_load_dataset(tmpdir):
     ds2 = load_dataset(path)
     assert ds2.joseki.is_valid
 
-def test_merge_1():
+
+def test_merge():
     ds1 = make(identifier="afgl_1986-tropical", molecules=["H2O", "CO2"])
     ds2 = make(identifier="afgl_1986-tropical", molecules=["O3"])
     ds = merge([ds1, ds2])
     assert ds.joseki.molecules == ["H2O", "CO2", "O3"]
+
 
 def test_identifiers():
     """Returns list of identifiers."""
