@@ -6,6 +6,7 @@ import logging
 import os
 import typing as t
 
+import numpy as np
 import pint
 import xarray as xr
 
@@ -14,7 +15,9 @@ from .profiles.core import (
     DEFAULT_METHOD,
     select_molecules,
 )
+from .profiles.core import regularize as _regularize
 from .__version__ import __version__
+from .units import to_quantity
 
 
 logger = logging.getLogger(__name__)
@@ -26,6 +29,7 @@ def make(
     interp_method: t.Mapping[str, str] | None = DEFAULT_METHOD,
     conserve_column: bool = False,
     molecules: t.List[str] | None = None,
+    regularize: bool | dict | None = None,
     **kwargs: t.Any,
 ) -> xr.Dataset:
     """
@@ -60,8 +64,22 @@ def make(
         **kwargs,
     )
     
+    # Molecules selection
     if molecules is not None:
         ds = select_molecules(ds, molecules)
+    
+    # Altitude grid regularization
+    if regularize:
+        z = to_quantity(ds.z)
+        default_num = int((z.max() - z.min()) // np.diff(z).min()) + 1
+        if isinstance(regularize, bool):
+            regularize = {}
+        ds = _regularize(
+            ds=ds,
+            method=regularize.get("method", DEFAULT_METHOD),
+            conserve_column=regularize.get("conserve_column", False),
+            options=regularize.get('options', {"num": default_num}),
+        )
     
     return ds
 
