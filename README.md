@@ -48,7 +48,7 @@ conda install -c conda-forge joseki
 
 ## Documentation
 
-Visit https://nollety.github.io/joseki/latest.
+Visit https://rayference.github.io/joseki/latest.
 
 ## Ikigai
 
@@ -57,3 +57,11 @@ Visit https://nollety.github.io/joseki/latest.
 the need to collect, document and trace, integrate and modify *popular* 
 thermophysical profiles.
 As such, its features evolve in close relationship to those of *Eradiate*.
+
+## About
+
+Joseki is written and maintained by [Yvan Nollet](https://github.com/nollety).
+
+Development is supported by [Rayference](https://www.rayference.eu).
+
+Joseki is a component of the [Eradiate radiative transfer model](https://www.eradiate.eu/site/).
