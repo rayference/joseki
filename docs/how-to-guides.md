@@ -87,30 +87,6 @@ To ensure column densities are conserved during interpolation, set the
         conserve_column=True,
     )
     ```
-## Cells representation
-
-To make an atmospheric profile where data variables are given in altitude cells
-instead of at altitude levels, set the parameter `represent_in_cells` to
-`True`:
-
-```python
-ds = joseki.make(
-    identifier="afgl_1986-us_standard",
-    represent_in_cells=True,
-)
-```
-
-The resulting dataset has a coordinate variable `z` that corresponds to
-the altitude cells center and a data variable `z_bounds` that indicate the
-altitude bounds of each altitude cell, i.e. atmospheric layer.
-
-Note that moving a profile from the nodes-representation to the 
-cells-representation is achieved by interpolating the nodes-represented profile.
-As a result, column densities are likely to be different in the 
-cells-represented profile.
-
-Similarly to [when specifying the altitude grid](#altitude-grid), you can 
-ensure that column densities are conserved with the `conserve_column` parameter.
 
 ## Molecules selection
 
@@ -141,7 +117,6 @@ parameter to `False`:
 ```python
 ds = joseki.make(
     identifier="afgl_1986-us_standard",
-    represent_in_cells=True,
     additional_molecules=False,
 )
 ```

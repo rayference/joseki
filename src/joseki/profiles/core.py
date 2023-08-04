@@ -4,8 +4,6 @@ The `Profile` abstract class defines the interface for atmosphere thermophysical
 profiles.
 The `interp` function is used to interpolate an atmosphere thermophysical
 profile on new altitude values.
-The `represent_profile_in_cells` function is used to compute the cells
-representation of the atmosphere thermophysical profile.
 """
 import logging
 import typing as t
@@ -150,74 +148,6 @@ def interp(
     if conserve_column:
         return rescale_to_column(reference=ds, ds=interpolated)
 
-    return interpolated
-
-
-def represent_profile_in_cells(
-    ds: xr.Dataset,
-    method: t.Dict[str, str] = DEFAULT_METHOD,
-    conserve_column: bool = False,
-) -> xr.Dataset:
-    """Compute the cells representation of the atmosphere thermophysical profile.
-
-    Args:
-        ds: Initial atmospheric profile.
-        method: Mapping of variable and interpolation method.
-            If a variable is not in the mapping, the linear interpolation is used.
-            By default, linear interpolation is used for all variables.
-        conserve_column: If True, ensure that column densities are conserved.
-
-    Returns:
-        Cells representation of the atmosphere thermophysical profile.
-
-    Notes:
-        Atmosphere cells (or layers) are defined by two consecutive altitude 
-        values. The layer's center altitude is defined as the arithmetic 
-        average of these two values. The pressure, temperature, number density 
-        and mole fraction fields are interpolated at these layer' center 
-        altitude values. In the new atmospheric profile, the `z` coordinate 
-        is updated with layer' center altitude values and a data variable 
-        `z_bounds` indicating the altitude bounds of each layer, is added.
-        A copy of the dataset is returned, the original dataset is not 
-        modified.
-    """
-    # if the profile is already represented in cells, do nothing
-    if ds.z.standard_name == "layer_center_altitude":
-        return ds
-
-    z_nodes = to_quantity(ds.z)
-    z_centers = (z_nodes[:-1] + z_nodes[1:]) / 2.0
-
-    interpolated = interp(
-        ds=ds,
-        z_new=z_centers,
-        method=method,
-        conserve_column=False,  # we rescale later
-    )
-    interpolated.z.attrs = dict(
-        standard_name="layer_center_altitude",
-        long_name="layer center altitude",
-        units="km",
-    )
-    z_bounds = np.stack([z_nodes[:-1], z_nodes[1:]])
-    interpolated = interpolated.assign(
-        z_bounds=(
-            ("zbv", "z"),
-            z_bounds.m_as("km"),
-            dict(
-                standard_name="cell_bound_altitude",
-                long_name="cell bound altitude",
-                units="km",
-            ),
-        )
-    )
-    interpolated.attrs.update(
-        history=interpolated.history + f"\n{utcnow()} "
-        f"- represent profile on cells - joseki, version {__version__}"
-    )
-
-    if conserve_column:
-        return rescale_to_column(reference=ds, ds=interpolated)
     return interpolated
 
 

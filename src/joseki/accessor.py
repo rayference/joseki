@@ -101,53 +101,27 @@ class JosekiAccessor:  # pragma: no cover
             * $n_{\mathrm{M}}(z)$ is the number density of molecule M at
             altitude $z$.
 
-            If the dataset has a `z_bounds` coordinate, the integral is computed
-            using the centered rectangle method, where the `z` coordinate
-            corresponds to the rectangle centers.
-
-            If the dataset does not have a `z_bounds` coordinate, the 
-            integration is performed using the trapezoidal rule.
+            The  integration is performed using the trapezoidal rule.
         """
         ds = self._obj
-        try:
-            with xr.set_options(keep_attrs=True):
-                dz = to_quantity(ds.z_bounds.diff(dim="zbv", n=1).squeeze())
-            
-            logger.debug(
-                "Computing column number density using the centered rectangle "
-                "rule."
+        
+        logger.debug(
+            "Computing column number density using the trapezoidal rule."
+        )
+
+        _column_number_density = {}
+        for m in self.molecules:
+            integral = (ds[f"x_{m}"] * ds.n).integrate(
+                coord="z"
+            )  # integrate using the trapezoidal rule
+            units = " ".join(
+                [ds[var].attrs["units"] for var in [f"x_{m}", "n", "z"]]
             )
+            _column_number_density[m] = (
+                integral.values * ureg.Unit(units)
+            ).to_base_units()
 
-            n = to_quantity(ds.n)
-
-            _column_number_density = {}
-            for m in self.molecules:
-                xm = to_quantity(ds[f"x_{m}"])
-                _column_number_density[m] = (
-                    (xm * n * dz).sum().to_base_units()
-                )  # integrate using the centered rectangle rule
-
-            return _column_number_density
-
-        except AttributeError:  # z_bounds attribute does not exist
-
-            logger.debug(
-                "Computing column number density using the trapezoidal rule."
-            )
-
-            _column_number_density = {}
-            for m in self.molecules:
-                integral = (ds[f"x_{m}"] * ds.n).integrate(
-                    coord="z"
-                )  # integrate using the trapezoidal rule
-                units = " ".join(
-                    [ds[var].attrs["units"] for var in [f"x_{m}", "n", "z"]]
-                )
-                _column_number_density[m] = (
-                    integral.values * ureg.Unit(units)
-                ).to_base_units()
-
-            return _column_number_density
+        return _column_number_density
 
     @property
     def column_mass_density(
@@ -187,7 +161,10 @@ class JosekiAccessor:  # pragma: no cover
         """
         ds = self._obj
         n = to_quantity(ds.n.isel(z=0))
-        return {m: (to_quantity(ds[f"x_{m}"].isel(z=0)) * n) for m in self.molecules}
+        return {
+            m: (to_quantity(ds[f"x_{m}"].isel(z=0)) * n)
+            for m in self.molecules
+        }
 
     @property
     def mass_density_at_sea_level(

@@ -23,8 +23,6 @@ different operations, such as interpolation and rescaling, on a dataset.
   * *MIPAS (2007) reference atmospheres*
   * *U.S. Standard Atmosphere, 1976*
 * Specify the altitude mesh to interpolate the atmospheric profile at.
-* Move from the nodes-representation to the cells-representation of the 
-  altitude mesh.
 * Command-line interface.
 * Python API.
 

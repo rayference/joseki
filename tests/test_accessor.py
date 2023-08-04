@@ -10,16 +10,6 @@ from joseki.units import to_quantity
 from joseki.units import ureg
 
 
-def test_column_number_density_integration():
-    """Same result is returned when profile is represented in cells or not."""
-    ds1 = joseki.make("mipas_2007-midlatitude_day")
-    ds2 = joseki.make("mipas_2007-midlatitude_day", represent_in_cells=True)
-    assert_approx_equal(
-        ds1.joseki.column_number_density["CO2"].m,
-        ds2.joseki.column_number_density["CO2"].m,
-        significant=5,
-    )
-
 @pytest.mark.parametrize(
     "identifier",
     ["ussa_1976", "afgl_1986-us_standard", "mipas_2007-midlatitude_day"]
@@ -31,41 +21,35 @@ def test_column_mass_density(identifier: str):
 
 
 @pytest.mark.parametrize(
-    "identifier, represent_in_cells, expected",
+    "identifier, expected",
     [
-        ("afgl_1986-us_standard", True, 14.27 * ureg.kg / ureg.m**2),
-        ("afgl_1986-us_standard", False, 14.38 * ureg.kg / ureg.m**2),
-        ("mipas_2007-midlatitude_day", True, 19.33 * ureg.kg / ureg.m**2),
-        ("mipas_2007-midlatitude_day", False, 19.51 * ureg.kg / ureg.m**2),
+        ("afgl_1986-us_standard", 14.38 * ureg.kg / ureg.m**2),
+        ("mipas_2007-midlatitude_day", 19.51 * ureg.kg / ureg.m**2),
     ]
 )
 def test_water_vapour_column_mass_density_in_cells(
     identifier: str,
-    represent_in_cells: bool,
     expected: pint.Quantity
 ):
     """Column mass density of water vapor is close to expected values."""
-    ds = joseki.make(identifier, represent_in_cells=represent_in_cells)
+    ds = joseki.make(identifier)
     water_vapor_amount = ds.joseki.column_mass_density["H2O"].to("kg/m^2")
     assert_approx_equal(water_vapor_amount.m, expected.m, significant=3)
 
 
 @pytest.mark.parametrize(
-    "identifier, represent_in_cells, expected",
+    "identifier, expected",
     [
-        ("afgl_1986-us_standard", True, 348.3 * ureg.dobson_unit),
-        ("afgl_1986-us_standard", False, 345.7 * ureg.dobson_unit),
-        ("mipas_2007-midlatitude_day", True, 303.4 * ureg.dobson_unit),
-        ("mipas_2007-midlatitude_day", False, 301.7 * ureg.dobson_unit)
+        ("afgl_1986-us_standard", 345.7 * ureg.dobson_unit),
+        ("mipas_2007-midlatitude_day", 301.7 * ureg.dobson_unit)
     ]
 )
 def test_column_number_density(
     identifier: str,
-    represent_in_cells: bool,
     expected: pint.Quantity
 ):
     """Column number density of ozone matches expected value."""
-    ds = joseki.make(identifier, represent_in_cells=represent_in_cells)
+    ds = joseki.make(identifier)
     ozone_amount = ds.joseki.column_number_density["O3"].to("dobson_unit")
     assert_approx_equal(ozone_amount.m, expected.m, significant=3)
 

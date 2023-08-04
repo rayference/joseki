@@ -13,17 +13,6 @@ def test_make():
     assert isinstance(make(identifier="afgl_1986-tropical"), xr.Dataset)
 
 
-def test_make_represent_in_cells():
-    """Returned dataset has dimensions zbv and z and data variable z_bounds."""
-    ds = make(
-        identifier="afgl_1986-tropical",
-        represent_in_cells=True,
-    )
-    for dim in ["zbv", "z"]:
-        assert dim in ds.dims
-    assert "z_bounds" in ds.data_vars
-
-
 def test_make_altitudes():
     """Assigns dataset' altitude values from file."""
     z = np.linspace(0, 120, 121) * ureg.km
@@ -78,45 +67,12 @@ def test_make_ussa_1976_z():
     assert ds.joseki.is_valid
 
 
-def test_make_conserve_column_1():
+def test_make_conserve_column():
     """Column densities are conserved when conserve_column is True."""
     ds0 = make(identifier="afgl_1986-us_standard")
     ds1 = make(
         identifier="afgl_1986-us_standard",
         z=np.linspace(0, 100, 21) * ureg.km,  # different than default
-        conserve_column=True,
-    )
-
-    for m in ds0.joseki.molecules:
-        assert_approx_equal(
-            ds0.joseki.column_number_density[m].m,
-            ds1.joseki.column_number_density[m].m,
-            significant=6
-        )
-
-def test_make_conserve_column_2():
-    """Column densities are conserved when conserve_column is True."""
-    ds0 = make(identifier="afgl_1986-us_standard")
-    ds1 = make(
-        identifier="afgl_1986-us_standard",
-        represent_in_cells=True,
-        conserve_column=True,
-    )
-
-    for m in ds0.joseki.molecules:
-        assert_approx_equal(
-            ds0.joseki.column_number_density[m].m,
-            ds1.joseki.column_number_density[m].m,
-            significant=6
-        )
-
-def test_make_conserve_column_3():
-    """Column densities are conserved when conserve_column is True."""
-    ds0 = make(identifier="afgl_1986-us_standard")
-    ds1 = make(
-        identifier="afgl_1986-us_standard",
-        z=np.linspace(0, 100, 21) * ureg.km,  # different than default
-        represent_in_cells=True,
         conserve_column=True,
     )
 

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Interpolate in time in the last step in `from_cams_reanalysis`
 
+### Removed
+
+* `represent_in_cells` and related.
+
 ## [2.3.0] - 2023-07-20
 
 ### Added

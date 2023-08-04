@@ -13,7 +13,6 @@ from joseki.profiles.core import (
     regularize,
     select_molecules,
 )
-from joseki.core import represent_profile_in_cells
 from joseki.units import to_quantity
 
 @pytest.fixture
@@ -81,18 +80,6 @@ def test_interp_bounds_error(test_data_set: xr.Dataset):
     )
     assert interpolated.joseki.is_valid
 
-
-def test_represent_profile_in_cells(test_data_set: xr.Dataset):
-    """Returns a xarray.Dataset object."""
-    interpolated = represent_profile_in_cells(ds=test_data_set)
-    assert isinstance(interpolated, xr.Dataset)
-
-
-def test_represent_profile_in_cells_twice(test_data_set: xr.Dataset):
-    """Running function twice has no effect."""
-    ds1 = represent_profile_in_cells(ds=test_data_set)
-    ds2 = represent_profile_in_cells(ds=ds1)
-    assert ds1 == ds2
 
 @pytest.mark.parametrize(
     "z_down",

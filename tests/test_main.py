@@ -63,19 +63,6 @@ def test_main_altitude_path(
     assert result.exit_code == 0
 
 
-def test_main_represent_in_cells(runner: CliRunner, tmpdir: t.Any):
-    """Exits with a status code of zero with option --represent-in-cells."""
-    result = runner.invoke(
-        __main__.main,
-        [
-            "--identifier=afgl_1986-tropical",
-            f"--file-name={tmpdir / 'ds.nc'}",
-            "--represent-in-cells",
-        ],
-    )
-    assert result.exit_code == 0
-
-
 def test_main_interp_method(runner: CliRunner, tmpdir: t.Any):
     """Exits with a status code of zero with option --p-interp-method."""
     result = runner.invoke(
@@ -96,7 +83,6 @@ def test_main_conserve_column(runner: CliRunner, tmpdir: t.Any):
         [
             "--identifier=afgl_1986-tropical",
             f"--file-name={tmpdir / 'ds.nc'}",
-            "--represent-in-cells",
             "--conserve-column",
         ],
     )

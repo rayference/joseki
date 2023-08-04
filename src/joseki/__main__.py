@@ -61,22 +61,10 @@ INTERPOLATION_METHOD_CHOICES = [
     show_default=True,
 )
 @click.option(
-    "--represent-in-cells",
-    "-r",
-    help=(
-        "Compute the cells representation of the atmospheric profile. The "
-        "initial altitude values are used to define the altitude bounds of "
-        "each cell. The pressure, temperature, number density and mixing "
-        "ratio fields are interpolated at the cells' center altitudes."
-    ),
-    is_flag=True,
-)
-@click.option(
     "--conserve-column",
     "-c",
     help=(
-        "Ensure that column densities are conserved during interpolation or "
-        "when representing the profile in cells."
+        "Ensure that column densities are conserved during interpolation."
     ),
     is_flag=True,
 )
@@ -130,7 +118,6 @@ def main(
     identifier: str,
     altitudes: t.Optional[str],
     altitude_units: str,
-    represent_in_cells: bool,
     conserve_column: bool,
     p_interp_method: str,
     t_interp_method: str,
@@ -158,7 +145,6 @@ def main(
         identifier=identifier,
         z=z,
         interp_method=interp_method,
-        represent_in_cells=represent_in_cells,
         conserve_column=conserve_column,
     )
 
