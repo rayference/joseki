@@ -351,6 +351,7 @@ class JosekiAccessor:  # pragma: no cover
         }
         factors = {}
         for m, target_amount in target.items():
+            target_amount = to_quantity(target_amount)
             initial_amount = None
             for dim in compute_initial_amount.keys():
                 if target_amount.check(dim):
