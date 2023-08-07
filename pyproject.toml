@@ -27,10 +27,10 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [project.urls]
-Changelog = "https://github.com/nollety/joseki/blob/main/docs/changelog.md"
-homepage = "https://github.com/nollety/joseki"
-repository = "https://github.com/nollety/joseki"
-issues = "https://github.com/nollety/joseki/issues"
+Changelog = "https://github.com/rayference/joseki/blob/main/docs/changelog.md"
+homepage = "https://github.com/rayference/joseki"
+repository = "https://github.com/rayference/joseki"
+issues = "https://github.com/rayference/joseki/issues"
 
 [project.scripts]
 joseki = "joseki.__main__:main"
