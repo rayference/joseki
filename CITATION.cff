@@ -12,8 +12,8 @@ authors:
     family-names: Nollet
     affiliation: Rayference
     orcid: 'https://orcid.org/0000-0002-6241-444X'
-repository-code: 'https://github.com/nollety/joseki'
-url: 'https://nollety.github.io/joseki/2.3'
+repository-code: 'https://github.com/rayference/joseki'
+url: 'https://rayference.github.io/joseki/2.4'
 abstract: >-
   Reference atmosphere's thermophysical profiles for
   radiative transfer applications in Earth's atmosphere.
@@ -24,6 +24,6 @@ keywords:
   - atmospheric-modelling
   - thermophysical-properties
 license: MIT
-commit: 308e11d1a5a5693e0afda891026b4e38c7f08a4d
-version: 2.3.0
-date-released: '2023-07-20'
+commit: 539c913854ffdafbeccfe2437b6d52367ec2ac4e
+version: 2.4.0
+date-released: '2023-08-07'
