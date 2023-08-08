@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Get unit registry from application and add Joseki required units by loading 
   a units definition file.
+
+### Removed
+
+* CAMS reanalysis datasets support
  
 ## [2.4.0] - 2023-08-07
 

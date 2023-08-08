@@ -38,7 +38,6 @@ The documentation consists of four separate parts:
             data/                       # Test data
             profiles/
                 test_afgl_1986.py       # AFGL (1986) profiles tests
-                test_cams.py            # CAMS profiles tests
                 test_core.py            # Profile core module tests
                 test_factory.py         # Profile factory tests
                 test_mipas_2007.py      # MIPAS (2007) profiles tests

@@ -17,5 +17,3 @@
 * <a name="NOAA+1976"></a> United States National Oceanic and Atmospheric Administration and United States Committee on Extension to the Standard Atmosphere. 1976. ‘U.S. Standard Atmosphere, 1976’. NOAA-S/T-76-1562. [https://ntrs.nasa.gov/citations/19770009539](https://ntrs.nasa.gov/citations/19770009539).
 
 * <a name="Remedios+2007"></a> Remedios, J. J., R. J. Leigh, A. M. Waterfall, D. P. Moore, H. Sembhi, I. Parkes, J. Greenhough, M. P. Chipperfield, and D. Hauglustaine. 2007. ‘MIPAS Reference Atmospheres and Comparisons to V4.61/V4.62 MIPAS Level 2 Geophysical Data Sets’. Atmospheric Chemistry and Physics Discussions 7 (4): 9973–10017. [https://doi.org/10.5194/acpd-7-9973-2007](https://doi.org/10.5194/acpd-7-9973-2007).
-
-* <a name="Inness+2019"></a> Inness, Antje, Melanie Ades, Anna Agustí-Panareda, Jérôme Barré, Anna Benedictow, Anne-Marlene Blechschmidt, Juan Jose Dominguez, et al. 2019. ‘The CAMS Reanalysis of Atmospheric Composition’. Atmospheric Chemistry and Physics 19 (6): 3515–56. [https://doi.org/10.5194/acp-19-3515-2019](https://doi.org/10.5194/acp-19-3515-2019).

@@ -15,9 +15,6 @@ This reference manual details functions, modules, and objects included in
 
 ::: src.joseki.profiles.factory
 
-### CAMS
-
-::: src.joseki.profiles.cams
 ### Core
 
 ::: src.joseki.profiles.core
