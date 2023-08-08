@@ -2,23 +2,38 @@
 from __future__ import annotations
 
 from functools import singledispatch
+import importlib_resources
+import logging
 
 import pint
 import numpy as np
 import xarray as xr
 from numpy.typing import ArrayLike
 
-ureg = pint.UnitRegistry()
+logger = logging.getLogger(__name__)
 
-pint.set_application_registry(ureg)
 
-# define ppm ppb and ppt units
-ureg.define("parts_per_million = 1e-6 = ppm = ppmv")
-ureg.define('parts_per_billion = 1e-9 = ppb')
-ureg.define('parts_per_trillion = 1e-12 = ppt')
+def init_unit_registry():
+    # get application registry (or default registry)
+    ureg = pint.get_application_registry()
 
-# define dobson unit
-ureg.define("dobson_unit = 2.687e20 * meter^-2 = du = dobson = dobson_units")
+    for unit in ["parts_per_million", "parts_per_billion", "parts_per_trillion"]:
+        if unit in ureg:
+            logger.warning(
+                "Unit '%s' already in registry. Its definition will be "
+                "overwritten.",
+                unit
+            )
+
+    # update registry with units from joseki.data.units.txt
+    package = "joseki.data"
+    file = "units.txt"
+    definition_file = importlib_resources.files(package).joinpath(file)
+    ureg.load_definitions(definition_file)
+    return ureg
+
+
+ureg = init_unit_registry()
 
 
 @singledispatch
@@ -47,49 +62,49 @@ def to_quantity(
     raise NotImplementedError
 
 @to_quantity.register(pint.Quantity)
-def _(
+def d(
     value, 
     units: None | str = None,
 ) -> pint.Quantity:
     return value.to(units) if units else value
 
 @to_quantity.register(dict)
-def _(
+def d(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
     return ureg.Quantity(**value).to(units) if units else ureg.Quantity(**value)
 
 @to_quantity.register(int)
-def _(
+def d(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
     return to_quantity_array_like(value, units)
 
 @to_quantity.register(float)
-def _(
+def d(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
     return to_quantity_array_like(value, units)
 
 @to_quantity.register(list)
-def _(
+def d(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
     return to_quantity_array_like(np.array(value), units)
 
 @to_quantity.register(np.ndarray)
-def _(
+def d(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
     return to_quantity_array_like(value, units)
 
 @to_quantity.register(xr.DataArray)
-def _(
+def d(
     value: xr.DataArray,
     units: None | str = None,
 ) -> pint.Quantity:

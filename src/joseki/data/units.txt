@@ -1,0 +1,9 @@
+# Joseki units definition file
+
+# (mole) fraction
+parts_per_million = 1e-6 = ppm = ppmv
+parts_per_billion = parts_per_billion = 1e-9 = ppb = ppbv
+parts_per_trillion = 1e-12 = ppt = pptv
+
+# column number density
+dobson_unit = 2.687e20 * meter^-2 = du = dobson_units
