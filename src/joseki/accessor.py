@@ -333,9 +333,9 @@ class JosekiAccessor:  # pragma: no cover
 
             * a column number density [`length^-2`],
             * a column mass density [`mass * length^-2`],
-            * a number densitx at sea level [`length^-3`],
+            * a number density at sea level [`length^-3`],
             * a mass density at sea level [`mass * length^-3`],
-            * a mole mixing fraction at sea level [`dimensionless`]
+            * a mole fraction at sea level [`dimensionless`]
 
             The scaling factor is then evaluated as the ratio of the target
             amount with the original amount, for each molecule.
@@ -421,7 +421,7 @@ class JosekiAccessor:  # pragma: no cover
             target: Mapping of molecule and target total column density. 
                 Total column must be either a column number density 
                 [`length^-2`], a column mass density [`mass * length^-2`], a 
-                number densitx at sea level [`length^-3`], a mass density at 
+                number density at sea level [`length^-3`], a mass density at 
                 sea level [`mass * length^-3`], a mole fraction at 
                 sea level [`dimensionless`].
             check_x_sum: if True, check that mole fraction sums are never
