@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Get unit registry from application and add Joseki required units by loading 
   a units definition file.
+* Alias `ppm` in `src/joseki/data/units.txt`
 
 ### Removed
 
