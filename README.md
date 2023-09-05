@@ -34,13 +34,15 @@ different operations, such as interpolation and rescaling, on a dataset.
 
 ## Installation
 
-You can install *Joseki* via `pip` from [`PyPI`](https://pypi.org/):
+You can install *Joseki* via [`pip`](https://pip.pypa.io/en/stable/) from 
+[`PyPI`](https://pypi.org/):
 
 ```shell
 pip install joseki
 ```
 
-or via [`conda`](https://docs.conda.io):
+or via [`conda`](https://docs.conda.io) from 
+[`conda-forge`](https://conda-forge.org):
 
 ```shell
 conda install -c conda-forge joseki
