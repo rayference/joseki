@@ -20,6 +20,19 @@ def test_make_altitudes():
     assert np.allclose(ds.z.values, z.m_as(ds.z.attrs["units"]))
 
 
+def test_make_python_dict():
+    """Pure Python dictionary can be used as input."""
+    d = {
+        "identifier": "afgl_1986-us_standard",
+        "z": {
+            "value": [0, 10, 20, 30, 60, 90, 120],
+            "units": "km",
+        }
+    }
+    ds = make(**d)
+    assert ds.joseki.is_valid
+
+
 @pytest.mark.parametrize(
     "identifier",
     [

@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * Units definition file at `data/units.txt`
+* Quantity conversion for `z` parameter of `make`, which makes it possible to
+  use `make` with pure Python inputs
 
 ### Changed
 

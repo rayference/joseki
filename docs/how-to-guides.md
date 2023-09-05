@@ -59,10 +59,43 @@ on the specified altitude grid.
 ??? example "Example"
 
     ```python
+    ds = joseki.make(
+        identifier="afgl_1986-us_standard",
+        z={
+            "value": [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+            "units": "km",
+        },
+    )
+    ```
+
+For more information about units specifications, please refer to the 
+[pint documentation](https://pint.readthedocs.io/en/stable/).
+
+Alternatively, instead of using a list you can also specify the altitude values
+as a [Numpy](https://numpy.org/doc/stable/) array:
+
+??? example "Example"
+
+    ```python
     import numpy as np
 
+    ds = joseki.make(
+        identifier="afgl_1986-us_standard",
+        z={
+            "value": np.linspace(0, 100, 51),
+            "units": "km",
+        },
+    )
+    ```
+
+Or use *Joseki*'s unit registry directly:
+
+??? example "Example"
+
+    ```python
     from joseki.units import ureg
 
+    import numpy as np
 
     ds = joseki.make(
         identifier="afgl_1986-us_standard",

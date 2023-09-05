@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 def make(
     identifier: str,
-    z: pint.Quantity | None = None,
+    z: pint.Quantity | dict | xr.DataArray | None = None,
     interp_method: t.Mapping[str, str] | None = DEFAULT_METHOD,
     conserve_column: bool = False,
     molecules: t.List[str] | None = None,
@@ -69,6 +69,9 @@ def make(
     logger.debug("regularize: %s", regularize)
     logger.debug("rescale_to: %s", rescale_to)
     logger.debug("kwargs: %s", kwargs)
+    
+    # Convert z to pint.Quantity
+    z = to_quantity(z) if z is not None else None
 
     profile = factory.create(identifier)
 
