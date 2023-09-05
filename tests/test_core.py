@@ -1,7 +1,6 @@
 """Test cases for the core module."""
 import numpy as np
 import pytest
-import xarray as xr
 from numpy.testing import assert_approx_equal
 
 from joseki import unit_registry as ureg
@@ -9,8 +8,9 @@ from joseki.core import make, open_dataset, load_dataset, merge, identifiers
 
 
 def test_make():
-    """Returns xr.Dataset."""
-    assert isinstance(make(identifier="afgl_1986-tropical"), xr.Dataset)
+    """make returns a valid dataset."""
+    ds = make(identifier="afgl_1986-tropical")
+    assert ds.joseki.is_valid
 
 
 def test_make_altitudes():
