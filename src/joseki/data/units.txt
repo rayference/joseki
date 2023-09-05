@@ -1,7 +1,7 @@
 # Joseki units definition file
 
 # (mole) fraction
-parts_per_million = 1e-6 = ppm = ppmv
+@alias ppm = parts_per_million = ppmv
 parts_per_billion = parts_per_billion = 1e-9 = ppb = ppbv
 parts_per_trillion = 1e-12 = ppt = pptv
 
