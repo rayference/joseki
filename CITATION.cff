@@ -13,7 +13,7 @@ authors:
     affiliation: Rayference
     orcid: 'https://orcid.org/0000-0002-6241-444X'
 repository-code: 'https://github.com/rayference/joseki'
-url: 'https://rayference.github.io/joseki/2.4'
+url: 'https://rayference.github.io/joseki/2.5'
 abstract: >-
   Reference atmosphere's thermophysical profiles for
   radiative transfer applications in Earth's atmosphere.
@@ -24,6 +24,6 @@ keywords:
   - atmospheric-modelling
   - thermophysical-properties
 license: MIT
-commit: 539c913854ffdafbeccfe2437b6d52367ec2ac4e
-version: 2.4.0
-date-released: '2023-08-07'
+commit: 80616015225aaf8bda12d694ee94fef6bbb12eef
+version: 2.5.0
+date-released: '2023-09-05'
