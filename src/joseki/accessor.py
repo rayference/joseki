@@ -1,4 +1,6 @@
 """Accessor module."""
+from __future__ import annotations
+
 import datetime
 import logging
 import typing as t
@@ -310,9 +312,8 @@ class JosekiAccessor:  # pragma: no cover
 
         return mm_average
 
-
     def scaling_factors(
-        self, target: t.MutableMapping[str, pint.Quantity]
+        self, target: t.MutableMapping[str, pint.Quantity | dict | xr.DataArray]
     ) -> t.MutableMapping[str, float]:
         """Compute scaling factor(s) to reach specific target amount(s).
 
@@ -409,7 +410,7 @@ class JosekiAccessor:  # pragma: no cover
 
     def rescale_to(
         self,
-        target: t.Mapping[str, pint.Quantity],
+        target: t.Mapping[str, pint.Quantity | dict | xr.DataArray],
         check_x_sum: bool = False,
     ) -> xr.Dataset:
         """
