@@ -214,6 +214,30 @@ When a rescale transformation has been applied to a dataset, its ``history``
 attribute is updated to indicate what scaling factors were applied to what 
 molecules.
 
+If you do not know the scaling factors but instead the target amounts that you 
+want for each molecule, the
+[rescale_to](reference.md#src.joseki.accessor.JosekiAccessor.rescale_to) 
+transformation might be more relevant.
+
+!!! example "Example"
+
+    ```python
+    ds = joseki.make(identifier="afgl_1986-us_standard")
+    rescaled = ds.joseki.rescale_to(
+       target={
+          "H2O": {"value": 25, "units": "kg / m**2"},
+          "CO2": {"value": 420, "units": "ppm"},
+          "O3": {"value": 280, "units": "dobson_unit"},
+       }
+    )
+    ```
+
+In the example above, each molecule is associated a target amount that must be 
+reached in the rescaled profile. As illustrated in the example, different 
+quantities—e.g. column mass density, mole fraction at sea level and column 
+number density—are supported to specify the target amount. The corresponding
+amount are computed for the initial profile and the scaling factors are given
+by the ratios of the target and initial amounts.
 
 ### Plotting
 
