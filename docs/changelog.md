@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Obsolete test data
 * Obsolete documentation figures
+* Obsolete module `test_util.py`
 
 ## [2.5.0] - 2023-09-05
 
