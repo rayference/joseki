@@ -1,4 +1,8 @@
+<div>
+<img align="left" alt="Joseki logo" src="logo.svg" style="margin-right: 10px; border-radius: 20%"/>
+
 # Joseki
+</div>
 
 Reference atmosphere's thermophysical profiles for radiative transfer
 applications in Earth's atmosphere.
