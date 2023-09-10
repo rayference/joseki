@@ -1,8 +1,8 @@
-<div>
-<img align="left" alt="Joseki logo" src="logo.svg" style="margin-right: 10px; border-radius: 20%"/>
+<p align="center">
+<img align="center" alt="Joseki logo" src="logo.svg"  width=100 style="margin-right: 10px; border-radius: 20%"/>
+</p>
 
 # Joseki
-</div>
 
 Reference atmosphere's thermophysical profiles for radiative transfer
 applications in Earth's atmosphere.
@@ -71,3 +71,5 @@ Joseki is written and maintained by [Yvan Nollet](https://github.com/nollety).
 Development is supported by [Rayference](https://www.rayference.eu).
 
 Joseki is a component of the [Eradiate radiative transfer model](https://www.eradiate.eu/site/).
+
+Joseki's logo is a simple representation (not to scale!) of the 5 layers of Earth's atmosphere (troposphere, stratosphere, mesosphere, thermosphere and exosphere).
