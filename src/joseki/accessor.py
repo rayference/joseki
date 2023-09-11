@@ -477,4 +477,11 @@ class JosekiAccessor:  # pragma: no cover
 
     @property
     def is_valid(self):
-        return self.validate(ret_true_if_valid=True)
+        """
+        Return `True` if the dataset complies with the schema, else `False`.
+        """
+        try:
+            self.validate(ret_true_if_valid=True)
+            return True
+        except ValueError:
+            return False

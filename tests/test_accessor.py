@@ -193,3 +193,17 @@ def test_drop_molecules(molecules):
     assert all([m in ds.joseki.molecules for m in molecules])
     dropped = ds.joseki.drop_molecules(molecules)
     assert all([m not in dropped.joseki.molecules for m in molecules])
+
+def test_valid_True():
+    """Returns True if the dataset is valid."""
+    ds = joseki.make("afgl_1986-midlatitude_summer")
+    assert ds.joseki.is_valid
+
+def test_valid_False():
+    """Returns False if the dataset is not valid."""
+    ds = joseki.make("afgl_1986-midlatitude_summer")
+    
+    # drop variable 't'
+    ds = ds.drop_vars("t")
+
+    assert not ds.joseki.is_valid

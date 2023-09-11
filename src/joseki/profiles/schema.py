@@ -76,7 +76,8 @@ class Schema:
             check_x_sum: if True, check that mole fraction sums
                 are never larger than one.
             ret_true_if_valid: make this method return True if the dataset is
-                valid.
+                valid. Note that if the dataset is not valid, this method will
+                raise an exception.
 
         Raises:
             ValueError: If the dataset does not match the schema.
