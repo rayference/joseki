@@ -42,10 +42,26 @@ def mole_fraction_sum(ds: xr.Dataset) -> pint.Quantity:
 class Schema:
     """Dataset schema for atmosphere thermophysical profiles."""
 
+    # name: (dims, data type, dimensionality, standard name)
     data_vars = {
-        "p": (["z"], npt.NDArray[np.float64], "Pa", "air_pressure"),
-        "t": (["z"], npt.NDArray[np.float64], "K", "air_temperature"),
-        "n": (["z"], npt.NDArray[np.float64], "m^-3", "air_number_density"),
+        "p": (
+            ["z"],
+            npt.NDArray[np.float64],
+            "Pa",
+            "air_pressure",
+        ),
+        "t": (
+            ["z"],
+            npt.NDArray[np.float64],
+            "K",
+            "air_temperature",
+        ),
+        "n": (
+            ["z"],
+            npt.NDArray[np.float64],
+            "m ** -3",
+            "air_number_density",
+        ),
     }
 
     coords = {
@@ -123,20 +139,26 @@ class Schema:
                     f"got {ds[coord].dims}"
                 )
 
-        logger.debug("Checking that data variables have the correct units")
-        for var, (_, _, units, _) in self.data_vars.items():
-            if ds[var].units != units:
+        logger.debug(
+            "Checking that data variables have the correct dimensionality"
+        )
+        for var, (_, _, dimensionality, _) in self.data_vars.items():
+            units = ureg(ds[var].units)
+            if not units.check(dimensionality):
                 raise ValueError(  # pragma: no cover
-                    f"incorrect units for {var}. Expected {units}, "
-                    f"got {ds[var].units}"
+                    f"incorrect units for {var}. Expected {dimensionality}, "
+                    f"got {units.dimensionality}"
                 )
 
-        logger.debug("Checking that coordinates have the correct units")
-        for coord, (_, _, units, _) in self.coords.items():
-            if ds[coord].units != units:
+        logger.debug(
+            "Checking that coordinates have the correct dimensionality"
+        )
+        for coord, (_, _, dimensionality, _) in self.coords.items():
+            units = ureg(ds[coord].units)
+            if not units.check(dimensionality):
                 raise ValueError(  # pragma: no cover
-                    f"incorrect units for {coord}. Expected {units}, "
-                    f"got {ds[coord].units}"
+                    f"incorrect units for {coord}. Expected {dimensionality}, "
+                    f"got {units.dimensionality}"
                 )
 
         logger.debug("Checking that attributes have the correct types")
@@ -147,7 +169,9 @@ class Schema:
                     f"got {type(ds.attrs[attr])}"
                 )
 
-        logger.debug("Checking that data variables have the correct standard names")
+        logger.debug(
+            "Checking that data variables have the correct standard names"
+        )
         for var, (_, _, _, standard_name) in self.data_vars.items():
             if ds[var].attrs["standard_name"] != standard_name:
                 raise ValueError(  # pragma: no cover
@@ -157,16 +181,17 @@ class Schema:
                 )
 
         logger.debug(
-            "Checking that all x_* data variables have the correct units and "
-            "standard names"
+            "Checking that all x_* data variables have the correct "
+            "dimensionality and standard names"
         )
         for var in ds.data_vars:
             if var.startswith("x_"):
                 m = var[2:]
-                if ds[var].attrs["units"] != "dimensionless":
+                units = ureg(ds[var].units)
+                if not units.check("[]"):
                     raise ValueError(  # pragma: no cover
-                        f"incorrect units for {var}. Expected dimensionless, "
-                        f"got {ds[var].attrs['units']}"
+                        f"incorrect dimensionality for {var}. Expected "
+                        f"dimensionless, got {units.dimensionality}"
                     )
                 if ds[var].attrs["standard_name"] != f"{m}_mole_fraction":
                     raise ValueError(  # pragma: no cover

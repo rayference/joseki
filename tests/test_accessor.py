@@ -2,12 +2,79 @@
 import numpy as np
 import pint
 import pytest
+import xarray as xr
 from numpy.testing import assert_approx_equal
 
 import joseki
 from joseki.accessor import _scaling_factor
 from joseki.units import to_quantity
 from joseki.units import ureg
+
+
+@pytest.fixture
+def test_dataset_non_standard_units():
+    """Returns a test dataset."""
+    return xr.Dataset(
+        {
+            "p": (
+                "z",
+                np.linspace(0, 100, 10),
+                {
+                    "units": "bar",
+                    "standard_name": "air_pressure",
+                    "long_name": "pressure",
+                },
+            ),
+            "t": (
+                "z",
+                np.linspace(0, 100, 10),
+                {
+                    "units": "millikelvin",
+                    "standard_name": "air_temperature",
+                    "long_name": "temperature",
+                },
+            ),
+            "n": (
+                "z",
+                np.linspace(0, 100, 10),
+                {
+                    "units": "cm ^ -3",
+                    "standard_name": "air_number_density",
+                    "long_name": "number density",
+                },
+            ),
+            "x_H2O": (
+                "z",
+                np.linspace(0, 1, 10),
+                {
+                    "units": "ppmv",
+                    "standard_name": "H2O_mole_fraction",
+                    "long_name": "H2O mole fraction",
+                },
+            ),
+        },
+        coords={
+            "z": (
+                "z",
+                np.linspace(0, 100, 10),
+                {
+                    "units": "hm",
+                    "standard_name": "altitude",
+                    "long_name": "altitude",
+                },
+            ),
+        },
+        attrs={
+            "Conventions": "CF-1.10",
+            "title": "Test dataset",
+            "institution": "Rayference",
+            "source": "N/A",
+            "history": "N/A",
+            "references": "N/A",
+            "url": "N/A",
+            "urldate": "N/A",
+        }
+    )
 
 
 @pytest.mark.parametrize(
@@ -207,3 +274,10 @@ def test_valid_False():
     ds = ds.drop_vars("t")
 
     assert not ds.joseki.is_valid
+
+def test_validate(test_dataset_non_standard_units, tmpdir):
+    """Returns True if the dataset is valid."""
+    path = tmpdir.join("test_dataset.nc")
+    test_dataset_non_standard_units.to_netcdf(path)
+    loaded = joseki.load_dataset(path)
+    assert loaded.joseki.is_valid

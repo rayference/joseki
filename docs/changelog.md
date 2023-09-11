@@ -11,10 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Logo
 
+### Changed
+
+* Schema: accept other units for data variables and data coordinates as long as
+  they match the expected dimensionality
+
 ### Fixed
 
 * Accessor `is_valid` did not return `False` when a dataset does not comply 
   with the schema.
+
 ### Removed
 
 * Obsolete test data
