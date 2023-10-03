@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from functools import singledispatch
-import importlib_resources
 import logging
 
 import pint
@@ -12,28 +11,23 @@ from numpy.typing import ArrayLike
 
 logger = logging.getLogger(__name__)
 
+ureg = pint.get_application_registry()
 
-def init_unit_registry():
-    # get application registry (or default registry)
-    ureg = pint.get_application_registry()
+definitions = [
+    # (mole) fraction
+    "@alias ppm = parts_per_million = ppmv",
+    "parts_per_billion = parts_per_billion = 1e-9 = ppb = ppbv",
+    "parts_per_trillion = 1e-12 = ppt = pptv",
 
-    for unit in ["parts_per_million", "parts_per_billion", "parts_per_trillion"]:
-        if unit in ureg:
-            logger.warning(
-                "Unit '%s' already in registry. Its definition will be "
-                "overwritten.",
-                unit
-            )
+    # column number density
+    "dobson_unit = 2.687e20 * meter^-2 = du = dobson_units",
+]
 
-    # update registry with units from joseki.data.units.txt
-    package = "joseki.data"
-    file = "units.txt"
-    definition_file = importlib_resources.files(package).joinpath(file)
-    ureg.load_definitions(definition_file)
-    return ureg
-
-
-ureg = init_unit_registry()
+for definition in definitions:
+    try:
+        ureg.define(definition)
+    except pint.RedefinitionError:
+        logger.warning("unit definition '%s' already exists", definition)
 
 
 @singledispatch

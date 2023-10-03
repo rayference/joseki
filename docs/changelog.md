@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Schema: accept other units for data variables and data coordinates as long as
   they match the expected dimensionality
+* Units registry: load unit definitions one by one in a try-except logic
 
 ### Fixed
 
