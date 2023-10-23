@@ -16,7 +16,7 @@ ureg = pint.get_application_registry()
 definitions = [
     # (mole) fraction
     "@alias ppm = parts_per_million = ppmv",
-    "parts_per_billion = parts_per_billion = 1e-9 = ppb = ppbv",
+    "parts_per_billion = 1e-9 = ppb = ppbv",
     "parts_per_trillion = 1e-12 = ppt = pptv",
 
     # column number density
