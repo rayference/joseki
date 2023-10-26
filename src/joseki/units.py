@@ -26,7 +26,7 @@ definitions = [
 for definition in definitions:
     try:
         ureg.define(definition)
-    except pint.RedefinitionError:
+    except pint.RedefinitionError:  # pragma: no cover
         logger.warning("unit definition '%s' already exists", definition)
 
 

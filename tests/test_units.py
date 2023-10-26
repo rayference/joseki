@@ -49,6 +49,7 @@ def test_to_quantity_dict():
 def test_to_quantity_array_like(value: ArrayLike):
     """Returns a dimensionless quantity."""
     assert to_quantity(value).units == ureg.dimensionless
+    assert to_quantity(value, units="m").units == ureg.Unit("m")
 
 def test_to_quantity_da(dataset: xr.Dataset):
     """Returns a quantity."""
@@ -63,7 +64,6 @@ def test_to_quantity_da_no_units_raise(dataset: xr.Dataset):
     """Returns a quantity."""
     with pytest.raises(ValueError):
         to_quantity(dataset.y)
-
 
 def test_to_quantity_da_no_units_no_raise(dataset: xr.Dataset):
     """Returns a quantity."""
