@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+* Unit test for `joseki.profiles.schema`
+* Unit test for `joseki.profiles.util`
+* Unit test for `joseki.units`
+
+### Fixed
+
+* Remove duplicate definition of 'parts_per_billion' unit
+
 ## [2.5.1] - 2023-10-03
 
 ### Added
@@ -171,7 +183,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Move from Poetry to [PDM](https://pdm.fming.dev/)
 * Re-organize documentation content
 * Move from Sphinx to [mkdocs](https://www.mkdocs.org/)
-
-
-
-    
