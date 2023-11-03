@@ -26,9 +26,18 @@ different operations, such as interpolation and rescaling, on a dataset.
   * *AFGL Atmospheric Constituent Profiles (0-120 km)*
   * *MIPAS (2007) reference atmospheres*
   * *U.S. Standard Atmosphere, 1976*
-* Specify the altitude mesh to interpolate the atmospheric profile at.
-* Command-line interface.
-* Python API.
+* NetCDF support thanks to the [xarray](https://xarray.pydata.org) library
+* Documented and standard dataset format based on the 
+  [CF conventions](https://cfconventions.org)
+* Dataset schema validation
+* Altitude interpolation/extrapolation and regularization
+* Molecular concentration rescaling
+* Molecules selection
+* Computation of derived quantities
+* Convenient units support thanks to the [pint](https://pint.readthedocs.io) 
+  library
+* Command-line interface
+* Python API
 
 
 ## Requirements
