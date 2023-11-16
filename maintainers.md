@@ -44,7 +44,7 @@
 
 ### After the release
 
-* Deploy the documentation: `mike deploy --push --update-aliases major.minor latest`
+* Deploy the documentation: `mike deploy --push --update-aliases major.minor.patch latest`
 * Describe the release on GitHub
 * Update `CITATION.cff` file. The following field should be updated
   * `url`
