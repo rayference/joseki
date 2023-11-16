@@ -239,7 +239,7 @@ number density—are supported to specify the target amount. The corresponding
 amount are computed for the initial profile and the scaling factors are given
 by the ratios of the target and initial amounts.
 
-### Plotting
+## Plotting
 
 !!! note "Note"
 
