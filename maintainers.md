@@ -35,7 +35,7 @@
 
 * Update `src/joseki/__version__.py`: change the `__version__` variable to the new version value
 * Update `docs/changelog.md`: change the heading `"[Unreleased]"` to `"[major.minor.patch]  - YYYY-MM-DD"`
-* Commit the changes on branch `main` with the message: `joseki version <major>.<minor>`
+* Commit the changes on branch `main` with the message: `joseki version <major>.<minor>.<patch>`
 * Tag the commit with `"v<major>.<minor>"`, e.g.: `git tag -a v2.3.0 -m "v2.3.0"` followed by `git push --tags`. This will trigger the `PyPI Release` workflow. It will also produce a pull request on the 
   [conda forge joseki feedstock](https://github.com/conda-forge/joseki-feedstock)
   within a delay (~1 hour).
