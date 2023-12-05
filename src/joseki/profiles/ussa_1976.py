@@ -1,22 +1,20 @@
 """Module to compute the U.S. Standard Atmosphere 1976.
 
-The U.S. Standard Atmosphere 1976 is a Earth atmosphere thermophysical model 
+The U.S. Standard Atmosphere 1976 is a Earth atmosphere thermophysical model
 described in the technical report [NOAA+1976](bibliography.md#NOAA+1976).
 """
-import typing as t
-
 import logging
+import typing as t
 
 import pint
 import ussa1976
 import xarray as xr
 from attrs import define
 
-from ..units import to_quantity
-from .schema import schema, history
 from .core import Profile
 from .factory import factory
-
+from .schema import history, schema
+from ..units import to_quantity
 
 logger = logging.getLogger(__name__)
 

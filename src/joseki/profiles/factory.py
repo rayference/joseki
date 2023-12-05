@@ -1,6 +1,6 @@
 """Profile factory module."""
-import typing as t
 import logging
+import typing as t
 
 from attrs import define, field
 
@@ -27,7 +27,7 @@ class ProfileFactory:
             List of registered profile identifiers.
         """
         return list(self.registry.keys())
-        
+
     def register(
         self,
         identifier: str,
@@ -37,7 +37,7 @@ class ProfileFactory:
 
         Args:
             identifier: Profile identifier.
-        
+
         Returns:
             Decorator function.
         """

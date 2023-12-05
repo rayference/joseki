@@ -10,12 +10,13 @@ import pint
 import xarray as xr
 
 from .__version__ import __version__
-from .constants import MM, AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION
+from .constants import AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION, MM
 from .profiles.schema import schema
 from .profiles.util import molar_mass
 from .units import to_quantity, ureg
 
 logger = logging.getLogger(__name__)
+
 
 def molecular_mass(m: str) -> pint.Quantity:
     """Return the average molecular mass of a molecule.
@@ -40,7 +41,7 @@ def _scaling_factor(
         target_amount: Target amount.
 
     Raises:
-        ValueError: when the initial amount has a zero magnitude and the target 
+        ValueError: when the initial amount has a zero magnitude and the target
           amount has a non-zero magnitude.
 
     Returns:
@@ -87,7 +88,7 @@ class JosekiAccessor:  # pragma: no cover
             $$
             N_{\mathrm{M}} = \int n_{\mathrm{M}}(z) \, \mathrm{d} z
             $$
-            
+
             with
 
             $$
@@ -106,19 +107,15 @@ class JosekiAccessor:  # pragma: no cover
             The  integration is performed using the trapezoidal rule.
         """
         ds = self._obj
-        
-        logger.debug(
-            "Computing column number density using the trapezoidal rule."
-        )
+
+        logger.debug("Computing column number density using the trapezoidal rule.")
 
         _column_number_density = {}
         for m in self.molecules:
             integral = (ds[f"x_{m}"] * ds.n).integrate(
                 coord="z"
             )  # integrate using the trapezoidal rule
-            units = " ".join(
-                [ds[var].attrs["units"] for var in [f"x_{m}", "n", "z"]]
-            )
+            units = " ".join([ds[var].attrs["units"] for var in [f"x_{m}", "n", "z"]])
             _column_number_density[m] = (
                 integral.values * ureg.Unit(units)
             ).to_base_units()
@@ -163,10 +160,7 @@ class JosekiAccessor:  # pragma: no cover
         """
         ds = self._obj
         n = to_quantity(ds.n.isel(z=0))
-        return {
-            m: (to_quantity(ds[f"x_{m}"].isel(z=0)) * n)
-            for m in self.molecules
-        }
+        return {m: (to_quantity(ds[f"x_{m}"].isel(z=0)) * n) for m in self.molecules}
 
     @property
     def mass_density_at_sea_level(
@@ -193,10 +187,7 @@ class JosekiAccessor:  # pragma: no cover
             A mapping of molecule and mole fraction at sea level.
         """
         ds = self._obj
-        return {
-            m: to_quantity(ds[f"x_{m}"].isel(z=0)).item()
-            for m in self.molecules
-        }
+        return {m: to_quantity(ds[f"x_{m}"].isel(z=0)).item() for m in self.molecules}
 
     @property
     def mole_fraction(self) -> xr.DataArray:
@@ -251,7 +242,7 @@ class JosekiAccessor:  # pragma: no cover
             The air molar mass is given by:
 
             $$
-            M_{\mathrm{air}} = 
+            M_{\mathrm{air}} =
             \frac{
                 \sum_{\mathrm{M}} x_{\mathrm{M}} \, m_{\mathrm{M}}
             }{
@@ -282,7 +273,7 @@ class JosekiAccessor:  # pragma: no cover
             fraction.
         """
         ds = self._obj
-        
+
         # for molar mass computation to be accurate, main air constituents
         # must be present in the dataset
         ds_copy = ds.copy(deep=True)
@@ -291,14 +282,14 @@ class JosekiAccessor:  # pragma: no cover
                 value = AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION[m]
                 ds_copy[f"x_{m}"] = ("z", np.full_like(ds.n, value))
                 ds_copy[f"x_{m}"].attrs.update({"units": "dimensionless"})
-        
+
         # compute air molar mass
         x = ds_copy.joseki.mole_fraction
         molecules = x.m.values
         mm = xr.DataArray(
             data=np.array([MM[m] for m in molecules]),
             coords={"m": ("m", molecules)},
-            attrs={"units": "dimensionless"}
+            attrs={"units": "dimensionless"},
         )
 
         mm_average = (x * mm).sum(dim="m") / (x.sum(dim="m"))
@@ -328,7 +319,7 @@ class JosekiAccessor:  # pragma: no cover
 
         Notes:
             For each molecule in the ``target`` mapping, the target amount is
-            interpreted, depending on its dimensions (indicated in square 
+            interpreted, depending on its dimensions (indicated in square
             brackets), as:
 
             * a column number density [`length^-2`],
@@ -365,9 +356,7 @@ class JosekiAccessor:  # pragma: no cover
         return factors
 
     def rescale(
-        self,
-        factors: t.MutableMapping[str, float],
-        check_x_sum: bool = False
+        self, factors: t.MutableMapping[str, float], check_x_sum: bool = False
     ) -> xr.Dataset:
         """Rescale molecules concentration in atmospheric profile.
 
@@ -376,7 +365,7 @@ class JosekiAccessor:  # pragma: no cover
             check_x_sum: if True, check that mole fraction sums
                 are never larger than one.
         Raises:
-            ValueError: if `check_x_sum` is `True` and the 
+            ValueError: if `check_x_sum` is `True` and the
                 dataset is not valid.
 
         Returns:
@@ -389,7 +378,7 @@ class JosekiAccessor:  # pragma: no cover
         for m in factors:
             with xr.set_options(keep_attrs=True):
                 x_new[f"x_{m}"] = ds[f"x_{m}"] * factors[m]
-            
+
         ds = ds.assign(x_new)
 
         # validate rescaled dataset
@@ -397,7 +386,7 @@ class JosekiAccessor:  # pragma: no cover
             ds.joseki.validate(check_x_sum=check_x_sum)
         except ValueError as e:
             raise ValueError("Cannot rescale") from e
-        
+
         # update history attribute
         now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
         for m in factors.keys():
@@ -414,21 +403,21 @@ class JosekiAccessor:  # pragma: no cover
         check_x_sum: bool = False,
     ) -> xr.Dataset:
         """
-        Rescale mole fractions to match target molecular total column 
+        Rescale mole fractions to match target molecular total column
         densities.
 
         Args:
-            target: Mapping of molecule and target total column density. 
-                Total column must be either a column number density 
-                [`length^-2`], a column mass density [`mass * length^-2`], a 
-                number density at sea level [`length^-3`], a mass density at 
-                sea level [`mass * length^-3`], a mole fraction at 
+            target: Mapping of molecule and target total column density.
+                Total column must be either a column number density
+                [`length^-2`], a column mass density [`mass * length^-2`], a
+                number density at sea level [`length^-3`], a mass density at
+                sea level [`mass * length^-3`], a mole fraction at
                 sea level [`dimensionless`].
             check_x_sum: if True, check that mole fraction sums are never
                 larger than one.
-        
+
         Returns:
-            Rescaled dataset (new object).    
+            Rescaled dataset (new object).
         """
         return self.rescale(
             factors=self.scaling_factors(target=target),
@@ -451,7 +440,7 @@ class JosekiAccessor:  # pragma: no cover
 
         # update history attribute
         now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
-        
+
         ds.attrs["history"] += (
             f"\n{now} - dropped mole fraction data for molecules "
             f"{', '.join(molecules)} - joseki, version {__version__}"

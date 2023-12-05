@@ -6,8 +6,8 @@ import click
 import pandas as pd
 
 from .core import make
-from .units import ureg
 from .profiles.factory import factory
+from .units import ureg
 
 IDENTIFIER_CHOICES = factory.registered_identifiers
 
@@ -63,9 +63,7 @@ INTERPOLATION_METHOD_CHOICES = [
 @click.option(
     "--conserve-column",
     "-c",
-    help=(
-        "Ensure that column densities are conserved during interpolation."
-    ),
+    help=("Ensure that column densities are conserved during interpolation."),
     is_flag=True,
 )
 @click.option(

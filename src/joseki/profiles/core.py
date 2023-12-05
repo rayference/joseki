@@ -15,10 +15,10 @@ import xarray as xr
 from attrs import define
 from scipy import interpolate
 
-from ..__version__ import __version__
-from ..units import to_quantity, ureg
 from .schema import schema
 from .util import utcnow
+from ..__version__ import __version__
+from ..units import to_quantity, ureg
 
 logger = logging.getLogger(__name__)
 
@@ -27,18 +27,19 @@ DEFAULT_METHOD = {
 }
 
 DEFAULT_OPTIONS = {
-    #"num": 100,
-    #"zstep": 0.1 * ureg.km,
+    # "num": 100,
+    # "zstep": 0.1 * ureg.km,
     "zstep": "auto",
 }
 
+
 def rescale_to_column(reference: xr.Dataset, ds: xr.Dataset) -> xr.Dataset:
     """Rescale mole fraction to ensure that column densities are conserved.
-    
+
     Args:
         reference: Reference profile.
         ds: Profile to rescale.
-    
+
     Returns:
         Rescaled profile.
     """
@@ -78,7 +79,7 @@ def interp(
             If a variable is not in the mapping, the linear interpolation is used.
             By default, linear interpolation is used for all variables.
         conserve_column: If True, ensure that column densities are conserved.
-        kwargs: Parameters passed to `scipy.interpolate.interp1d` (except 
+        kwargs: Parameters passed to `scipy.interpolate.interp1d` (except
             'kind' and 'bounds_error').
 
     Returns:
@@ -101,7 +102,6 @@ def interp(
             bounds_error = None
     except KeyError:
         bounds_error = True
-
 
     # Interpolate pressure, temperature and density
     data_vars = {}
@@ -143,7 +143,7 @@ def interp(
         coords=coords,
         attrs=attrs,
     )
-    
+
     # Compute scaling factors to conserve column densities
     if conserve_column:
         return rescale_to_column(reference=ds, ds=interpolated)
@@ -169,7 +169,7 @@ def extrapolate(
             If a variable is not in the mapping, the linear interpolation is used.
             By default, linear interpolation is used for all variables.
         conserve_column: If True, ensure that column densities are conserved.
-    
+
     Raises:
         ValueError: If the extrapolation direction is not "up" or "down".
 
@@ -193,7 +193,7 @@ def extrapolate(
         )
         logger.critical(msg)
         raise ValueError(msg)
-    
+
     elif direction == "up" and np.any(z_extra <= z.max()):
         msg = (
             f"Cannot extrapolate up to {z_extra:~P}, "
@@ -201,7 +201,7 @@ def extrapolate(
         )
         logger.critical(msg)
         raise ValueError(msg)
-    
+
     else:
         extrapolated = interp(
             ds=ds,
@@ -225,7 +225,7 @@ def regularize(
     **kwargs: t.Any,
 ) -> xr.Dataset:
     """Regularize the profile's altitude grid.
-    
+
     Args:
         ds: Initial atmospheric profile.
         method: Mapping of variable and interpolation method.
@@ -261,11 +261,14 @@ def regularize(
                 raise ValueError(f"Invalid zstep value: {zstep}")
         else:
             raise ValueError(f"Invalid zstep value: {zstep}")
-        z_new = np.arange(
-            z.min().m_as(zunits),
-            z.max().m_as(zunits),
-            zstep.m_as(zunits),
-        ) * zunits
+        z_new = (
+            np.arange(
+                z.min().m_as(zunits),
+                z.max().m_as(zunits),
+                zstep.m_as(zunits),
+            )
+            * zunits
+        )
 
     else:
         raise ValueError("options must contain either 'num' or 'zstep' key.")
@@ -289,7 +292,7 @@ def select_molecules(
     Args:
         ds: Initial atmospheric profile.
         molecules: List of molecules to select.
-    
+
     Returns:
         Atmospheric profile with exactly the specified molecules.
     """
@@ -303,6 +306,7 @@ def select_molecules(
             f"Could not select molecules {molecules}, "
             f"available molecules are {ds.joseki.molecules}."
         )
+
 
 @define
 class Profile(ABC):

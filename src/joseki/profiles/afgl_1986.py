@@ -5,19 +5,19 @@ These data files correspond to tables 1a-f and 2a-d of the technical report
 [Anderson+1986](bibliography.md#Anderson+1986).
 """
 import enum
-import importlib_resources
 import logging
 import typing as t
 
+import importlib_resources
 import pandas as pd
 import pint
 import xarray as xr
 from attrs import define
 
-from ..units import ureg
-from .core import Profile, interp, DEFAULT_METHOD
+from .core import DEFAULT_METHOD, Profile, interp
 from .factory import factory
 from .schema import history, schema
+from ..units import ureg
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +111,7 @@ def dataframe_to_dataset(
     Args:
         df: Atmospheric profile data.
         identifier: Atmospheric profile identifier.
-        additional_molecules: If ``True``, include molecules 8-28 as numbered 
+        additional_molecules: If ``True``, include molecules 8-28 as numbered
             in [Anderson+1986](bibliography.md#Anderson+1986).
             Else, discard molecules 8-28.
 
@@ -185,8 +185,8 @@ def get_dataset(
 
     Args:
         identifier: Atmospheric profile identifier.
-            See 
-            [`Identifier`](reference.md#src.joseki.profiles.afgl_1986.Identifier) 
+            See
+            [`Identifier`](reference.md#src.joseki.profiles.afgl_1986.Identifier)
             for possible values.
         additional_molecules: If ``True``, include molecules 8-28 as numbered in
             [Anderson+1986](bibliography.md#Anderson+1986).
@@ -196,7 +196,7 @@ def get_dataset(
         Atmospheric profile dataset.
 
     Notes:
-        Chain calls to 
+        Chain calls to
         [`parse`](reference.md#src.joseki.profiles.afgl_1986.parse) and
         [`dataframe_to_dataset`](reference.md#src.joseki.profiles.afgl_1986.dataframe_to_dataset).
 
@@ -221,18 +221,18 @@ def to_dataset(
 
     Args:
         identifier: AFGL 1986 atmosphere thermophysical profile identifier.
-            See 
-            [`Identifier`](reference.md#src.joseki.profiles.afgl_1986.Identifier) 
+            See
+            [`Identifier`](reference.md#src.joseki.profiles.afgl_1986.Identifier)
             for possible values.
         z: New level altitudes.
             If ``None``, return the original dataset
             Else, interpolate the dataset to the new level altitudes.
             Default is ``None``.
-        interp_method: Interpolation method for each data variable. Default is 
+        interp_method: Interpolation method for each data variable. Default is
             ``None``.
         conserve_column: If `True`, ensure that column densities are conserved
             during interpolation.
-        kwargs: Additional arguments passed to 
+        kwargs: Additional arguments passed to
             [`get_dataset`](reference.md#src.joseki.profiles.afgl_1986.get_dataset).
 
     Returns:

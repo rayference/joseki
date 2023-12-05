@@ -1,14 +1,13 @@
-from .units import ureg
 from ussa1976.constants import F
 
-# Boltzmann constant (according to SciPy v1.10.1 Manual)
-K = 1.380649e-23 * ureg.joule /  ureg.kelvin
+from .units import ureg
 
-# air main constituents molar fractions (values according to US Standard 
+# Boltzmann constant (according to SciPy v1.10.1 Manual)
+K = 1.380649e-23 * ureg.joule / ureg.kelvin
+
+# air main constituents molar fractions (values according to US Standard
 # Atmosphere 1976)
-AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION = {
-    m: F[m] for m in ["N2", "O2", "Ar"]
-}
+AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION = {m: F[m] for m in ["N2", "O2", "Ar"]}
 
 # average molecular masses [dalton]
 # (computed with molmass: https://pypi.org/project/molmass/)

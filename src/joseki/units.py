@@ -1,11 +1,11 @@
 """Units module."""
 from __future__ import annotations
 
-from functools import singledispatch
 import logging
+from functools import singledispatch
 
-import pint
 import numpy as np
+import pint
 import xarray as xr
 from numpy.typing import ArrayLike
 
@@ -18,7 +18,6 @@ definitions = [
     "@alias ppm = parts_per_million = ppmv",
     "parts_per_billion = 1e-9 = ppb = ppbv",
     "parts_per_trillion = 1e-12 = ppt = pptv",
-
     # column number density
     "dobson_unit = 2.687e20 * meter^-2 = du = dobson_units",
 ]
@@ -40,7 +39,7 @@ def to_quantity(
     Args:
         value: Value which will be converted. If value is an `ArrayLike`, it is
             assumed to be dimensionless (unless `units` is set).
-            If a `xarray.DataArray` is passed and 
+            If a `xarray.DataArray` is passed and
             `units_error` is `True`, it is assumed to have a `units` key in
             its `attrs` field; otherwise, it is assumed to be dimensionless.
         units: Units to assign. If `None`, the units are inferred from the
@@ -48,19 +47,21 @@ def to_quantity(
 
     Returns:
         The corresponding quantity.
-    
+
     Notes:
-        This function can also be used on DataArray and Dataset coordinate 
+        This function can also be used on DataArray and Dataset coordinate
         variables.
     """
     raise NotImplementedError
 
+
 @to_quantity.register(pint.Quantity)
 def d(
-    value, 
+    value,
     units: None | str = None,
 ) -> pint.Quantity:
     return value.to(units) if units else value
+
 
 @to_quantity.register(dict)
 def d(
@@ -69,12 +70,14 @@ def d(
 ) -> pint.Quantity:
     return ureg.Quantity(**value).to(units) if units else ureg.Quantity(**value)
 
+
 @to_quantity.register(int)
 def d(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
     return to_quantity_array_like(value, units)
+
 
 @to_quantity.register(float)
 def d(
@@ -83,6 +86,7 @@ def d(
 ) -> pint.Quantity:
     return to_quantity_array_like(value, units)
 
+
 @to_quantity.register(list)
 def d(
     value,
@@ -90,12 +94,14 @@ def d(
 ) -> pint.Quantity:
     return to_quantity_array_like(np.array(value), units)
 
+
 @to_quantity.register(np.ndarray)
 def d(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
     return to_quantity_array_like(value, units)
+
 
 @to_quantity.register(xr.DataArray)
 def d(
@@ -106,9 +112,7 @@ def d(
         da_units = value.attrs["units"]
     except KeyError as e:
         if units is None:
-            raise ValueError(
-                "this DataArray has no 'units' metadata field"
-            ) from e
+            raise ValueError("this DataArray has no 'units' metadata field") from e
         else:
             return value.values * ureg(units)
     else:
@@ -117,7 +121,7 @@ def d(
             return q.to(units)
         else:
             return q
-    
+
 
 def to_quantity_array_like(
     value: ArrayLike,

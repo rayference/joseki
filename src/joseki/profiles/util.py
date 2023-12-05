@@ -6,13 +6,13 @@ import numpy as np
 import pint
 import xarray as xr
 
-from ..constants import K, MM
+from ..constants import MM, K
 from ..units import ureg
 
 
 def utcnow() -> str:
     """Get current UTC time.
-    
+
     Returns:
         ISO 8601 formatted UTC timestamp.
     """
@@ -21,14 +21,14 @@ def utcnow() -> str:
 
 def number_density(p: pint.Quantity, t: pint.Quantity) -> pint.Quantity:
     """Compute air number density from air pressure and air temperature.
-    
+
     Args:
         p: Air pressure.
         t: Air temperature.
-    
+
     Returns:
         Number density.
-    
+
     Notes:
         The air number density is computed according to the ideal gas law:
 
@@ -36,7 +36,7 @@ def number_density(p: pint.Quantity, t: pint.Quantity) -> pint.Quantity:
         n = \\frac{p}{k_B T}
         $$
 
-        where $p$ is the air pressure, $k_B$ is the Boltzmann constant, and 
+        where $p$ is the air pressure, $k_B$ is the Boltzmann constant, and
         $T$ is the air temperature.
     """
     return (p / (K * t)).to_base_units()
@@ -49,23 +49,21 @@ def molar_mass(molecules: t.List[str]) -> xr.DataArray:
         attrs={
             "long_name": "molar mass",
             "standard_name": "molar_mass",
-            "units": "g/mol"
+            "units": "g/mol",
         },
     )
 
 
-def air_molar_mass_from_mass_fraction(
-    y: xr.DataArray
-) -> xr.DataArray:
+def air_molar_mass_from_mass_fraction(y: xr.DataArray) -> xr.DataArray:
     r"""
     Compute the air molar mass from the of air constituents mass fractions.
-    
+
     Args:
         y: Mass fraction as a function of molecule (`m`) and altitude (`z`).
-    
+
     Returns:
         Air molar mass as a function of altitude (`z`).
-    
+
     Notes:
         The air molar mass is computed according to the following equation:
 

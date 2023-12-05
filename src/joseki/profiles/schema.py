@@ -6,16 +6,15 @@ expected in a dataset representing an atmosphere thermophysical profile.
 import logging
 import typing as t
 
-
-from attrs import define
 import numpy as np
 import numpy.typing as npt
-import xarray as xr
 import pint
+import xarray as xr
+from attrs import define
 
+from .util import number_density, utcnow
 from ..__version__ import __version__
 from ..units import ureg
-from .util import utcnow, number_density
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +36,7 @@ def mole_fraction_sum(ds: xr.Dataset) -> pint.Quantity:
         sum([ds[c] for c in ds.data_vars if c.startswith("x_")]).values
         * ureg.dimensionless
     )
+
 
 @define(frozen=True)
 class Schema:
@@ -97,9 +97,9 @@ class Schema:
 
         Raises:
             ValueError: If the dataset does not match the schema.
-        
+
         Returns:
-            None or bool: If `ret_true_if_valid` is True, returns True if the 
+            None or bool: If `ret_true_if_valid` is True, returns True if the
                 dataset is valid, otherwise returns None.
         """
         logger.debug("Validating dataset")
@@ -111,7 +111,9 @@ class Schema:
 
         logger.debug("Checking that 'x_*' data variable(s) are present")
         if not any([name.startswith("x_") for name in ds.data_vars]):
-            raise ValueError("missing data variable starting with x_")  # pragma: no cover
+            raise ValueError(
+                "missing data variable starting with x_"
+            )  # pragma: no cover
 
         logger.debug("Checking that all coordinates are present")
         for coord in self.coords:
@@ -139,9 +141,7 @@ class Schema:
                     f"got {ds[coord].dims}"
                 )
 
-        logger.debug(
-            "Checking that data variables have the correct dimensionality"
-        )
+        logger.debug("Checking that data variables have the correct dimensionality")
         for var, (_, _, dimensionality, _) in self.data_vars.items():
             units = ureg(ds[var].units)
             if not units.check(dimensionality):
@@ -150,9 +150,7 @@ class Schema:
                     f"got {units.dimensionality}"
                 )
 
-        logger.debug(
-            "Checking that coordinates have the correct dimensionality"
-        )
+        logger.debug("Checking that coordinates have the correct dimensionality")
         for coord, (_, _, dimensionality, _) in self.coords.items():
             units = ureg(ds[coord].units)
             if not units.check(dimensionality):
@@ -169,9 +167,7 @@ class Schema:
                     f"got {type(ds.attrs[attr])}"
                 )
 
-        logger.debug(
-            "Checking that data variables have the correct standard names"
-        )
+        logger.debug("Checking that data variables have the correct standard names")
         for var, (_, _, _, standard_name) in self.data_vars.items():
             if ds[var].attrs["standard_name"] != standard_name:
                 raise ValueError(  # pragma: no cover
@@ -201,9 +197,7 @@ class Schema:
                     )
 
         if check_x_sum:
-            logger.debug(
-                "Checking that mole fraction sums are never larger than one"
-            )
+            logger.debug("Checking that mole fraction sums are never larger than one")
             vfs = mole_fraction_sum(ds)
             if np.any(vfs.m > 1):
                 raise ValueError(  # pragma: no cover
@@ -223,12 +217,12 @@ class Schema:
         attrs: t.Mapping[str, str],
     ) -> xr.Dataset:
         """Convert input to schema-compliant dataset.
-        
+
         Args:
             data_vars: Mapping of data variable names to quantities.
             coords: Mapping of coordinate names to quantities.
             attrs: Mapping of attribute names to values.
-        
+
         Returns:
             Dataset with schema-compliant data variables, coordinates, and
             attributes.
@@ -245,12 +239,15 @@ class Schema:
                 data_vars["n"] = n
             else:
                 if var not in data_vars:
-                    raise ValueError(f"missing data variable: {var}")  # pragma: no cover
-
+                    raise ValueError(
+                        f"missing data variable: {var}"
+                    )  # pragma: no cover
 
         logger.debug("checking that there is at least one x_ data variable")
         if not any([name.startswith("x_") for name in data_vars]):
-            raise ValueError("missing data variable starting with x_")  # pragma: no cover
+            raise ValueError(
+                "missing data variable starting with x_"
+            )  # pragma: no cover
 
         logger.debug("checking that all coordinates are present")
         for coord in self.coords:

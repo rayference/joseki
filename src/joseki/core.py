@@ -10,15 +10,14 @@ import numpy as np
 import pint
 import xarray as xr
 
-from .profiles.factory import factory
+from .__version__ import __version__
 from .profiles.core import (
     DEFAULT_METHOD,
     select_molecules,
 )
 from .profiles.core import regularize as _regularize
-from .__version__ import __version__
+from .profiles.factory import factory
 from .units import to_quantity
-
 
 logger = logging.getLogger(__name__)
 
@@ -45,18 +44,18 @@ def make(
             during interpolation.
         molecules: List of molecules to include in the profile.
         regularize: Regularize the altitude grid with specified options which
-            are passed to 
+            are passed to
             [regularize](reference.md#src.joseki.profiles.core.regularize).
-        rescale_to: Rescale molecular concentrations to the specified target 
-            values which are passed to 
-            [rescale_to](reference.md#src.joseki.accessor.JosekiAccessor.rescale_to).  
-        check_x_sum: If `True`, check that the mole fraction sums are less or 
+        rescale_to: Rescale molecular concentrations to the specified target
+            values which are passed to
+            [rescale_to](reference.md#src.joseki.accessor.JosekiAccessor.rescale_to).
+        check_x_sum: If `True`, check that the mole fraction sums are less or
             equal to 1.
         kwargs: Additional keyword arguments passed to the profile constructor.
-    
+
     Returns:
         Profile as xarray.Dataset.
-    
+
     See Also:
         [regularize](reference.md#src.joseki.profiles.core.regularize)
         [rescale_to](reference.md#src.joseki.accessor.JosekiAccessor.rescale_to)
@@ -69,7 +68,7 @@ def make(
     logger.debug("regularize: %s", regularize)
     logger.debug("rescale_to: %s", rescale_to)
     logger.debug("kwargs: %s", kwargs)
-    
+
     # Convert z to pint.Quantity
     z = to_quantity(z) if z is not None else None
 
@@ -82,11 +81,11 @@ def make(
         conserve_column=conserve_column,
         **kwargs,
     )
-    
+
     # Molecules selection
     if molecules is not None:
         ds = select_molecules(ds, molecules)
-    
+
     # Altitude grid regularization
     if regularize:
         z = to_quantity(ds.z)
@@ -97,23 +96,23 @@ def make(
             ds=ds,
             method=regularize.get("method", DEFAULT_METHOD),
             conserve_column=regularize.get("conserve_column", False),
-            options=regularize.get('options', {"num": default_num}),
+            options=regularize.get("options", {"num": default_num}),
         )
-    
+
     # Molecular concentration rescaling
     if rescale_to:
         ds = ds.joseki.rescale_to(
             target=rescale_to,
             check_x_sum=check_x_sum,
         )
-    
+
     return ds
 
 
 def open_dataset(path: os.PathLike, *args, **kwargs) -> xr.Dataset:
     """
     Thin wrapper around `xarray.open_dataset`.
-    
+
     Args:
         path: Path to the dataset.
 
@@ -126,7 +125,7 @@ def open_dataset(path: os.PathLike, *args, **kwargs) -> xr.Dataset:
 def load_dataset(path: os.PathLike, *args, **kwargs) -> xr.Dataset:
     """
     Thin wrapper around `xarray.load_dataset`.
-    
+
     Args:
         path: Path to the dataset.
 
@@ -142,7 +141,7 @@ def merge(
 ) -> xr.Dataset:
     """
     Merge multiple profiles into a single profile.
-    
+
     Args:
         datasets: Iterable of profiles.
         new_title: New title for the merged profile. If `None`, the title of
@@ -150,7 +149,7 @@ def merge(
 
     Returns:
         Merged profile.
-    
+
     Notes:
         The first profile in the iterable is used as the base profile; when
         variables with the same name are encountered in subsequent profiles,

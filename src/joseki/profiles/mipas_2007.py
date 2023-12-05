@@ -1,7 +1,7 @@
 """MIPAS atmosphere thermophysical profiles.
 
-[Remedios et al. (2007)](bibliography.md#Remedios+2007) define a set of 5 
-"standard atmospheres" representing the atmosphere at different latitudes and 
+[Remedios et al. (2007)](bibliography.md#Remedios+2007) define a set of 5
+"standard atmospheres" representing the atmosphere at different latitudes and
 seasons or times of day:
 
 * midlatitude day
@@ -16,20 +16,20 @@ files for characteristic atmospheric states such as the
 [AFGL Atmospheric constituent profiles](bibliography.md#Anderson+1986).
 """
 import enum
-import importlib_resources
 import logging
 import typing as t
 
+import importlib_resources
 import numpy as np
 import pint
 import xarray as xr
 from attrs import define
 from scipy.constants import physical_constants
 
-from ..units import ureg
-from .core import Profile, interp, DEFAULT_METHOD
+from .core import DEFAULT_METHOD, Profile, interp
 from .factory import factory
 from .schema import history, schema
+from ..units import ureg
 
 logger = logging.getLogger(__name__)
 
@@ -64,13 +64,13 @@ K = ureg.Quantity(*physical_constants["Boltzmann constant"][:2])
 
 def to_chemical_formula(name: str) -> str:
     """Convert to chemical formula.
-    
+
     Args:
         name: Molecule name.
 
     Returns:
         Molecule formula.
-    
+
     Notes:
         If molecule name is unknown, returns name unchanged.
     """
@@ -165,7 +165,7 @@ def parse_content(lines: t.List[str]) -> t.Dict[str, pint.Quantity]:
     def _add_to_quantities(quantity: pint.Quantity, name: str) -> None:
         if name not in ["z", "p", "t", "n"]:
             name = f"x_{name}"
-        
+
         if quantity.check(""):
             quantities[name] = quantity.to("dimensionless")
         else:
@@ -214,8 +214,8 @@ def read_file_content(identifier: Identifier) -> str:
 
     Args:
         identifier: Atmospheric profile identifier.
-            See 
-            [`Identifier`](reference.md#src.joseki.profiles.mipas_2007.Identifier) 
+            See
+            [`Identifier`](reference.md#src.joseki.profiles.mipas_2007.Identifier)
             for possible values.
 
     Returns:
@@ -232,8 +232,8 @@ def get_dataset(identifier: Identifier) -> xr.Dataset:
 
     Args:
         identifier: Atmospheric profile identifier.
-            See 
-            [`Identifier`](reference.md#src.joseki.profiles.mipas_2007.Identifier) 
+            See
+            [`Identifier`](reference.md#src.joseki.profiles.mipas_2007.Identifier)
             for possible values.
 
     Returns:
