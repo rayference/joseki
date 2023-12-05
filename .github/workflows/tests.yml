@@ -1,7 +1,15 @@
 name: Tests
 
 on:
-  - pull_request
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 
 jobs:
   tests:
@@ -14,6 +22,8 @@ jobs:
           - "3.8"
           - "3.9"
           - "3.10"
+          - "3.11"
+          - "3.12"
         os:
           - ubuntu-latest
 
@@ -21,7 +31,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PDM
         uses: pdm-project/setup-pdm@main
@@ -29,13 +39,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Setup Nox
-        uses: excitedleigh/setup-nox@main
+        uses: wntrblm/nox@2022.11.21
 
       - name: Install dependencies
         run: pdm sync
 
       - name: Run Tests
-        run: nox -s test
+        run: nox --no-venv -s test
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v3
@@ -67,7 +77,7 @@ jobs:
           python -m coverage combine
           python -m coverage html --skip-covered --skip-empty
           python -m coverage report --fail-under=100
-          
+
       - name: Upload HTML report if check failed
         uses: actions/upload-artifact@v2
         with:
