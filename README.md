@@ -7,7 +7,7 @@
 Reference atmosphere's thermophysical profiles for radiative transfer
 applications in Earth's atmosphere.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-LGPLv3-yellow.svg)](https://opensource.org/license/lgpl-3-0/)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 [![code-style-black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![PyPI](https://img.shields.io/pypi/v/joseki)](https://pypi.python.org/pypi/joseki/)
@@ -27,14 +27,14 @@ different operations, such as interpolation and rescaling, on a dataset.
   * *MIPAS (2007) reference atmospheres*
   * *U.S. Standard Atmosphere, 1976*
 * NetCDF support thanks to the [xarray](https://xarray.pydata.org) library
-* Documented and standard dataset format based on the 
+* Documented and standard dataset format based on the
   [CF conventions](https://cfconventions.org)
 * Dataset schema validation
 * Altitude interpolation/extrapolation and regularization
 * Molecular concentration rescaling
 * Molecules selection
 * Computation of derived quantities
-* Convenient units support thanks to the [pint](https://pint.readthedocs.io) 
+* Convenient units support thanks to the [pint](https://pint.readthedocs.io)
   library
 * Command-line interface
 * Python API
@@ -47,14 +47,14 @@ different operations, such as interpolation and rescaling, on a dataset.
 
 ## Installation
 
-You can install *Joseki* via [`pip`](https://pip.pypa.io/en/stable/) from 
+You can install *Joseki* via [`pip`](https://pip.pypa.io/en/stable/) from
 [`PyPI`](https://pypi.org/):
 
 ```shell
 pip install joseki
 ```
 
-or via [`conda`](https://docs.conda.io) from 
+or via [`conda`](https://docs.conda.io) from
 [`conda-forge`](https://conda-forge.org):
 
 ```shell
@@ -67,17 +67,15 @@ Visit https://rayference.github.io/joseki/latest.
 
 ## Ikigai
 
-*Joseki* was born in the context of the development of the 
+*Joseki* was born in the context of the development of the
 [Eradiate](https://github.com/eradiate/eradiate) radiative transfer model, from
-the need to collect, document and trace, integrate and modify *popular* 
+the need to collect, document and trace, integrate and modify *popular*
 thermophysical profiles.
 As such, its features evolve in close relationship to those of *Eradiate*.
 
 ## About
 
-Joseki is written and maintained by [Yvan Nollet](https://github.com/nollety).
-
-Development is supported by [Rayference](https://www.rayference.eu).
+Joseki was created by [Yvan Nollet](https://github.com/nollety) and is maintained by [Rayference](https://www.rayference.eu).
 
 Joseki is a component of the [Eradiate radiative transfer model](https://www.eradiate.eu/site/).
 
