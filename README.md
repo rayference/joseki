@@ -4,21 +4,20 @@
 
 # Joseki
 
-Reference atmosphere's thermophysical profiles for radiative transfer
+Reference atmospheric thermophysical profiles for radiative transfer
 applications in Earth's atmosphere.
 
-[![License: MIT](https://img.shields.io/badge/License-LGPLv3-yellow.svg)](https://opensource.org/license/lgpl-3-0/)
+[![License: LGPLv3](https://img.shields.io/badge/License-LGPLv3-yellow.svg)](https://opensource.org/license/lgpl-3-0/)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 [![code-style-black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![PyPI](https://img.shields.io/pypi/v/joseki)](https://pypi.python.org/pypi/joseki/)
 [![Conda](https://img.shields.io/conda/vn/conda-forge/joseki)](https://anaconda.org/conda-forge/joseki)
 [![Coverage](https://codecov.io/gh/nollety/joseki/branch/main/graph/badge.svg)](https://codecov.io/gh/nollety/joseki)
 
-
 This package gathers together datasets of thermophysical properties of the
 Earth's atmosphere relevant for radiative transfer applications, and provides
-utilities to compute common caracteristic quantities as well as to perform
-different operations, such as interpolation and rescaling, on a dataset.
+utilities to compute common characteristic quantities and perform operations
+such as interpolation and rescaling on a dataset.
 
 ## Features
 
@@ -39,11 +38,9 @@ different operations, such as interpolation and rescaling, on a dataset.
 * Command-line interface
 * Python API
 
-
 ## Requirements
 
 * Python 3.8+
-
 
 ## Installation
 
@@ -79,4 +76,6 @@ Joseki was created by [Yvan Nollet](https://github.com/nollety) and is maintaine
 
 Joseki is a component of the [Eradiate radiative transfer model](https://www.eradiate.eu/site/).
 
-Joseki's logo is a simple representation (not to scale!) of the 5 layers of Earth's atmosphere (troposphere, stratosphere, mesosphere, thermosphere and exosphere).
+Joseki's logo is a simple representation (not to scale!) of the 5 layers of
+Earth's atmosphere (troposphere, stratosphere, mesosphere, thermosphere and
+exosphere).

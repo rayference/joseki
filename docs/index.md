@@ -1,4 +1,4 @@
-# Welcome to `joseki` documentation
+# Welcome to the `joseki` documentation
 
 ## Table of contents
 
@@ -12,11 +12,11 @@ The documentation consists of four separate parts:
 ## Project layout
 
 ??? abstract "Project layout"
-    
+
     ```
         docs/
             bibliography.bib            # BibTeX file
-            bibliography.md             # Bibliography 
+            bibliography.md             # Bibliography
             changelog.md                # Changelog
             explanation.md              # Understanding-oriented documentation
             how-to-guides.md            # Task-oriented documentation
