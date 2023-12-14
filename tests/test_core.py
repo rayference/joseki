@@ -4,7 +4,7 @@ import pytest
 from numpy.testing import assert_approx_equal
 
 from joseki import unit_registry as ureg
-from joseki.core import make, open_dataset, load_dataset, merge, identifiers
+from joseki.core import identifiers, load_dataset, make, merge, open_dataset
 
 
 def test_make():
@@ -27,7 +27,7 @@ def test_make_python_dict():
         "z": {
             "value": [0, 10, 20, 30, 60, 90, 120],
             "units": "km",
-        }
+        },
     }
     ds = make(**d)
     assert ds.joseki.is_valid
@@ -93,8 +93,9 @@ def test_make_conserve_column():
         assert_approx_equal(
             ds0.joseki.column_number_density[m].m,
             ds1.joseki.column_number_density[m].m,
-            significant=6
+            significant=6,
         )
+
 
 def test_make_molecules():
     """Returns dataset with molecules corresponding to selection."""
@@ -129,18 +130,13 @@ def test_make_regularize_dict():
 @pytest.mark.parametrize(
     "target",
     [
-        {
-            "H2O": 25 * ureg.kg / ureg.m**2
-        },
-        {
-            "H2O": 25 * ureg.kg / ureg.m**2,
-            "CO2": 420 * ureg.ppm
-        },
+        {"H2O": 25 * ureg.kg / ureg.m**2},
+        {"H2O": 25 * ureg.kg / ureg.m**2, "CO2": 420 * ureg.ppm},
         {
             "H2O": 25 * ureg.kg / ureg.m**2,
             "CO2": 420 * ureg.ppm,
-            "O3": 350 * ureg.dobson_unit
-        }
+            "O3": 350 * ureg.dobson_unit,
+        },
     ],
 )
 def test_make_rescale_to(target):
@@ -160,6 +156,7 @@ def test_make_rescale_to(target):
             target[molecule].m,
             significant=6,
         )
+
 
 def test_open_dataset(tmpdir):
     """Returns xr.Dataset."""

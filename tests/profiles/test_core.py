@@ -2,50 +2,44 @@ import numpy as np
 import pint
 import pytest
 import xarray as xr
-from numpy.testing import assert_approx_equal, assert_allclose
+from numpy.testing import assert_allclose, assert_approx_equal
 
 from joseki import unit_registry as ureg
 from joseki.core import make
 from joseki.profiles.core import (
-    rescale_to_column,
-    interp,
     extrapolate,
+    interp,
     regularize,
+    rescale_to_column,
     select_molecules,
 )
 from joseki.units import to_quantity
+
 
 @pytest.fixture
 def test_data_set() -> xr.Dataset:
     """Test dataset fixture."""
     return make(identifier="afgl_1986-tropical")
 
+
 def test_rescale_to_column_factor_0():
     ds = make(identifier="afgl_1986-tropical")
     with xr.set_options(keep_attrs=True):
-        reference = ds.copy(deep=True).assign({
-            "x_H2O": ds.x_H2O * 0
-        })
+        reference = ds.copy(deep=True).assign({"x_H2O": ds.x_H2O * 0})
 
-    rescaled = rescale_to_column(
-        reference=reference,
-        ds=ds
-    )
+    rescaled = rescale_to_column(reference=reference, ds=ds)
 
     assert_allclose(rescaled.x_H2O, 0)
+
 
 def test_rescale_to_column_impossible():
     reference = make(identifier="afgl_1986-tropical")
     with xr.set_options(keep_attrs=True):
-        ds = reference.copy(deep=True).assign({
-            "x_H2O": reference.x_H2O * 0
-        })
+        ds = reference.copy(deep=True).assign({"x_H2O": reference.x_H2O * 0})
 
     with pytest.raises(ValueError):
-        rescale_to_column(
-            reference=reference,
-            ds=ds
-        )
+        rescale_to_column(reference=reference, ds=ds)
+
 
 def test_interp_returns_data_set(test_data_set: xr.Dataset):
     """Returns an xarray.Dataset."""
@@ -65,11 +59,10 @@ def test_interp_out_of_bound(test_data_set: xr.Dataset):
 def test_interp_extrapolate(test_data_set: xr.Dataset):
     """Key-word argument 'fill_value' is processed."""
     interpolated = interp(
-        ds=test_data_set,
-        z_new=np.linspace(0, 150) * ureg.km,
-        fill_value="extrapolate"
+        ds=test_data_set, z_new=np.linspace(0, 150) * ureg.km, fill_value="extrapolate"
     )
     assert interpolated.joseki.is_valid
+
 
 def test_interp_bounds_error(test_data_set: xr.Dataset):
     """Key-word argument 'fill_value' is processed."""
@@ -86,7 +79,7 @@ def test_interp_bounds_error(test_data_set: xr.Dataset):
     [
         -0.1 * ureg.km,
         np.linspace(-0.5, -0.1, 5) * ureg.km,
-    ]
+    ],
 )
 def test_extrapolate_down(test_data_set: xr.Dataset, z_down: pint.Quantity):
     """Extrapolate down to 100 m."""
@@ -104,12 +97,13 @@ def test_extrapolate_down(test_data_set: xr.Dataset, z_down: pint.Quantity):
     )
     assert extrapolated.joseki.is_valid
 
+
 @pytest.mark.parametrize(
     "z_up",
     [
         130 * ureg.km,
         np.linspace(130, 180, 6) * ureg.km,
-    ]
+    ],
 )
 def test_extrapolate_up(test_data_set: xr.Dataset, z_up: pint.Quantity):
     """Extrapolate up to 130 km."""
@@ -137,13 +131,14 @@ def test_extrapolate_invalid_altitude(test_data_set: xr.Dataset):
             z_extra=10 * ureg.km,
             direction="down",
         )
-    
+
     with pytest.raises(ValueError):
         extrapolate(
             ds=test_data_set,
             z_extra=60 * ureg.km,
             direction="up",
         )
+
 
 def test_extrapolate_invalid_direction(test_data_set: xr.Dataset):
     """Raises when invalid direction is provided."""
@@ -154,6 +149,7 @@ def test_extrapolate_invalid_direction(test_data_set: xr.Dataset):
             direction="invalid",
         )
 
+
 def test_regularize(test_data_set: xr.Dataset):
     """Regularize the profile."""
     regularized = regularize(ds=test_data_set)
@@ -162,6 +158,7 @@ def test_regularize(test_data_set: xr.Dataset):
     # grid is regular
     assert np.all(np.diff(zgrid) == zgrid[1] - zgrid[0])
 
+
 def test_regularize_zstep(test_data_set: xr.Dataset):
     """Regularize the profile."""
     zstep = 0.5 * ureg.km
@@ -169,11 +166,12 @@ def test_regularize_zstep(test_data_set: xr.Dataset):
         ds=test_data_set,
         options={
             "zstep": zstep,
-        }
+        },
     )
 
     zgrid = to_quantity(regularized.z)
     assert np.all(np.diff(zgrid) == zstep)
+
 
 def test_regularize_zstep_str_invalid(test_data_set: xr.Dataset):
     """Invalid zstep raises."""
@@ -182,8 +180,9 @@ def test_regularize_zstep_str_invalid(test_data_set: xr.Dataset):
             ds=test_data_set,
             options={
                 "zstep": "invalid",
-            }
+            },
         )
+
 
 def test_regularize_zstep_invalid_type(test_data_set: xr.Dataset):
     """Invalid zstep raises."""
@@ -192,16 +191,14 @@ def test_regularize_zstep_invalid_type(test_data_set: xr.Dataset):
             ds=test_data_set,
             options={
                 "zstep": ["cannot be a list"],
-            }
+            },
         )
+
 
 def test_regularize_options_invalid(test_data_set: xr.Dataset):
     """Invalid options raises."""
     with pytest.raises(ValueError):
-        regularize(
-            ds=test_data_set,
-            options={}
-        )
+        regularize(ds=test_data_set, options={})
 
 
 def test_regularize_num(test_data_set: xr.Dataset):
@@ -211,7 +208,7 @@ def test_regularize_num(test_data_set: xr.Dataset):
         ds=test_data_set,
         options={
             "num": num,
-        }
+        },
     )
 
     assert regularized.z.size == num
@@ -227,6 +224,7 @@ def test_select_molecules(test_data_set: xr.Dataset):
     assert "H2O" in selected.joseki.molecules
     assert "CO2" in selected.joseki.molecules
     assert "O3" not in selected.joseki.molecules
+
 
 def test_select_molecules_invalid(test_data_set: xr.Dataset):
     """Raise when selected molecules are not available."""

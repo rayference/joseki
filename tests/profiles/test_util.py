@@ -3,13 +3,14 @@ import numpy.testing as npt
 import pytest
 import xarray as xr
 
+from joseki import unit_registry as ureg
 from joseki.profiles.util import (
     air_molar_mass_from_mass_fraction,
     molar_mass,
     number_density,
 )
 from joseki.units import to_quantity
-from joseki import unit_registry as ureg
+
 
 @pytest.fixture
 def test_y():
@@ -25,7 +26,7 @@ def test_y():
         coords={
             "m": ("m", ["N2", "O2"]),
             "z": ("z", [0, 50, 100], {"units": "km"}),
-        }
+        },
     )
 
 
@@ -34,6 +35,7 @@ def test_air_molar_mass_from_mass_fraction(test_y):
     q = to_quantity(air_mm)
     assert q.check("[mass] / [substance]")
     assert np.allclose(air_mm.values, 29.0, rtol=1e-2)
+
 
 def test_number_density():
     p = 101325 * ureg.Pa
@@ -46,10 +48,10 @@ def test_number_density():
         rtol=1e-5,
     )
 
+
 def test_molar_mass():
     molecules = ["H2O", "CO2"]
     da = molar_mass(molecules)
     assert isinstance(da, xr.DataArray)
     q = to_quantity(da)
     assert q.check("[mass] / [substance]")
-

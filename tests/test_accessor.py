@@ -7,8 +7,7 @@ from numpy.testing import assert_approx_equal
 
 import joseki
 from joseki.accessor import _scaling_factor
-from joseki.units import to_quantity
-from joseki.units import ureg
+from joseki.units import to_quantity, ureg
 
 
 @pytest.fixture
@@ -73,13 +72,12 @@ def test_dataset_non_standard_units():
             "references": "N/A",
             "url": "N/A",
             "urldate": "N/A",
-        }
+        },
     )
 
 
 @pytest.mark.parametrize(
-    "identifier",
-    ["ussa_1976", "afgl_1986-us_standard", "mipas_2007-midlatitude_day"]
+    "identifier", ["ussa_1976", "afgl_1986-us_standard", "mipas_2007-midlatitude_day"]
 )
 def test_column_mass_density(identifier: str):
     """Returns a dictionary."""
@@ -92,11 +90,10 @@ def test_column_mass_density(identifier: str):
     [
         ("afgl_1986-us_standard", 14.38 * ureg.kg / ureg.m**2),
         ("mipas_2007-midlatitude_day", 19.51 * ureg.kg / ureg.m**2),
-    ]
+    ],
 )
 def test_water_vapour_column_mass_density_in_cells(
-    identifier: str,
-    expected: pint.Quantity
+    identifier: str, expected: pint.Quantity
 ):
     """Column mass density of water vapor is close to expected values."""
     ds = joseki.make(identifier)
@@ -108,13 +105,10 @@ def test_water_vapour_column_mass_density_in_cells(
     "identifier, expected",
     [
         ("afgl_1986-us_standard", 345.7 * ureg.dobson_unit),
-        ("mipas_2007-midlatitude_day", 301.7 * ureg.dobson_unit)
-    ]
+        ("mipas_2007-midlatitude_day", 301.7 * ureg.dobson_unit),
+    ],
 )
-def test_column_number_density(
-    identifier: str,
-    expected: pint.Quantity
-):
+def test_column_number_density(identifier: str, expected: pint.Quantity):
     """Column number density of ozone matches expected value."""
     ds = joseki.make(identifier)
     ozone_amount = ds.joseki.column_number_density["O3"].to("dobson_unit")
@@ -139,8 +133,8 @@ def test_number_density_at_sea_level(identifier: str):
     "identifier, expected",
     [
         ("afgl_1986-us_standard", 0.00590723 * ureg.kg / ureg.m**3),
-        ("mipas_2007-midlatitude_day", 0.00901076 * ureg.kg / ureg.m**3)
-    ]
+        ("mipas_2007-midlatitude_day", 0.00901076 * ureg.kg / ureg.m**3),
+    ],
 )
 def test_mass_density_at_sea_level(identifier: str, expected: pint.Quantity):
     """Mass density at sea level of H2O matches expected value."""
@@ -153,8 +147,8 @@ def test_mass_density_at_sea_level(identifier: str, expected: pint.Quantity):
     "identifier, expected",
     [
         ("afgl_1986-us_standard", 0.000330 * ureg.dimensionless),
-        ("mipas_2007-midlatitude_day", 0.0003685 * ureg.dimensionless)
-    ]
+        ("mipas_2007-midlatitude_day", 0.0003685 * ureg.dimensionless),
+    ],
 )
 def test_mole_fraction_at_sea_level(identifier: str, expected):
     """CO2 mole mixing fraction at sea level matches expected value."""
@@ -199,9 +193,7 @@ def test_scaling_factors(identifier: str):
     assert all([k1 == k2 for k1, k2 in zip(target.keys(), factors.keys())])
 
 
-@pytest.mark.parametrize(
-    "identifier", ["afgl_1986-us_standard"]
-)
+@pytest.mark.parametrize("identifier", ["afgl_1986-us_standard"])
 def test_rescale(identifier: str):
     """Scaling factors are applied."""
     ds = joseki.make(identifier)
@@ -234,6 +226,7 @@ def test_rescale_invalid(identifier: str):
             check_x_sum=True,
         )
 
+
 def test_rescale_to_column_mass_density():
     """Column mass density of H2O matches target value."""
     ds = joseki.make("afgl_1986-midlatitude_summer")
@@ -247,12 +240,13 @@ def test_rescale_to_column_mass_density():
         significant=3,
     )
 
+
 @pytest.mark.parametrize(
     "molecules",
     [
         ["H2O"],
         ["H2O", "CO2"],
-    ]
+    ],
 )
 def test_drop_molecules(molecules):
     """x_M data variable is(are) dropped."""
@@ -261,19 +255,22 @@ def test_drop_molecules(molecules):
     dropped = ds.joseki.drop_molecules(molecules)
     assert all([m not in dropped.joseki.molecules for m in molecules])
 
+
 def test_valid_True():
     """Returns True if the dataset is valid."""
     ds = joseki.make("afgl_1986-midlatitude_summer")
     assert ds.joseki.is_valid
 
+
 def test_valid_False():
     """Returns False if the dataset is not valid."""
     ds = joseki.make("afgl_1986-midlatitude_summer")
-    
+
     # drop variable 't'
     ds = ds.drop_vars("t")
 
     assert not ds.joseki.is_valid
+
 
 def test_validate(test_dataset_non_standard_units, tmpdir):
     """Returns True if the dataset is valid."""

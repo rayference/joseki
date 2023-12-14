@@ -2,23 +2,24 @@
 import numpy as np
 import pytest
 
-from joseki.profiles.mipas_2007 import parse_content
-from joseki.profiles.mipas_2007 import parse_units
-from joseki.profiles.mipas_2007 import parse_values_line
-from joseki.profiles.mipas_2007 import parse_var_line
-from joseki.profiles.mipas_2007 import parse_var_name
-from joseki.profiles.mipas_2007 import Identifier
-from joseki.profiles.mipas_2007 import read_file_content
-from joseki.profiles.mipas_2007 import translate_cfc, to_chemical_formula
-from joseki.profiles.mipas_2007 import to_dataset
-from joseki.units import ureg
 from joseki.profiles.mipas_2007 import (
-    MIPASMidlatitudeNight,
+    Identifier,
     MIPASMidlatitudeDay,
+    MIPASMidlatitudeNight,
     MIPASPolarSummer,
     MIPASPolarWinter,
     MIPASTropical,
+    parse_content,
+    parse_units,
+    parse_values_line,
+    parse_var_line,
+    parse_var_name,
+    read_file_content,
+    to_chemical_formula,
+    to_dataset,
+    translate_cfc,
 )
+from joseki.units import ureg
 
 
 def test_parse_unit():
@@ -174,6 +175,7 @@ def test_to_chemical_formula_h2o():
     """Returns non-chlorofulorocarbon name unchanged."""
     assert to_chemical_formula("H2O") == "H2O"
 
+
 def test_to_dataset_z():
     ds = to_dataset(
         identifier=Identifier.TROPICAL,
@@ -181,13 +183,17 @@ def test_to_dataset_z():
     )
     assert ds.joseki.is_valid
 
-@pytest.mark.parametrize("profile", [
-    MIPASMidlatitudeNight(),
-    MIPASMidlatitudeDay(),
-    MIPASPolarSummer(),
-    MIPASPolarWinter(),
-    MIPASTropical(),
-])
+
+@pytest.mark.parametrize(
+    "profile",
+    [
+        MIPASMidlatitudeNight(),
+        MIPASMidlatitudeDay(),
+        MIPASPolarSummer(),
+        MIPASPolarWinter(),
+        MIPASTropical(),
+    ],
+)
 def test_profile_to_dataset(profile):
     """Returns a dataset."""
     ds = profile.to_dataset()
