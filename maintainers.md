@@ -17,7 +17,7 @@
 * run the test with `pytest tests`
 * to verify the test coverage, run:
   ```shell
-  pdm run coverage
+  pdm run coverage-report
   ```
   and inspect the coverage report.
 
