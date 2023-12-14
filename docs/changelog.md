@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.6.0] - Upcoming release
+## [2.6.0] - 2023-12-14
 
 ### Changed
 
 * Joseki is now licensed under the terms of the LGPLv3.
 * Updated documentation to reflect licensing and governance changes.
-* Added Python 3.11 and 3.12 to CI matrix.
+* Added Python 3.11 and 3.12 to CI matrix: Joseki is now testing with Python 3.8
+  to 3.12.
 
 ## [2.5.2] - 2023-11-16
 
