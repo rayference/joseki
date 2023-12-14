@@ -146,6 +146,38 @@ def test_mass_density_at_sea_level(identifier: str, expected: pint.Quantity):
 @pytest.mark.parametrize(
     "identifier, expected",
     [
+        ("afgl_1986-us_standard", 0.0004621406347),
+        ("mipas_2007-midlatitude_day", 0.000456396845),
+    ],
+)
+def test_mass_fraction(identifier, expected):
+    """Mean CO2 mass fraction matches expected value.
+    This basic test will detect an obvious regression, but not subtle changes.
+    """
+    ds = joseki.make(identifier)
+    value = ds.joseki.mass_fraction.sel(m="CO2").mean(dim="z")
+    assert_approx_equal(value, expected)
+
+
+@pytest.mark.parametrize(
+    "identifier, expected",
+    [
+        ("afgl_1986-us_standard", 0.00030396),
+        ("mipas_2007-midlatitude_day", 0.0003002627),
+    ],
+)
+def test_mole_fraction(identifier, expected):
+    """Mean CO2 mole mixing fraction matches expected value.
+    This basic test will detect an obvious regression, but not subtle changes.
+    """
+    ds = joseki.make(identifier)
+    value = ds.joseki.mole_fraction.sel(m="CO2").mean(dim="z")
+    assert_approx_equal(value, expected)
+
+
+@pytest.mark.parametrize(
+    "identifier, expected",
+    [
         ("afgl_1986-us_standard", 0.000330 * ureg.dimensionless),
         ("mipas_2007-midlatitude_day", 0.0003685 * ureg.dimensionless),
     ],
