@@ -84,16 +84,16 @@ test = [
 ]
 
 [tool.pdm.scripts]
-coverage = {composite = [
-  "coverage-pytest",
-  "coverage-combine",
-  "coverage-report",
-  "coverage-html"
-]}
 coverage-combine = {cmd = "python -m coverage combine"}
 coverage-html = {cmd = "python -m coverage html --skip-covered --skip-empty"}
 coverage-pytest = {cmd = "coverage run -m pytest tests"}
-coverage-report = {cmd = "python -m coverage report --fail-under=100"}
+coverage-report = {composite = [
+  "coverage-pytest",
+  "coverage-combine",
+  "coverage-show",
+  "coverage-html"
+]}
+coverage-show = {cmd = "python -m coverage report --fail-under=100"}
 
 [tool.pdm.version]
 path = "src/joseki/__version__.py"
