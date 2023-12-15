@@ -37,7 +37,8 @@ requires-python = ">=3.8"
 joseki = "joseki.__main__:main"
 
 [project.urls]
-Changelog = "https://github.com/rayference/joseki/blob/main/docs/changelog.md"
+changelog = "https://github.com/rayference/joseki/blob/main/docs/changelog.md"
+documentation = "https://rayference.github.io/joseki/latest"
 homepage = "https://github.com/rayference/joseki"
 issues = "https://github.com/rayference/joseki/issues"
 repository = "https://github.com/rayference/joseki"
