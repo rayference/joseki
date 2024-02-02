@@ -1,56 +1,26 @@
 This reference manual details functions, modules, and objects included in
 `joseki`, describing what they are and what they do.
 
-## Accessor
+::: joseki.accessor
 
-::: src.joseki.accessor
+::: joseki.data
 
-## Data
+::: joseki.profiles.factory
 
-::: src.joseki.data
+::: joseki.profiles.core
 
-## Profiles
+::: joseki.profiles.schema
 
-### Factory
+::: joseki.profiles.afgl_1986
 
-::: src.joseki.profiles.factory
+::: joseki.profiles.mipas_2007
 
-### Core
+::: joseki.profiles.ussa_1976
 
-::: src.joseki.profiles.core
+::: joseki.profiles.util
 
-### Dataset schema
+::: joseki.core
 
-::: src.joseki.profiles.schema
+::: joseki.units
 
-### AFGL (1986)
-
-::: src.joseki.profiles.afgl_1986
-
-### MIPAS (2007)
-
-::: src.joseki.profiles.mipas_2007
-
-### US Standard Atmosphere (1976)
-
-::: src.joseki.profiles.ussa_1976
-
-### Utilities
-
-::: src.joseki.profiles.util
-
-## Command line interface
-
-::: src.joseki.__main__
-
-## Core
-
-::: src.joseki.core
-
-## Units
-
-::: src.joseki.units
-
-## Util
-
-::: src.joseki.profiles.util
+::: joseki.profiles.util
