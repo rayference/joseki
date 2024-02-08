@@ -13,18 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: pdm-project/setup-pdm@main
-        name: Setup PDM
-        with:
-          python-version: "3.10"
-          architecture: x64
-          prerelease: true
-          enable-pep582: false
+      - name: Setup Rye
+        uses: eifinger/setup-rye@v1
 
       - name: Build wheels
         run: |
-          pdm build
-          
+          rye build
+
       - name: Test build
         run: |
           python3 -m venv fresh_env
@@ -34,4 +29,4 @@ jobs:
 
       - name: Upload to PyPI
         run: |
-          pdm publish --no-build -r pypi --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+          rye publish --token ${{ secrets.PYPI_TOKEN }} --yes
