@@ -1,1 +1,4 @@
-__version__ = "2.6.0"
+import sys
+from importlib import metadata
+
+__version__ = metadata.version("joseki")

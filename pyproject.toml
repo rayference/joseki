@@ -1,6 +1,6 @@
 [build-system]
-build-backend = "pdm.pep517.api"
-requires = ["pdm-pep517>=1.0"]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
 
 [project]
 authors = [
@@ -27,11 +27,11 @@ dependencies = [
   "importlib-resources>=5.10.2"
 ]
 description = "Reference atmospheric thermophysical profiles for radiative transfer applications in Earth's atmosphere."
-dynamic = ["version"]
 license = {text = "LGPLv3"}
 name = "joseki"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">= 3.9"
+version = "2.6.0"
 
 [project.scripts]
 joseki = "joseki.__main__:main"
@@ -61,30 +61,40 @@ skip_covered = true
 [tool.coverage.run]
 branch = true
 parallel = true
-source = [
-  "src/"
-]
+source = ["src/"]
 
-[tool.pdm.dev-dependencies]
-dev = [
+[tool.hatch.build.targets.wheel]
+packages = ["src/joseki"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.ruff]
+select = [
+  "I"
+]
+src = ["src", "tests"]
+
+[tool.ruff.isort]
+relative-imports-order = "closest-to-furthest"
+
+[tool.rye]
+dev-dependencies = [
   "jupyterlab>=3.5.3",
   "ipykernel>=6.21.0",
   "ipython>=8.9.0",
   "matplotlib>=3.6.3",
-  "nbstripout>=0.6.1"
-]
-docs = [
+  "nbstripout>=0.6.1",
   "mkdocs>=1.4.2",
   "mkdocstrings[python]>=0.20.0",
   "mkdocs-material>=9.0.10",
-  "mike>=1.1.2"
-]
-test = [
+  "mike>=1.1.2",
   "pytest>=7.2.1",
   "coverage>=7.1.0"
 ]
+managed = true
 
-[tool.pdm.scripts]
+[tool.rye.scripts]
 coverage-combine = {cmd = "python -m coverage combine"}
 coverage-html = {cmd = "python -m coverage html --skip-covered --skip-empty"}
 coverage-pytest = {cmd = "coverage run -m pytest tests"}
@@ -95,16 +105,3 @@ coverage-report = {composite = [
   "coverage-html"
 ]}
 coverage-show = {cmd = "python -m coverage report --fail-under=100"}
-
-[tool.pdm.version]
-path = "src/joseki/__version__.py"
-source = "file"
-
-[tool.ruff]
-select = [
-  "I"
-]
-src = ["src", "tests"]
-
-[tool.ruff.isort]
-relative-imports-order = "closest-to-furthest"
