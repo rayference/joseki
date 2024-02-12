@@ -95,13 +95,13 @@ dev-dependencies = [
 managed = true
 
 [tool.rye.scripts]
-coverage-combine = {cmd = "python -m coverage combine"}
-coverage-html = {cmd = "python -m coverage html --skip-covered --skip-empty"}
-coverage-pytest = {cmd = "coverage run -m pytest tests"}
-coverage-report = {composite = [
+coverage-report = {chain = [
   "coverage-pytest",
   "coverage-combine",
   "coverage-show",
   "coverage-html"
 ]}
+coverage-pytest = {cmd = "coverage run -m pytest tests"}
+coverage-combine = {cmd = "python -m coverage combine"}
 coverage-show = {cmd = "python -m coverage report --fail-under=100"}
+coverage-html = {cmd = "python -m coverage html --skip-covered --skip-empty"}
