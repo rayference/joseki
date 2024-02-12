@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+* Various documentation tweaks for improved quality of life (search, logo, etc.).
+
 ### Fixed
 
 * Added missing tests to bring coverage metric to 100%.
