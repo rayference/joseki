@@ -44,8 +44,8 @@ rye sync
 ### After the release
 
 * Deploy the documentation:
-  `mike deploy --push --update-aliases major.minor.patch latest`
-* Describe the release on GitHub
+  `mike deploy --push --update-aliases <major>.<minor>.<patch> latest`
+* Describe the release on GitHub ([link to release page](https://github.com/rayference/joseki/releases))
 * Update `CITATION.cff` file. The following fields should be updated
   * `url`
   * `commit`
