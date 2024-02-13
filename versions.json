@@ -2,6 +2,11 @@
   {
     "version": "major.minor.patch",
     "title": "major.minor.patch",
+    "aliases": []
+  },
+  {
+    "version": "2.6.1",
+    "title": "2.6.1",
     "aliases": [
       "latest"
     ]
