@@ -1,1 +1,39 @@
-[{"version": "2.6.0", "title": "2.6.0", "aliases": ["latest"]}, {"version": "2.5.2", "title": "2.5.2", "aliases": []}, {"version": "2.5.1", "title": "2.5.1", "aliases": []}, {"version": "2.5", "title": "2.5", "aliases": []}, {"version": "2.1", "title": "2.1", "aliases": []}, {"version": "2.0", "title": "2.0", "aliases": []}]
+[
+  {
+    "version": "major.minor.patch",
+    "title": "major.minor.patch",
+    "aliases": [
+      "latest"
+    ]
+  },
+  {
+    "version": "2.6.0",
+    "title": "2.6.0",
+    "aliases": []
+  },
+  {
+    "version": "2.5.2",
+    "title": "2.5.2",
+    "aliases": []
+  },
+  {
+    "version": "2.5.1",
+    "title": "2.5.1",
+    "aliases": []
+  },
+  {
+    "version": "2.5",
+    "title": "2.5",
+    "aliases": []
+  },
+  {
+    "version": "2.1",
+    "title": "2.1",
+    "aliases": []
+  },
+  {
+    "version": "2.0",
+    "title": "2.0",
+    "aliases": []
+  }
+]
