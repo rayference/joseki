@@ -10,7 +10,7 @@ import pint
 import xarray as xr
 
 from .__version__ import __version__
-from .constants import AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION, MM
+from .constants import AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION, MM, K
 from .profiles.schema import schema
 from .profiles.util import molar_mass
 from .units import to_quantity, ureg
@@ -31,8 +31,7 @@ def molecular_mass(m: str) -> pint.Quantity:
 
 
 def _scaling_factor(
-    initial_amount: pint.Quantity,
-    target_amount: pint.Quantity,
+    initial_amount: pint.Quantity, target_amount: pint.Quantity
 ) -> float:
     """Compute scaling factor given initial and target amounts.
 
@@ -74,9 +73,7 @@ class JosekiAccessor:  # pragma: no cover
         return [c[2:] for c in self._obj.data_vars if c.startswith("x_")]
 
     @property
-    def column_number_density(
-        self,
-    ) -> t.Dict[str, pint.Quantity]:
+    def column_number_density(self) -> t.Dict[str, pint.Quantity]:
         r"""Compute column number density.
 
         Returns:
@@ -123,9 +120,7 @@ class JosekiAccessor:  # pragma: no cover
         return _column_number_density
 
     @property
-    def column_mass_density(
-        self,
-    ) -> t.Dict[str, pint.Quantity]:
+    def column_mass_density(self) -> t.Dict[str, pint.Quantity]:
         r"""Compute column mass density.
 
         Returns:
@@ -150,9 +145,7 @@ class JosekiAccessor:  # pragma: no cover
         }
 
     @property
-    def number_density_at_sea_level(
-        self,
-    ) -> t.Dict[str, pint.Quantity]:
+    def number_density_at_sea_level(self) -> t.Dict[str, pint.Quantity]:
         """Compute number density at sea level.
 
         Returns:
@@ -163,9 +156,7 @@ class JosekiAccessor:  # pragma: no cover
         return {m: (to_quantity(ds[f"x_{m}"].isel(z=0)) * n) for m in self.molecules}
 
     @property
-    def mass_density_at_sea_level(
-        self,
-    ) -> t.Dict[str, pint.Quantity]:
+    def mass_density_at_sea_level(self) -> t.Dict[str, pint.Quantity]:
         """Compute mass density at sea level.
 
         Returns:
@@ -178,9 +169,7 @@ class JosekiAccessor:  # pragma: no cover
         }
 
     @property
-    def mole_fraction_at_sea_level(
-        self,
-    ) -> t.Dict[str, pint.Quantity]:
+    def mole_fraction_at_sea_level(self) -> t.Dict[str, pint.Quantity]:
         """Compute mole fraction at sea level.
 
         Returns:
@@ -303,6 +292,52 @@ class JosekiAccessor:  # pragma: no cover
 
         return mm_average
 
+    @property
+    def air_number_density(self) -> xr.DataArray:
+        ds = self._obj
+        p = to_quantity(ds.p).m_as("pascal")
+        t = to_quantity(ds.t).m_as("kelvin")
+        k_b = K.m_as("joule / kelvin")
+        n_air = p / (k_b * t) / ureg.m**3
+
+        result = xr.DataArray(
+            n_air.m,
+            coords={"z": ("z", ds.z.values, ds.z.attrs)},
+            attrs={
+                "standard_name": "air_number_density",
+                "long_name": "air number density",
+                "units": "m^-3",
+            },
+        )
+        return result
+
+    @property
+    def number_density(self) -> xr.DataArray:
+        """
+        Compute number densities for each species as a function of altitude and
+        return them as a data array.
+        """
+        ds = self._obj
+        das = []
+
+        da_air = self.air_number_density
+        n_air = to_quantity(da_air).m_as("m^-3")
+
+        for m in self.molecules:
+            da = xr.DataArray(
+                ds[f"x_{m}"].values * n_air,
+                coords={"z": ("z", ds.z.values, ds.z.attrs)},
+                attrs={
+                    "standard_name": "number_density",
+                    "long_name": "number density",
+                    "units": "m^-3",
+                },
+            ).expand_dims({"m": [m]})
+            das.append(da)
+
+        result = xr.concat(das, dim="m")
+        return result
+
     def scaling_factors(
         self, target: t.MutableMapping[str, pint.Quantity | dict | xr.DataArray]
     ) -> t.MutableMapping[str, float]:
@@ -424,10 +459,7 @@ class JosekiAccessor:  # pragma: no cover
             check_x_sum=check_x_sum,
         )
 
-    def drop_molecules(
-        self,
-        molecules: t.List[str],
-    ) -> xr.Dataset:
+    def drop_molecules(self, molecules: t.List[str]) -> xr.Dataset:
         """Drop molecules from dataset.
 
         Args:
@@ -449,9 +481,7 @@ class JosekiAccessor:  # pragma: no cover
         return ds.drop_vars([f"x_{m}" for m in molecules])
 
     def validate(
-        self,
-        check_x_sum: bool = False,
-        ret_true_if_valid: bool = False,
+        self, check_x_sum: bool = False, ret_true_if_valid: bool = False
     ) -> bool:
         """Validate atmosphere thermophysical profile dataset schema.
 
