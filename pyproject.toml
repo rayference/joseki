@@ -30,7 +30,7 @@ license = {text = "LGPLv3"}
 name = "joseki"
 readme = "README.md"
 requires-python = ">= 3.9"
-version = "2.6.1"
+version = "2.7.0.dev0"
 
 [project.scripts]
 joseki = "joseki.__main__:main"
