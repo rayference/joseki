@@ -43,7 +43,7 @@ class ProfileFactory:
         """
 
         def inner_wrapper(wrapped_class: Profile) -> t.Callable:
-            logger.info("Registering profile %s", identifier)
+            logger.debug("Registering profile %s", identifier)
             if identifier in self.registry:
                 logger.warning(  # pragma: no cover
                     "Profile %s already exists. Will replace it",
