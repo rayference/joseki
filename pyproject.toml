@@ -42,6 +42,12 @@ homepage = "https://github.com/rayference/joseki"
 issues = "https://github.com/rayference/joseki/issues"
 repository = "https://github.com/rayference/joseki"
 
+[tool.coverage.html]
+directory = "./reports/coverage/html"
+
+[tool.coverage.json]
+output = "./reports/coverage/coverage.json"
+
 [tool.coverage.paths]
 equivalent = [
   "src/",
