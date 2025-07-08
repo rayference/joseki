@@ -423,7 +423,7 @@ class JosekiAccessor:  # pragma: no cover
             raise ValueError("Cannot rescale") from e
 
         # update history attribute
-        now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+        now = datetime.datetime.now(datetime.UTC).replace(microsecond=0).isoformat()
         for m in factors.keys():
             ds.attrs["history"] += (
                 f"\n{now} - rescaled {m}'s mole fraction using a scaling "
@@ -471,7 +471,7 @@ class JosekiAccessor:  # pragma: no cover
         ds = self._obj
 
         # update history attribute
-        now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+        now = datetime.datetime.now(datetime.UTC).replace(microsecond=0).isoformat()
 
         ds.attrs["history"] += (
             f"\n{now} - dropped mole fraction data for molecules "
