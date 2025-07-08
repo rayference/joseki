@@ -162,7 +162,7 @@ def merge(
     )
 
     # update attributes
-    now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+    now = datetime.datetime.now(datetime.UTC).replace(microsecond=0).isoformat()
 
     institutions = set([ds.attrs["institution"] for ds in datasets])
     sources = set([ds.attrs["source"] for ds in datasets])
