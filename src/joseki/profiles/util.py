@@ -16,7 +16,7 @@ def utcnow() -> str:
     Returns:
         ISO 8601 formatted UTC timestamp.
     """
-    return datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+    return datetime.datetime.now(datetime.UTC).replace(microsecond=0).isoformat()
 
 
 def number_density(p: pint.Quantity, t: pint.Quantity) -> pint.Quantity:
