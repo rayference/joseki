@@ -49,7 +49,7 @@ directory = "./reports/coverage/html"
 output = "./reports/coverage/coverage.json"
 
 [tool.coverage.paths]
-equivalent = ["src/", "__pypackages__/"]
+equivalent = ["src/", ".venv/"]
 
 [tool.coverage.report]
 omit = ["src/*/__init__.py", "src/*/_version.py"]
@@ -75,8 +75,8 @@ src = ["src", "tests"]
 [tool.ruff.isort]
 relative-imports-order = "closest-to-furthest"
 
-[tool.rye]
-dev-dependencies = [
+[dependency-groups]
+dev = [
   "jupyterlab>=3.5.3",
   "ipykernel>=6.21.0",
   "ipython>=8.9.0",
@@ -88,17 +88,15 @@ dev-dependencies = [
   "mike>=1.1.2",
   "pytest>=7.2.1",
   "coverage>=7.1.0",
+  "taskipy>=1.12.2",
 ]
-managed = true
 
-[tool.rye.scripts]
-coverage-combine = { cmd = "python -m coverage combine" }
-coverage-html = { cmd = "python -m coverage html --skip-covered --skip-empty" }
-coverage-pytest = { cmd = "coverage run -m pytest tests" }
-coverage-report = { chain = [
-  "coverage-pytest",
-  "coverage-combine",
-  "coverage-show",
-  "coverage-html",
-] }
-coverage-show = { cmd = "python -m coverage report --fail-under=100" }
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.taskipy.tasks]
+coverage-combine = "python -m coverage combine"
+coverage-html = "python -m coverage html --skip-covered --skip-empty"
+coverage-pytest = "coverage run -m pytest tests"
+coverage-show = "python -m coverage report --fail-under=100"
+coverage-report = "task coverage-pytest && task coverage-combine && task coverage-show && task coverage-html"
