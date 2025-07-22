@@ -15,6 +15,7 @@ MIPAS standard atmospheres were intended to provide an updated set of pro-
 files for characteristic atmospheric states such as the
 [AFGL Atmospheric constituent profiles](bibliography.md#Anderson+1986).
 """
+
 import enum
 import logging
 import typing as t
@@ -232,9 +233,6 @@ def get_dataset(identifier: Identifier) -> xr.Dataset:
 
     Args:
         identifier: Atmospheric profile identifier.
-            See
-            [`Identifier`](reference.md#src.joseki.profiles.mipas_2007.Identifier)
-            for possible values.
 
     Returns:
         Atmospheric profile.

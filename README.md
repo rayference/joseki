@@ -1,5 +1,5 @@
 <p align="center">
-<img align="center" alt="Joseki logo" src="logo.svg"  width=100 style="margin-right: 10px; border-radius: 20%"/>
+<img align="center" alt="Joseki logo" src="docs/assets/logo.svg"  width=100 style="margin-right: 10px; border-radius: 20%"/>
 </p>
 
 # Joseki
@@ -21,9 +21,9 @@ such as interpolation and rescaling on a dataset.
 ## Features
 
 * Available profiles:
-  * *AFGL Atmospheric Constituent Profiles (0-120 km)*
-  * *MIPAS (2007) reference atmospheres*
-  * *U.S. Standard Atmosphere, 1976*
+    * *AFGL Atmospheric Constituent Profiles (0-120 km)*
+    * *MIPAS (2007) reference atmospheres*
+    * *U.S. Standard Atmosphere, 1976*
 * NetCDF support thanks to the [xarray](https://xarray.pydata.org) library
 * Documented and standard dataset format based on the
   [CF conventions](https://cfconventions.org)
@@ -43,7 +43,7 @@ such as interpolation and rescaling on a dataset.
 
 ## Installation
 
-You can install *Joseki* via [`pip`](https://pip.pypa.io/en/stable/) from
+You can install Joseki via [`pip`](https://pip.pypa.io/en/stable/) from
 [`PyPI`](https://pypi.org/):
 
 ```shell
@@ -63,7 +63,7 @@ Visit https://rayference.github.io/joseki/latest.
 
 ## Ikigai
 
-*Joseki* was born in the context of the development of the
+Joseki was born in the context of the development of the
 [Eradiate](https://github.com/eradiate/eradiate) radiative transfer model, from
 the need to collect, document and trace, integrate and modify *popular*
 thermophysical profiles.
@@ -71,9 +71,11 @@ As such, its features evolve in close relationship to those of *Eradiate*.
 
 ## About
 
-Joseki was created by [Yvan Nollet](https://github.com/nollety) and is maintained by [Rayference](https://www.rayference.eu).
+Joseki was created by [Yvan Nollet](https://github.com/nollety) and is
+maintained by [Rayference](https://www.rayference.eu).
 
-Joseki is a component of the [Eradiate radiative transfer model](https://www.eradiate.eu/site/).
+Joseki is a component of
+the [Eradiate radiative transfer model](https://www.eradiate.eu/site/).
 
 Joseki's logo is a simple representation (not to scale!) of the 5 layers of
 Earth's atmosphere (troposphere, stratosphere, mesosphere, thermosphere and

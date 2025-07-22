@@ -1,10 +1,11 @@
 """Core module for atmosphere thermophysical profiles.
 
-The `Profile` abstract class defines the interface for atmosphere thermophysical
+The :class:`Profile` abstract class defines the interface for atmosphere thermophysical
 profiles.
-The `interp` function is used to interpolate an atmosphere thermophysical
+The :func:`interp` function is used to interpolate an atmosphere thermophysical
 profile on new altitude values.
 """
+
 import logging
 import typing as t
 from abc import ABC, abstractmethod
@@ -17,7 +18,7 @@ from scipy import interpolate
 
 from .schema import schema
 from .util import utcnow
-from ..__version__ import __version__
+from .._version import __version__
 from ..units import to_quantity, ureg
 
 logger = logging.getLogger(__name__)
@@ -79,7 +80,7 @@ def interp(
             If a variable is not in the mapping, the linear interpolation is used.
             By default, linear interpolation is used for all variables.
         conserve_column: If True, ensure that column densities are conserved.
-        kwargs: Parameters passed to `scipy.interpolate.interp1d` (except
+        kwargs: Parameters passed to :func:`scipy.interpolate.interp1d` (except
             'kind' and 'bounds_error').
 
     Returns:
@@ -177,10 +178,7 @@ def extrapolate(
         Extrapolated atmospheric profile.
     """
     if direction not in ["up", "down"]:
-        msg = (
-            f"Extrapolation direction must be either 'up' or 'down', got "
-            f"{direction}."
-        )
+        msg = f"Extrapolation direction must be either 'up' or 'down', got {direction}."
         logger.critical(msg)
         raise ValueError(msg)
 
@@ -196,8 +194,7 @@ def extrapolate(
 
     elif direction == "up" and np.any(z_extra <= z.max()):
         msg = (
-            f"Cannot extrapolate up to {z_extra:~P}, "
-            f"maximum altitude is {z.max():~P}."
+            f"Cannot extrapolate up to {z_extra:~P}, maximum altitude is {z.max():~P}."
         )
         logger.critical(msg)
         raise ValueError(msg)
@@ -234,9 +231,11 @@ def regularize(
         conserve_column: If True, ensure that column densities are conserved.
         options: Options for the regularization.
             Mapping with possible keys:
-                - "num": Number of points in the new altitude grid.
-                - "zstep": Altitude step in the new altitude grid.
-                    If "auto", the minimum altitude step is used.
+
+            - "num": Number of points in the new altitude grid.
+            - "zstep": Altitude step in the new altitude grid.
+              If "auto", the minimum altitude step is used.
+
         kwargs: Keyword arguments passed to the interpolation function.
 
     Returns:
@@ -338,7 +337,7 @@ class Profile(ABC):
                 used to define the profile.
                 Interpolation may also not be required, e.g. if the profile is
                 defined by analytical function(s) of the altitude variable.
-            conserve_column: If `True`, ensure that column densities are conserved
+            conserve_column: If ``True``, ensure that column densities are conserved
                 during interpolation.
             kwargs: Parameters passed to lower-level methods.
 

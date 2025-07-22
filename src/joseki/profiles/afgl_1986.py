@@ -2,8 +2,9 @@
 
 The profiles are generated from data files stored in ``joseki/data/afgl_1986``.
 These data files correspond to tables 1a-f and 2a-d of the technical report
-[Anderson+1986](bibliography.md#Anderson+1986).
+:cite:p:`Anderson1986AtmosphericConstituentProfiles`.
 """
+
 import enum
 import logging
 import typing as t
@@ -230,7 +231,7 @@ def to_dataset(
             Default is ``None``.
         interp_method: Interpolation method for each data variable. Default is
             ``None``.
-        conserve_column: If `True`, ensure that column densities are conserved
+        conserve_column: If ``True``, ensure that column densities are conserved
             during interpolation.
         kwargs: Additional arguments passed to
             [`get_dataset`](reference.md#src.joseki.profiles.afgl_1986.get_dataset).

@@ -3,6 +3,7 @@
 The dataset schema defines the variables, coordinates and attributes that are
 expected in a dataset representing an atmosphere thermophysical profile.
 """
+
 import logging
 import typing as t
 
@@ -13,7 +14,7 @@ import xarray as xr
 from attrs import define
 
 from .util import number_density, utcnow
-from ..__version__ import __version__
+from .._version import __version__
 from ..units import ureg
 
 logger = logging.getLogger(__name__)

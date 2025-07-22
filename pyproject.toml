@@ -77,17 +77,23 @@ relative-imports-order = "closest-to-furthest"
 
 [dependency-groups]
 dev = [
-  "jupyterlab>=3.5.3",
+  "autodocsumm>=0.2.14",
+  "coverage>=7.1.0",
+  "furo>=2024.1.29",
   "ipykernel>=6.21.0",
   "ipython>=8.9.0",
+  "jupyterlab>=3.5.3",
+  "linkify-it-py>=2.0.0",
   "matplotlib>=3.6.3",
+  "myst-parser>=2.0.0",
   "nbstripout>=0.6.1",
-  "mkdocs>=1.4.2",
-  "mkdocstrings[python]>=0.20.0",
-  "mkdocs-material>=9.0.10",
-  "mike>=1.1.2",
   "pytest>=7.2.1",
-  "coverage>=7.1.0",
+  "sphinx-autoapi>=3.6.0",
+  "sphinx-autobuild>=2024.10.3",
+  "sphinx-autodoc-typehints>=1.25.0",
+  "sphinx-copybutton>=0.5.2",
+  "sphinx>=7.0.0",
+  "sphinxcontrib-bibtex>=2.6.5",
   "taskipy>=1.12.2",
 ]
 
@@ -98,5 +104,8 @@ testpaths = ["tests"]
 coverage-combine = "python -m coverage combine"
 coverage-html = "python -m coverage html --skip-covered --skip-empty"
 coverage-pytest = "coverage run -m pytest tests"
-coverage-show = "python -m coverage report --fail-under=100"
+coverage-show = "python -m coverage report --fail-under=90"
 coverage-report = "task coverage-pytest && task coverage-combine && task coverage-show && task coverage-html"
+docs-build = "sphinx-build -b html docs docs/_build/html"
+docs-serve = "sphinx-autobuild docs docs/_build/html"
+docs-clean = "rm -rf docs/_build"

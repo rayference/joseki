@@ -21,3 +21,5 @@ site/
 
 # PyCharm
 .idea/
+docs/_build/
+docs/reference/joseki

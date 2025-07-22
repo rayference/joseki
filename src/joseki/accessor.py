@@ -1,4 +1,5 @@
 """Accessor module."""
+
 from __future__ import annotations
 
 import datetime
@@ -9,7 +10,7 @@ import numpy as np
 import pint
 import xarray as xr
 
-from .__version__ import __version__
+from ._version import __version__
 from .constants import AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION, MM, K
 from .profiles.schema import schema
 from .profiles.util import molar_mass
@@ -82,24 +83,24 @@ class JosekiAccessor:  # pragma: no cover
         Notes:
             The column number density is given by:
 
-            $$
-            N_{\mathrm{M}} = \int n_{\mathrm{M}}(z) \, \mathrm{d} z
-            $$
+            .. math::
+
+                N_{\mathrm{M}} = \int n_{\mathrm{M}}(z) \, \mathrm{d} z
 
             with
 
-            $$
-            n_{\mathrm{M}}(z) = x_{\mathrm{M}}(z) \, n(z)
-            $$
+            .. math::
+
+                n_{\mathrm{M}}(z) = x_{\mathrm{M}}(z) \, n(z)
 
             where
 
-            * $z$ is the altitude,
-            * $x_{\mathrm{M}}(z)$ is the mole fraction of molecule M
-            at altitude $z$,
-            * $n(z)$ is the air number density at altitude $z$,
-            * $n_{\mathrm{M}}(z)$ is the number density of molecule M at
-            altitude $z$.
+            * :math:`z` is the altitude,
+            * :math:`x_{\mathrm{M}}(z)` is the mole fraction of molecule M
+              at altitude :math:`z`,
+            * :math:`n(z)` is the air number density at altitude :math:`z`,
+            * :math:`n_{\mathrm{M}}(z)` is the number density of molecule M at
+              altitude :math:`z`.
 
             The  integration is performed using the trapezoidal rule.
         """
@@ -129,14 +130,14 @@ class JosekiAccessor:  # pragma: no cover
         Notes:
             The column mass density is given by:
 
-            $$
-            \sigma_{\mathrm{M}} = N_{\mathrm{M}} \, m_{\mathrm{M}}
-            $$
+            .. math::
+
+                \sigma_{\mathrm{M}} = N_{\mathrm{M}} \, m_{\mathrm{M}}
 
             where
 
-            * $N_{\mathrm{M}}$ is the column number density of molecule M,
-            * $m_{\mathrm{M}}$ is the molecular mass of molecule M.
+            * :math:`N_{\mathrm{M}}` is the column number density of molecule M,
+            * :math:`m_{\mathrm{M}}` is the molecular mass of molecule M.
         """
         _column_number_density = self.column_number_density
         return {
@@ -230,18 +231,19 @@ class JosekiAccessor:  # pragma: no cover
         Notes:
             The air molar mass is given by:
 
-            $$
-            M_{\mathrm{air}} =
-            \frac{
-                \sum_{\mathrm{M}} x_{\mathrm{M}} \, m_{\mathrm{M}}
-            }{
-                \sum_{\mathrm{M}} x_{\mathrm{M}}
-            }
-            $$
+            .. math::
+
+                M_{\mathrm{air}} =
+                \frac{
+                    \sum_{\mathrm{M}} x_{\mathrm{M}} \, m_{\mathrm{M}}
+                }{
+                    \sum_{\mathrm{M}} x_{\mathrm{M}}
+                }
 
             where
-            * $x_{\mathrm{M}}$ is the mole fraction of molecule M,
-            * $m_{\mathrm{M}}$ is the molar mass of molecule M.
+
+            * :math:`x_{\mathrm{M}}` is the mole fraction of molecule M,
+            * :math:`m_{\mathrm{M}}` is the molar mass of molecule M.
 
             To compute the air molar mass accurately, the mole fraction of
             molecular nitrogen (N2), molecular oxygen (O2), and argon (Ar) are
@@ -256,7 +258,7 @@ class JosekiAccessor:  # pragma: no cover
 
             are independent of altitude.
 
-            Since nothing garantees that the mole fraction sum is equal to
+            Since nothing guarantees that the mole fraction sum is equal to
             one, the air molar mass is computed as the sum of the mole
             fraction weighted molar mass divided by the sum of the mole
             fraction.
@@ -357,11 +359,11 @@ class JosekiAccessor:  # pragma: no cover
             interpreted, depending on its dimensions (indicated in square
             brackets), as:
 
-            * a column number density [`length^-2`],
-            * a column mass density [`mass * length^-2`],
-            * a number density at sea level [`length^-3`],
-            * a mass density at sea level [`mass * length^-3`],
-            * a mole fraction at sea level [`dimensionless`]
+            * a column number density [``length^-2``],
+            * a column mass density [``mass * length^-2``],
+            * a number density at sea level [``length^-3``],
+            * a mass density at sea level [``mass * length^-3``],
+            * a mole fraction at sea level [``dimensionless``]
 
             The scaling factor is then evaluated as the ratio of the target
             amount with the original amount, for each molecule.
@@ -400,7 +402,7 @@ class JosekiAccessor:  # pragma: no cover
             check_x_sum: if True, check that mole fraction sums
                 are never larger than one.
         Raises:
-            ValueError: if `check_x_sum` is `True` and the
+            ValueError: if ``check_x_sum`` is ``True`` and the
                 dataset is not valid.
 
         Returns:
@@ -444,10 +446,10 @@ class JosekiAccessor:  # pragma: no cover
         Args:
             target: Mapping of molecule and target total column density.
                 Total column must be either a column number density
-                [`length^-2`], a column mass density [`mass * length^-2`], a
-                number density at sea level [`length^-3`], a mass density at
-                sea level [`mass * length^-3`], a mole fraction at
-                sea level [`dimensionless`].
+                [``length^-2``], a column mass density [``mass * length^-2``], a
+                number density at sea level [``length^-3``], a mass density at
+                sea level [``mass * length^-3``], a mole fraction at
+                sea level [``dimensionless``].
             check_x_sum: if True, check that mole fraction sums are never
                 larger than one.
 
@@ -486,7 +488,7 @@ class JosekiAccessor:  # pragma: no cover
         """Validate atmosphere thermophysical profile dataset schema.
 
         Returns:
-            `True` if the dataset complies with the schema, else `False`.
+            ``True`` if the dataset complies with the schema, else `False`.
         """
         return schema.validate(
             ds=self._obj,
@@ -497,7 +499,7 @@ class JosekiAccessor:  # pragma: no cover
     @property
     def is_valid(self):
         """
-        Return `True` if the dataset complies with the schema, else `False`.
+        Return ``True`` if the dataset complies with the schema, else `False`.
         """
         try:
             self.validate(ret_true_if_valid=True)

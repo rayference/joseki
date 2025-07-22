@@ -1,4 +1,5 @@
 """Command-line interface."""
+
 import pathlib
 import typing as t
 
@@ -63,7 +64,7 @@ INTERPOLATION_METHOD_CHOICES = [
 @click.option(
     "--conserve-column",
     "-c",
-    help=("Ensure that column densities are conserved during interpolation."),
+    help="Ensure that column densities are conserved during interpolation.",
     is_flag=True,
 )
 @click.option(

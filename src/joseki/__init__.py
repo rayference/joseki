@@ -1,6 +1,7 @@
 """Joseki."""
+
 from . import accessor
-from .__version__ import __version__ as __version__
+from ._version import __version__ as __version__
 from .core import identifiers, load_dataset, make, merge, open_dataset
 from .profiles.core import interp
 from .units import ureg as unit_registry

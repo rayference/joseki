@@ -3,6 +3,7 @@
 The U.S. Standard Atmosphere 1976 is a Earth atmosphere thermophysical model
 described in the technical report [NOAA+1976](bibliography.md#NOAA+1976).
 """
+
 import logging
 import typing as t
 
@@ -26,7 +27,7 @@ class USSA1976(Profile):
     Class to compute the U.S. Standard Atmosphere 1976.
 
     The U.S. Standard Atmosphere 1976 is a Earth atmosphere thermophysical model
-    described in the technical report [NOAA+1976](bibliography.md#NOAA+1976).
+    described in the technical report :cite:p:`NASA1976USStandardAtmosphere`.
     """
 
     def to_dataset(
