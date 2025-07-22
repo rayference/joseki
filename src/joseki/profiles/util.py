@@ -1,4 +1,5 @@
 """Utility module."""
+
 import datetime
 import typing as t
 
@@ -32,12 +33,12 @@ def number_density(p: pint.Quantity, t: pint.Quantity) -> pint.Quantity:
     Notes:
         The air number density is computed according to the ideal gas law:
 
-        $$
-        n = \\frac{p}{k_B T}
-        $$
+        .. math::
 
-        where $p$ is the air pressure, $k_B$ is the Boltzmann constant, and
-        $T$ is the air temperature.
+            n = \\frac{p}{k_B T}
+
+        where :math:`p` is the air pressure, :math:`k_B` is the Boltzmann constant,
+        and :math:`T` is the air temperature.
     """
     return (p / (K * t)).to_base_units()
 
@@ -67,21 +68,21 @@ def air_molar_mass_from_mass_fraction(y: xr.DataArray) -> xr.DataArray:
     Notes:
         The air molar mass is computed according to the following equation:
 
-        $$
-        m_{\mathrm{air}} (z) = \left(
-            \sum_{\mathrm{M}} \frac{
-                y_{\mathrm{M}} (z)
-            }{
-                m_{\mathrm{M}}
-            }
-        \right)^{-1}
-        $$
+        .. math::
+
+            m_{\mathrm{air}} (z) = \left(
+                \sum_{\mathrm{M}} \frac{
+                    y_{\mathrm{M}} (z)
+                }{
+                    m_{\mathrm{M}}
+                }
+            \right)^{-1}
 
         where:
 
-        * $y_{\mathrm{M}} (z)$ is the mass fraction of molecule M at altitude
-          $z$,
-        * $m_{\mathrm{M}}$ is the molar mass of molecule M.
+        * :math:`y_{\mathrm{M}} (z)` is the mass fraction of molecule M at altitude
+          :math:`z`,
+        * :math:`m_{\mathrm{M}}` is the molar mass of molecule M.
     """
     # compute molar masses along molecular species
     molecules = y.m.values

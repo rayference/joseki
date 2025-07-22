@@ -1,4 +1,5 @@
 """Units module."""
+
 from __future__ import annotations
 
 import logging
@@ -39,8 +40,8 @@ def to_quantity(
     Args:
         value: Value which will be converted. If value is an `ArrayLike`, it is
             assumed to be dimensionless (unless `units` is set).
-            If a `xarray.DataArray` is passed and
-            `units_error` is `True`, it is assumed to have a `units` key in
+            If a :class:`~xarray.DataArray` is passed and
+            ``units_error`` is ``True``, it is assumed to have a `units` key in
             its `attrs` field; otherwise, it is assumed to be dimensionless.
         units: Units to assign. If `None`, the units are inferred from the
             `value` argument.
@@ -56,7 +57,7 @@ def to_quantity(
 
 
 @to_quantity.register(pint.Quantity)
-def d(
+def _(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
@@ -64,7 +65,7 @@ def d(
 
 
 @to_quantity.register(dict)
-def d(
+def _(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
@@ -72,7 +73,7 @@ def d(
 
 
 @to_quantity.register(int)
-def d(
+def _(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
@@ -80,7 +81,7 @@ def d(
 
 
 @to_quantity.register(float)
-def d(
+def _(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
@@ -88,7 +89,7 @@ def d(
 
 
 @to_quantity.register(list)
-def d(
+def _(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
@@ -96,7 +97,7 @@ def d(
 
 
 @to_quantity.register(np.ndarray)
-def d(
+def _(
     value,
     units: None | str = None,
 ) -> pint.Quantity:
@@ -104,7 +105,7 @@ def d(
 
 
 @to_quantity.register(xr.DataArray)
-def d(
+def _(
     value: xr.DataArray,
     units: None | str = None,
 ) -> pint.Quantity:

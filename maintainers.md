@@ -2,7 +2,8 @@
 
 ## Development setup
 
-This project is managed using [uv](https://github.com/astral-sh/uv). Development setup
+This project is managed using [uv](https://github.com/astral-sh/uv). Development
+setup
 requires installing it. Once this is done, simply navigate to the root of the
 source repository and run:
 
@@ -26,7 +27,7 @@ uv sync
 ### Before the release
 
 * Run the tests with `uv run pytest tests`
-* Build and inspect the docs with `mkdocs serve`
+* Build and inspect the docs with `uv run task docs-serve`
 
 ### Make the release
 
@@ -39,7 +40,8 @@ uv sync
 * Tag the commit with `"v<major>.<minor>.<patch>"`, *e.g.*:
   `git tag -a v2.3.0 -m "v2.3.0"` followed by `git push --tags`. This will
   trigger the `PyPI Release` workflow. It will also produce a pull request on
-  the [conda forge joseki feedstock](https://github.com/conda-forge/joseki-feedstock) within a delay (~1 hour)
+  the [conda forge joseki feedstock](https://github.com/conda-forge/joseki-feedstock)
+  within a delay (~1 hour)
 * Review the pull request. When the pull request is merged,
   `joseki` will be available on `conda` as well, within another delay
   (~ 15 minutes).
@@ -48,9 +50,10 @@ uv sync
 
 * Deploy the documentation:
   `mike deploy --push --update-aliases <major>.<minor>.<patch> latest`
-* Describe the release on GitHub ([link to release page](https://github.com/rayference/joseki/releases))
+* Describe the release on
+  GitHub ([link to release page](https://github.com/rayference/joseki/releases))
 * Update `CITATION.cff` file. The following fields should be updated
-  * `url`
-  * `commit`
-  * `version`
-  * `date-released`
+    * `url`
+    * `commit`
+    * `version`
+    * `date-released`

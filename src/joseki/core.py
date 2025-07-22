@@ -1,4 +1,5 @@
 """Core module."""
+
 from __future__ import annotations
 
 import datetime
@@ -10,7 +11,7 @@ import numpy as np
 import pint
 import xarray as xr
 
-from .__version__ import __version__
+from ._version import __version__
 from .profiles.core import (
     DEFAULT_METHOD,
     select_molecules,
@@ -40,7 +41,7 @@ def make(
         identifier: Profile identifier.
         z: Altitude values.
         interp_method: Mapping of variable and interpolation method.
-        conserve_column: If `True`, ensure that column densities are conserved
+        conserve_column: If ``True``, ensure that column densities are conserved
             during interpolation.
         molecules: List of molecules to include in the profile.
         regularize: Regularize the altitude grid with specified options which
@@ -49,7 +50,7 @@ def make(
         rescale_to: Rescale molecular concentrations to the specified target
             values which are passed to
             [rescale_to](reference.md#src.joseki.accessor.JosekiAccessor.rescale_to).
-        check_x_sum: If `True`, check that the mole fraction sums are less or
+        check_x_sum: If ``True``, check that the mole fraction sums are less or
             equal to 1.
         kwargs: Additional keyword arguments passed to the profile constructor.
 
@@ -57,8 +58,8 @@ def make(
         Profile as xarray.Dataset.
 
     See Also:
-        [regularize](reference.md#src.joseki.profiles.core.regularize)
-        [rescale_to](reference.md#src.joseki.accessor.JosekiAccessor.rescale_to)
+        * :func:`joseki.profiles.core.regularize`
+        * :meth:`joseki.accessor.JosekiAccessor.rescale_to`
     """
     logger.info("Creating profile %s", identifier)
     logger.debug("z: %s", z)
