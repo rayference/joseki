@@ -13,12 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Rye
-        uses: eifinger/setup-rye@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
 
       - name: Build wheels
         run: |
-          rye build
+          uv build
 
       - name: Test build
         run: |
@@ -29,4 +29,4 @@ jobs:
 
       - name: Upload to PyPI
         run: |
-          rye publish --token ${{ secrets.PYPI_TOKEN }} --yes
+          uv publish --token ${{ secrets.PYPI_TOKEN }}

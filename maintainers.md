@@ -2,33 +2,36 @@
 
 ## Development setup
 
-This project is managed using [Rye](https://rye-up.com). Development setup
+This project is managed using [uv](https://github.com/astral-sh/uv). Development setup
 requires installing it. Once this is done, simply navigate to the root of the
 source repository and run:
-```
-rye sync
+
+```shell
+uv sync
 ```
 
 ## Run the tests and verify test coverage
 
-* Run tests with `rye run pytest tests`
+* Run tests with `uv run pytest`
 * To verify test coverage, run:
+
   ```shell
-  rye run coverage-report
+  uv run task coverage-report
   ```
+
   and inspect the coverage report
 
 ## Make a PyPI/conda release
 
 ### Before the release
 
-* Run the tests with `rye run pytest tests`
+* Run the tests with `uv run pytest tests`
 * Build and inspect the docs with `mkdocs serve`
 
 ### Make the release
 
-* Bump the version number to the target value using the
-  `rye version <major>.<minor>.<patch>` command
+* Bump the version number to the target value by updating the `version` field
+  in `pyproject.toml`
 * Update `docs/changelog.md`: change the heading
   `"[Unreleased]"` to `"[major.minor.patch]  - YYYY-MM-DD"`
 * Commit the changes on branch `main` with the message:
