@@ -7,7 +7,7 @@
 Reference atmospheric thermophysical profiles for radiative transfer
 applications in Earth's atmosphere.
 
-[![Documentation Status](https://readthedocs.org/projects/joseki/badge/?version=latest)](https://joseki.readthedocs.io/latest)
+[![Documentation Status](https://readthedocs.org/projects/joseki/badge/?version=latest)](https://joseki.readthedocs.io/en/latest/)
 [![PyPI](https://img.shields.io/pypi/v/joseki)](https://pypi.python.org/pypi/joseki/)
 [![Conda](https://img.shields.io/conda/vn/conda-forge/joseki)](https://anaconda.org/conda-forge/joseki)
 [![License: LGPLv3](https://img.shields.io/badge/License-LGPLv3-yellow.svg)](https://opensource.org/license/lgpl-3-0/)
