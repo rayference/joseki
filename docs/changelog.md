@@ -3,19 +3,28 @@
 All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres
+to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.6.2]
+## [2.7.0] - Upcoming release
+
+### Changed
+
+* Move from Rye to [uv](https://astral.sh/uv).
+* Move back from mkdocs to Sphinx.
+* Rework documentation structure for improved navigation and search.
+* Deploy docs on Read The Docs.
 
 ### Fixed
 
-* Reduced logging level of updates during factory registration.
+* Reduce logging level of updates during factory registration.
 
 ## [2.6.1] - 2024-02-13
 
 ### Changed
 
-* Various documentation tweaks for improved quality of life (search, logo, etc.).
+* Various documentation tweaks for improved quality of life (search, logo,
+  etc.).
 * Move from PDM to [Rye](https://rye-up.com/) for project management.
 
 ### Fixed
