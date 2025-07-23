@@ -7,11 +7,12 @@
 Reference atmospheric thermophysical profiles for radiative transfer
 applications in Earth's atmosphere.
 
+[![Documentation Status](https://readthedocs.org/projects/joseki/badge/?version=latest)](https://joseki.readthedocs.io/latest)
+[![PyPI](https://img.shields.io/pypi/v/joseki)](https://pypi.python.org/pypi/joseki/)
+[![Conda](https://img.shields.io/conda/vn/conda-forge/joseki)](https://anaconda.org/conda-forge/joseki)
 [![License: LGPLv3](https://img.shields.io/badge/License-LGPLv3-yellow.svg)](https://opensource.org/license/lgpl-3-0/)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![PyPI](https://img.shields.io/pypi/v/joseki)](https://pypi.python.org/pypi/joseki/)
-[![Conda](https://img.shields.io/conda/vn/conda-forge/joseki)](https://anaconda.org/conda-forge/joseki)
 
 This package gathers together datasets of thermophysical properties of the
 Earth's atmosphere relevant for radiative transfer applications, and provides
