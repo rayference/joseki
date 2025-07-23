@@ -3,9 +3,8 @@
 ## Development setup
 
 This project is managed using [uv](https://github.com/astral-sh/uv). Development
-setup
-requires installing it. Once this is done, simply navigate to the root of the
-source repository and run:
+setup requires installing it. Once this is done, simply navigate to the root of
+the source repository and run:
 
 ```shell
 uv sync
@@ -48,8 +47,6 @@ uv sync
 
 ### After the release
 
-* Deploy the documentation:
-  `mike deploy --push --update-aliases <major>.<minor>.<patch> latest`
 * Describe the release on
   GitHub ([link to release page](https://github.com/rayference/joseki/releases))
 * Update `CITATION.cff` file. The following fields should be updated
