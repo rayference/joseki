@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "Joseki"
-copyright = "2024, Yvan Nollet, Vincent Leroy, Rayference"
+copyright = "2024, Rayference"
 author = "Yvan Nollet, Vincent Leroy"
 
 # The version info for the project
