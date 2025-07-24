@@ -247,12 +247,10 @@ individually. Here are a few plotting code examples:
 
 .. code:: python
 
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(6, 6))
 
     for m in ds.joseki.molecules:
-       ds[f"x_{m}"].plot(
-          ls="dotted", marker=".", y="z", xscale="log"
-       )
+       ds[f"x_{m}"].plot(ls="dotted", marker=".", y="z", xscale="log")
 
     plt.xlabel("mole fraction [dimensionless]")
     plt.legend(ds.joseki.molecules)
