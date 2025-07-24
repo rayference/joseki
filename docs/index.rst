@@ -1,6 +1,8 @@
 Joseki Documentation
 ====================
 
+**Date**: |today| | **Version**: |version|
+
 Reference atmospheric thermophysical profiles for radiative transfer applications in Earth's atmosphere.
 
 If you are new to Joseki, start by reading the :doc:`"Usage" <usage>` section.

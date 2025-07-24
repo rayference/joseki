@@ -45,8 +45,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
-html_title = f"Joseki {version}"
-html_logo = "assets/logo.svg"
 
 html_theme_options = {
     "source_repository": "https://github.com/rayference/joseki/",
@@ -60,9 +58,13 @@ html_theme_options = {
         "color-brand-primary": "#60a5fa",
         "color-brand-content": "#60a5fa",
     },
+    "light_logo": "logo_title-light.svg",
+    "dark_logo": "logo_title-dark.svg",
+    "sidebar_hide_name": True,
 }
 
 html_static_path = ["_static"]
+html_title = "Joseki"
 
 # -- Extension configuration -------------------------------------------------
 
