@@ -11,9 +11,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 * Move from Rye to [uv](https://astral.sh/uv).
-* Move back from mkdocs to Sphinx.
+* Move back from mkdocs to Sphinx (with Furo theme).
 * Rework documentation structure for improved navigation and search.
 * Deploy docs on Read The Docs.
+* Allow Numpy 2.
+* Support Python 3.13.
 
 ### Fixed
 
