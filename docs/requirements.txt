@@ -265,7 +265,31 @@ netcdf4==1.7.2
     #   ussa1976
 notebook-shim==0.2.4
     # via jupyterlab
-numpy==1.26.4
+numpy==2.0.2 ; python_full_version < '3.10'
+    # via
+    #   cftime
+    #   contourpy
+    #   joseki
+    #   matplotlib
+    #   netcdf4
+    #   pandas
+    #   scipy
+    #   seaborn
+    #   ussa1976
+    #   xarray
+numpy==2.2.6 ; python_full_version == '3.10.*'
+    # via
+    #   cftime
+    #   contourpy
+    #   joseki
+    #   matplotlib
+    #   netcdf4
+    #   pandas
+    #   scipy
+    #   seaborn
+    #   ussa1976
+    #   xarray
+numpy==2.3.2 ; python_full_version >= '3.11'
     # via
     #   cftime
     #   contourpy
