@@ -88,6 +88,7 @@ dev = [
   "myst-parser>=2.0.0",
   "nbstripout>=0.6.1",
   "pytest>=7.2.1",
+  "seaborn>=0.13.2",
   "sphinx-autoapi>=3.6.0",
   "sphinx-autobuild>=2024.10.3",
   "sphinx-autodoc-typehints>=1.25.0",

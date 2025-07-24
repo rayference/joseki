@@ -216,33 +216,34 @@ individually. Here are a few plotting code examples:
 
 .. code:: python
 
-    ds = joseki.make(
-       identifier="afgl_1986-us_standard",
-       additional_molecules=False,
-    )
+    ds = joseki.make(identifier="afgl_1986-us_standard", additional_molecules=False)
+    ds.p.plot(figsize=(3, 6), ls="dotted", marker=".", y="z", xscale="log")
 
-    ds.p.plot(
-       figsize=(4, 8), ls="dotted", marker=".", y="z", xscale="log"
-    )
+.. figure:: fig/user_guide/plotting-p-light.svg
+    :figclass: only-light
 
-.. figure:: fig/user_guide/plotting-p.png
-
+.. figure:: fig/user_guide/plotting-p-dark.svg
+    :figclass: only-dark
 
 .. code:: python
 
-    ds.t.plot(
-       figsize=(4, 8), ls="dotted", marker=".", y="z"
-    )
+    ds.t.plot(figsize=(3, 6), ls="dotted", marker=".", y="z")
 
-.. figure:: fig/user_guide/plotting-t.png
+.. figure:: fig/user_guide/plotting-t-light.svg
+    :figclass: only-light
+
+.. figure:: fig/user_guide/plotting-t-dark.svg
+    :figclass: only-dark
 
 .. code:: python
 
-    ds.n.plot(
-       figsize=(4, 8), ls="dotted", marker=".", y="z", xscale="log"
-    )
+    ds.n.plot(figsize=(3, 6), ls="dotted", marker=".", y="z", xscale="log")
 
-.. figure:: fig/user_guide/plotting-n.png
+.. figure:: fig/user_guide/plotting-n-light.svg
+    :figclass: only-light
+
+.. figure:: fig/user_guide/plotting-n-dark.svg
+    :figclass: only-dark
 
 .. code:: python
 
@@ -256,4 +257,8 @@ individually. Here are a few plotting code examples:
     plt.xlabel("mole fraction [dimensionless]")
     plt.legend(ds.joseki.molecules)
 
-.. figure:: fig/user_guide/plotting-x.png
+.. figure:: fig/user_guide/plotting-x-light.svg
+    :figclass: only-light
+
+.. figure:: fig/user_guide/plotting-x-dark.svg
+    :figclass: only-dark
