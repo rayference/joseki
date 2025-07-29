@@ -1,6 +1,7 @@
 """Utility module."""
 
 import datetime
+import sys
 import typing as t
 
 import numpy as np
@@ -10,14 +11,22 @@ import xarray as xr
 from ..constants import MM, K
 from ..units import ureg
 
+if sys.version_info[1] < 11:
 
-def utcnow() -> str:
-    """Get current UTC time.
+    def _utcnow():
+        return datetime.datetime.utcnow()
+else:
 
-    Returns:
-        ISO 8601 formatted UTC timestamp.
-    """
-    return datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+    def _utcnow():
+        return datetime.datetime.now(datetime.UTC)
+
+
+def utcnow(isoformat: bool = True):
+    result = _utcnow()
+    if isoformat:
+        return result.replace(microsecond=0).isoformat()
+    else:
+        return result
 
 
 def number_density(p: pint.Quantity, t: pint.Quantity) -> pint.Quantity:
