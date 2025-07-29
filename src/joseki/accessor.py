@@ -13,7 +13,7 @@ import xarray as xr
 from ._version import __version__
 from .constants import AIR_MAIN_CONSTITUENTS_MOLAR_FRACTION, MM, K
 from .profiles.schema import schema
-from .profiles.util import molar_mass
+from .profiles.util import molar_mass, utcnow
 from .units import to_quantity, ureg
 
 logger = logging.getLogger(__name__)
@@ -425,7 +425,7 @@ class JosekiAccessor:  # pragma: no cover
             raise ValueError("Cannot rescale") from e
 
         # update history attribute
-        now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+        now = utcnow()
         for m in factors.keys():
             ds.attrs["history"] += (
                 f"\n{now} - rescaled {m}'s mole fraction using a scaling "
@@ -473,7 +473,7 @@ class JosekiAccessor:  # pragma: no cover
         ds = self._obj
 
         # update history attribute
-        now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+        now = utcnow()
 
         ds.attrs["history"] += (
             f"\n{now} - dropped mole fraction data for molecules "
