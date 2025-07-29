@@ -9,7 +9,6 @@ import pint
 import xarray as xr
 
 from ..constants import MM, K
-from ..units import ureg
 
 if sys.version_info[1] < 11:
 
