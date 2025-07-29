@@ -44,25 +44,14 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "furo"
-
+html_theme = "shibuya"
 html_theme_options = {
-    "source_repository": "https://github.com/rayference/joseki/",
-    "source_branch": "main",
-    "source_directory": "docs/",
-    "light_css_variables": {
-        "color-brand-primary": "#2563eb",
-        "color-brand-content": "#2563eb",
-    },
-    "dark_css_variables": {
-        "color-brand-primary": "#60a5fa",
-        "color-brand-content": "#60a5fa",
-    },
-    "light_logo": "logo_title-light.svg",
-    "dark_logo": "logo_title-dark.svg",
-    "sidebar_hide_name": True,
+    "github_url": "https://github.com/rayference/joseki/",
+    "accent_color": "violet",
+    "light_logo": "_static/logo_title-light.svg",
+    "dark_logo": "_static/logo_title-dark.svg",
+    "navigation_with_keys": True,
 }
-
 html_static_path = ["_static"]
 html_title = "Joseki"
 
