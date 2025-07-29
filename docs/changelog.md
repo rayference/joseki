@@ -17,6 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 * Deploy docs on [Read The Docs](https://joseki.readthedocs.io/).
 * Allow Numpy 2.
 * Support Python 3.13.
+* Internalized ussa1976 dependency, which is no longer maintained.
 
 ### Fixed
 

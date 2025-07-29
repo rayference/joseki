@@ -8,14 +8,14 @@ import logging
 import typing as t
 
 import pint
-import ussa1976
 import xarray as xr
 from attrs import define
 
-from .core import Profile
-from .factory import factory
-from .schema import history, schema
-from ..units import to_quantity
+from .core import compute as compute
+from ..core import Profile
+from ..factory import factory
+from ..schema import history, schema
+from ...units import to_quantity
 
 logger = logging.getLogger(__name__)
 
@@ -56,11 +56,11 @@ class USSA1976(Profile):
         # compute profile
         if z is None:
             logging.debug("Computing profile with ussa1976 package")
-            ds = ussa1976.compute(variables=variables)
+            ds = compute(variables=variables)
         else:
             logging.debug("Computing profile with ussa1976 package")
             logging.debug("z=%s", z)
-            ds = ussa1976.compute(z=z.m_as("m"), variables=variables)
+            ds = compute(z=z.m_as("m"), variables=variables)
 
         # extract data
         coords = {"z": to_quantity(ds["z"]).to("km")}

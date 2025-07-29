@@ -1,9 +1,21 @@
-from ussa1976.constants import F
-
 from .units import ureg
 
 # Boltzmann constant (according to SciPy v1.10.1 Manual)
 K = 1.380649e-23 * ureg.joule / ureg.kelvin
+
+# Sea level volume fractions below 86 km [dimensionless].
+F = {
+    "N2": 0.78084,
+    "O2": 0.209476,
+    "Ar": 0.00934,
+    "CO2": 0.000314,
+    "Ne": 0.00001818,
+    "He": 0.00000524,
+    "Kr": 0.00000114,
+    "Xe": 0.000000087,
+    "CH4": 0.000002,
+    "H2": 0.0000005,
+}
 
 # air main constituents molar fractions (values according to US Standard
 # Atmosphere 1976)
