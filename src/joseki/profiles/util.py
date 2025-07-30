@@ -10,14 +10,15 @@ import xarray as xr
 
 from ..constants import MM, K
 
-if sys.version_info[1] < 11:
-
-    def _utcnow():
-        return datetime.datetime.utcnow()
-else:
+if sys.version_info >= (3, 11):
 
     def _utcnow():
         return datetime.datetime.now(datetime.UTC)
+
+else:
+
+    def _utcnow():
+        return datetime.datetime.utcnow()
 
 
 def utcnow(isoformat: bool = True):
