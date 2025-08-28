@@ -22,16 +22,18 @@ such as interpolation and rescaling on a dataset.
 ## Features
 
 * Available profiles:
-    * *AFGL Atmospheric Constituent Profiles (0-120 km)*
-    * *MIPAS (2007) reference atmospheres*
-    * *U.S. Standard Atmosphere, 1976*
+
+  * *AFGL Atmospheric Constituent Profiles (0-120 km)*
+  * *MIPAS (2007) reference atmospheres*
+  * *U.S. Standard Atmosphere, 1976*
+
 * NetCDF support thanks to the [xarray](https://xarray.pydata.org) library
 * Documented and standard dataset format based on the
   [CF conventions](https://cfconventions.org)
 * Dataset schema validation
 * Altitude interpolation/extrapolation and regularization
 * Molecular concentration rescaling
-* Molecules selection
+* Molecule selection
 * Computation of derived quantities
 * Convenient units support thanks to the [pint](https://pint.readthedocs.io)
   library
@@ -66,7 +68,7 @@ Visit [joseki.readthedocs.io](https://joseki.readthedocs.io/).
 
 Joseki was born in the context of the development of the
 [Eradiate](https://github.com/eradiate/eradiate) radiative transfer model, from
-the need to collect, document and trace, integrate and modify *popular*
+the need to collect, document, trace, integrate, and modify *popular*
 thermophysical profiles.
 As such, its features evolve in close relationship to those of *Eradiate*.
 

@@ -4,7 +4,7 @@ Usage
 Joseki brings together datasets of thermophysical properties of Earth's atmosphere
 relevant for radiative transfer applications, and provides utilities to compute common
 characteristic quantities and perform operations such as interpolation and rescaling
-on generated atmospheric thermosphysical property datasets.
+on generated atmospheric thermophysical property datasets.
 
 Basics
 ------
@@ -205,7 +205,7 @@ Plotting examples
 -----------------
 
 The xarray library, which powers Joseki, offers various plotting features that
-can be leverage to explore thermophysical property profiles. The following shows
+can be leveraged to explore thermophysical property profiles. The following shows
 a few examples that use the `Matplotlib library <https://matplotlib.org/>`_.
 
 All dataset variables (air pressure ``p``, air temperature ``t``,

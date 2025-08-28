@@ -47,7 +47,7 @@ REFERENCE = (
     "https://ui.adsabs.harvard.edu/abs/1986afgl.rept.....A/abstract"
 )
 
-INSTITUION = "Air Force Geophysics Laboratory"
+INSTITUTION = "Air Force Geophysics Laboratory"
 URL = "https://archive.org/details/DTIC_ADA175173"
 URLDATE = "2022-12-12"
 
@@ -163,7 +163,7 @@ def dataframe_to_dataset(
     attrs = {
         "Conventions": "CF-1.10",
         "title": pretty_title,
-        "institution": INSTITUION,
+        "institution": INSTITUTION,
         "source": SOURCE,
         "history": history(),
         "references": REFERENCE,

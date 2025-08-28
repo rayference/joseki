@@ -42,7 +42,7 @@ profiles.
     **Number density at sea level**
         Sea level is defined by :math:`z=0`, hence the number density at sea
         level of molecule M is simply :math:`n_{\mathrm{M}}(0)`.
-        Number density at sea level has dimensions of `length^-3`.
+        Number density at sea level has dimensions of ``length^-3``.
 
     **Mass density at sea level**
         Similarly, mass density at sea level is

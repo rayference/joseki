@@ -102,7 +102,7 @@ class JosekiAccessor:  # pragma: no cover
             * :math:`n_{\mathrm{M}}(z)` is the number density of molecule M at
               altitude :math:`z`.
 
-            The  integration is performed using the trapezoidal rule.
+            The integration is performed using the trapezoidal rule.
         """
         ds = self._obj
 
