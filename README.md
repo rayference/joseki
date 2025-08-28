@@ -60,7 +60,7 @@ conda install -c conda-forge joseki
 
 ## Documentation
 
-Visit https://rayference.github.io/joseki/latest.
+Visit [joseki.readthedocs.io](https://joseki.readthedocs.io/).
 
 ## Ikigai
 
