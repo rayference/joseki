@@ -7,7 +7,7 @@ setup requires installing it. Once this is done, simply navigate to the root of
 the source repository and run:
 
 ```shell
-uv sync
+uv sync --all-groups --all-extras
 ```
 
 ## Run the tests and verify test coverage
