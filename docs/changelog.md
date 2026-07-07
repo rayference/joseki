@@ -16,12 +16,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 * Rework documentation structure for improved navigation and search.
 * Deploy docs on [Read The Docs](https://joseki.readthedocs.io/).
 * Allow Numpy 2.
-* Support Python 3.13.
+* Support Python 3.13 and 3.14.
 * Internalized ussa1976 dependency, which is no longer maintained.
 
 ### Fixed
 
 * Reduce logging level of updates during factory registration.
+* Fix datetime warnings on Python 3.11 and later.
 
 ## [2.6.1] - 2024-02-13
 

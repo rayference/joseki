@@ -480,7 +480,7 @@ terminado==0.18.1
     #   jupyter-server-terminals
 tinycss2==1.4.0
     # via bleach
-tomli==2.2.1
+tomli==2.2.1 ; python_full_version < '4'
     # via
     #   jupyterlab
     #   pytest
