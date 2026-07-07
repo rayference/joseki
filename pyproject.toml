@@ -50,7 +50,7 @@ directory = "./reports/coverage/html"
 output = "./reports/coverage/coverage.json"
 
 [tool.coverage.paths]
-equivalent = ["src/", ".venv/"]
+source = ["src/joseki", "*/site-packages/joseki"]
 
 [tool.coverage.report]
 omit = ["src/*/__init__.py", "src/*/_version.py"]
@@ -61,7 +61,7 @@ skip_covered = true
 [tool.coverage.run]
 branch = true
 parallel = true
-source = ["src/"]
+source = ["src/joseki"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/joseki"]
