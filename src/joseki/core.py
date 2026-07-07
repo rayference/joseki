@@ -12,12 +12,10 @@ import pint
 import xarray as xr
 
 from ._version import __version__
-from .profiles.core import (
-    DEFAULT_METHOD,
-    select_molecules,
-)
+from .profiles.core import DEFAULT_METHOD, select_molecules
 from .profiles.core import regularize as _regularize
 from .profiles.factory import factory
+from .profiles.util import _utcnow
 from .units import to_quantity
 
 logger = logging.getLogger(__name__)
@@ -163,7 +161,7 @@ def merge(
     )
 
     # update attributes
-    now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+    now = _utcnow().replace(microsecond=0).isoformat()
 
     institutions = set([ds.attrs["institution"] for ds in datasets])
     sources = set([ds.attrs["source"] for ds in datasets])

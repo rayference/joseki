@@ -79,6 +79,7 @@ from .constants import (
 )
 from ..._version import __version__
 from ...constants import F
+from ...profiles.util import _utcnow
 
 # List of all gas species
 SPECIES = [
@@ -490,7 +491,7 @@ def init_data_set(z: NDArray[np.float64]) -> xr.Dataset:  # type: ignore
         "convention": "CF-1.9",
         "title": "U.S. Standard Atmosphere 1976",
         "history": (
-            f"{datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}"
+            f"{_utcnow().strftime('%Y-%m-%d %H:%M:%S')}"
             f" - data set creation - ussa1976, version {__version__}"
         ),
         "source": f"ussa1976, version {__version__}",
