@@ -90,7 +90,7 @@ T0 = 288.15
 S = 110.4
 """Sutherland constant in eq. 51 of :cite:`NASA1976USStandardAtmosphere` [K]."""
 
-BETA = 1.458e6
+BETA = 1.458e-6
 """:math:`\\beta` constant in eq. 51 of :cite:`NASA1976USStandardAtmosphere`
 [kg * m^-1 * s^-1 * K^-0.5]."""
 
