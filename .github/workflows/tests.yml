@@ -60,7 +60,7 @@ jobs:
     needs: tests
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           # Use latest, so it understands all syntax.
           python-version: "3.12"
